@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - VoteSystem</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <img src="/Voting_System/img/image_1_1.png" alt="votesystem">
+                <span>VoteSystem</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#">Results</a></li>
+                <li><a href="about.html">About</a></li>
+                <!-- <li><a href="faq.html" class="active">FAQ</a></li> -->
+            </ul>
+            <div class="auth-buttons">
+                <a href="#" class="login-btn">Login</a>
+                <a href="#" class="signup-btn">Register</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <h1>Frequently Asked Questions</h1>
+        <p>Find answers to common questions about our secure online voting platform.</p>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="faq-container">
+            <div class="faq-categories">
+                <button class="category-btn active" data-category="general">General</button>
+                <button class="category-btn" data-category="security">Security</button>
+                <button class="category-btn" data-category="voting">Voting Process</button>
+                <button class="category-btn" data-category="technical">Technical Support</button>
+            </div>
+
+            <div class="faq-items" id="general">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>What is VoteSystem?</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>VoteSystem is a secure online voting platform designed for organizations and institutions to conduct transparent, accessible, and reliable elections. Our platform offers end-to-end encryption, real-time results, and the ability to vote from any device.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Who can use VoteSystem?</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>VoteSystem is designed for a wide range of organizations, including:</p>
+                        <ul>
+                            <li>Universities and student organizations</li>
+                            <li>Professional associations</li>
+                            <li>Corporate boards</li>
+                            <li>Non-profit organizations</li>
+                            <li>Government institutions</li>
+                            <li>Homeowners associations</li>
+                        </ul>
+                        <p>Any organization that requires secure and transparent voting can benefit from our platform.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>How much does VoteSystem cost?</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>VoteSystem offers several pricing tiers based on organization size and needs:</p>
+                        <ul>
+                            <li><strong>Basic:</strong> For small organizations with up to 100 voters. $99 per election.</li>
+                            <li><strong>Standard:</strong> For mid-sized organizations with up to 1,000 voters. $299 per election.</li>
+                            <li><strong>Premium:</strong> For large organizations with up to 10,000 voters. $799 per election.</li>
+                            <li><strong>Enterprise:</strong> Custom solutions for organizations with over 10,000 voters. Contact us for pricing.</li>
+                        </ul>
+                        <p>All plans include our core security features, real-time results, and technical support.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Is there a free trial available?</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! We offer a free demo election for organizations to test our platform with up to 25 voters. This allows you to experience the full functionality of VoteSystem before making a purchase decision.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-items" id="security" style="display: none;">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>How secure is VoteSystem?</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>VoteSystem employs state-of-the-art security measures, including:</p>
+                        <ul>
+                            <li>End-to-end encryption for all voter data</li>
+                            <li>Multi-factor authentication for all users</li>
+                            <li>Regular third-party security audits</li>
+                            <li>Compliance with industry security standards</li>
+                            <li>Real-time intrusion detection systems</li>
+                        </ul>
+                        <p>Our security protocols are regularly updated to address emerging threats and ensure the highest level of protection for your elections.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>How does VoteSystem ensure voter anonymity?</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>VoteSystem uses a sophisticated anonymization protocol that separates voter identity from ballot choices. While we verify that each eligible voter casts only one ballot, the system ensures that votes cannot be traced back to individual voters. This provides both security and anonymity throughout the election process.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Can election results be tampered with?</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>VoteSystem's architecture is designed to prevent tampering at every level. We implement:</p>
+                        <ul>
+                            <li>Immutable vote recording using blockchain technology</li>
+                            <li>Multiple redundant storage systems</li>
+                            <li>Comprehensive audit logs for all system activities</li>
+                            <li>Real-time anomaly detection to flag suspicious activities</li>
+                        </ul>
+                        <p>These measures ensure that votes are recorded accurately and cannot be altered once cast.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Is my organization's data protected?</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, all organizational and voter data is protected using enterprise-grade security measures. We maintain strict data privacy policies in compliance with GDPR and other international data protection regulations. Your data is never shared with third parties without explicit permission, and we implement strict access controls even within our own team.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-items" id="voting" style="display: none;">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>How do voters access the platform?</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Voters receive a unique, secure link via email or SMS, which directs them to the voting portal. After identity verification (which can include various authentication methods based on your security preferences), they can access their ballot and cast their vote securely from any device with internet access.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>What types of elections can be conducted on VoteSystem?</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>VoteSystem supports various election types, including:</p>
+                        <ul>
+                            <li>Single-choice elections</li>
+                            <li>Multiple-choice elections</li>
+                            <li>Ranked-choice voting</li>
+                            <li>Preferential voting</li>
+                            <li>Cumulative voting</li>
+                            <li>Approval voting</li>
+                        </ul>
+                        <p>Our platform is flexible and can be configured to meet the specific requirements of your organization's election rules.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Can voters change their vote after submitting?</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>By default, votes are final once submitted. However, we can configure your election to allow vote changes within a specified timeframe if your organization's rules permit this. This setting is determined during the election setup phase and applies to all voters in the election.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>How are election results displayed?</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>VoteSystem offers customizable results displays, including:</p>
+                        <ul>
+                            <li>Real-time vote tallies (if enabled)</li>
+                            <li>Graphical representations (bar charts, pie charts, etc.)</li>
+                            <li>Detailed breakdowns by voting category</li>
+                            <li>Exportable results in various formats (PDF, CSV, Excel)</li>
+                        </ul>
+                        <p>You can control when and how results are displayed to voters and administrators based on your organization's preferences.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-items" id="technical" style="display: none;">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>What devices and browsers are supported?</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>VoteSystem is compatible with all modern devices and browsers, including:</p>
+                        <ul>
+                            <li>Desktop computers (Windows, Mac, Linux)</li>
+                            <li>Tablets (iOS, Android)</li>
+                            <li>Smartphones (iOS, Android)</li>
+                            <li>Browsers: Chrome, Firefox, Safari, Edge (latest two versions)</li>
+                        </ul>
+                        <p>Our responsive design ensures a seamless voting experience regardless of the device being used.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>What happens if a voter loses internet connection while voting?</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>VoteSystem includes automatic progress saving. If a voter loses internet connection during the voting process, their selections are saved temporarily. When they reconnect, they can continue from where they left off. No votes are submitted until the voter explicitly confirms their ballot.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>How do I set up an election on VoteSystem?</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Setting up an election is a straightforward process:</p>
+                        <ol>
+                            <li>Create an administrator account</li>
+                            <li>Define election parameters (title, dates, voting methods)</li>
+                            <li>Add candidates or ballot items</li>
+                            <li>Upload voter information (email addresses)</li>
+                            <li>Configure security and authentication settings</li>
+                            <li>Preview and test the ballot</li>
+                            <li>Launch the election</li>
+                        </ol>
+                        <p>Our team is available to assist with every step of the setup process.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>What technical support is available?</h3>
+                        <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>VoteSystem offers comprehensive technical support for all customers:</p>
+                        <ul>
+                            <li>24/7 emergency support during active elections</li>
+                            <li>Email and phone support during business hours</li>
+                            <li>Detailed documentation and video tutorials</li>
+                            <li>Dedicated account manager for premium and enterprise plans</li>
+                        </ul>
+                        <p>We're committed to ensuring your election runs smoothly from start to finish.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-contact">
+                <h3>Didn't find what you were looking for?</h3>
+                <p>Our support team is here to help with any additional questions you may have.</p>
+                <a href="#" class="contact-btn">Contact Support</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section about">
+                <h3>VoteSystem</h3>
+                <p>Secure and reliable online voting platform for organizations and institutions.</p>
+            </div>
+            <div class="footer-section links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="about.html">About Us</a></li>
+                    <!-- <li><a href="#">How it Works</a></li>
+                    <li><a href="#">Security</a></li> -->
+                    <li><a href="faq.html">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section contact">
+                <h3>Contact</h3>
+                <p><i class="fas fa-envelope"></i> <a href="#">info@votesystem.com</a></p>
+                <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+            </div>
+            <div class="footer-section social">
+                <h3>Follow Us</h3>
+                <div class="social-icons">
+                    <a href="https://x.com/"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.facebook.com/"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 VoteSystem. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="./script.js"></script>
+    <script src="./faq.js"></script>
+</body>
+</html>
