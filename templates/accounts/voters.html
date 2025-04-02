@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" class="dark-theme">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VoteAdmin - Election Management Dashboard</title>
+
+  <!-- External Styles -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="/static/voters.css">
+</head>
+<body>
+  <div id="app">
+    <div id="voters-page" class="page-content">
+      <!-- Back Button -->
+      <div class="header">
+        <a href="{% url 'accounts:admin_page' %}" class="back-btn">
+          <i class="fas fa-arrow-left"></i> Back to Admin
+        </a>
+      </div>
+
+      <!-- Voter Dashboard Card -->
+      <div class="card voter-dashboard-card">
+        <div class="voter-dashboard-header">
+          <h2 class="voter-dashboard-title">Voter Dashboard</h2>
+          <p class="voter-dashboard-subtitle">Overview of voter registration and activity</p>
+        </div>
+
+        <!-- Voter Details Section -->
+        <div class="voter-details-section">
+          <h3 class="section-title">Voter's Details</h3>
+          <div class="voter-table-container">
+            <table class="voter-table">
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Email Address</th>
+                  <th>Date of Birth</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Voter data will be populated here dynamically -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination Info -->
+          <div class="pagination">
+            <span class="pagination-info">Showing 1 to 5 of {{ total_entries }} entries</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- External JavaScript -->
+  <script src="/static/voters.js"></script>
+</body>
+</html>

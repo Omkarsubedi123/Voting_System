@@ -1,0 +1,16 @@
+{% extends 'accounts/admin.html' %}
+{% load static %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'candidates.css' %}">
+{% endblock %}
+
+{% block content %}
+  <h1>{% if form.instance.pk %}Edit Candidate{% else %}Add New Candidate{% endif %}</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+    <a href="{% url 'accounts:candidate_list' %}">Cancel</a>
+  </form>
+{% endblock %}
