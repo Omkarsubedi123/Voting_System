@@ -118,12 +118,17 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = False
 
-# Static files
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 STATIC_URL = '/static/'
+
+# Collect all static files during deployment
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Additional directories to look for static files (Only for development)
 STATICFILES_DIRS = [
     BASE_DIR / 'accounts' / 'static',
 ]
-STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Media files (if needed)
 MEDIA_URL = '/media/'

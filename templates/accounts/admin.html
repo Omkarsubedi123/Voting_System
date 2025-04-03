@@ -1,12 +1,15 @@
 {% extends 'accounts/base_admin.html' %}
 {% load static %}
 
+{% block title %}Admin Dashboard{% endblock %}
+
 {% block content %}
   <div class="header">
     <div>
       <h1 class="page-title">Dashboard Overview</h1>
       <p class="welcome-text">Welcome back, {{ user.username }}</p>
     </div>
+
     <div class="user-profile">
       <button id="theme-toggle-btn" class="theme-toggle-btn" title="Toggle Light/Dark Mode">
         <i class="fas fa-moon"></i>
@@ -23,9 +26,10 @@
             <span>{{ user.email }}</span>
           </div>
           <div class="profile-menu-divider"></div>
-          <a href="{% url 'accounts:logout' %}" class="profile-menu-item" id="quick-logout">
+          <a href="{% url 'accounts:logout' %}" class="profile-menu-item">
             <i class="fas fa-sign-out-alt"></i>
             <span>Logout</span>
+        </a>
           </a>
         </div>
       </div>

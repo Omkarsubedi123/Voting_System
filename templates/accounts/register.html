@@ -6,159 +6,105 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Online Voting System</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <style>
-        /* Tooltip-style Error Box (Visible by default when errors exist) */
-        .error-box {
-            background-color: #e63946;  /* Deep red background */
-            color: white;
-            padding: 8px 12px;
-            border-radius: 6px;
-            position: absolute;
-            top: 50%;
-            left: calc(100% + 10px);  /* Always appears to the right */
-            white-space: nowrap;
-            z-index: 10;
-            font-size: 0.9rem;
-            transform: translateY(-50%);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .input-group {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .error-box::before {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: -8px;
-            transform: translateY(-50%);
-            border: 8px solid transparent;
-            border-right-color: #e63946;
-        }
-
-        input {
-            width: 100%;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            font-size: 1rem;
-            margin-top: 5px;
-        }
-
-        label {
-            font-weight: bold;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        .register {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .register p {
-            margin: 0;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
     <div class="container">
         <div class="login-box">
+            <div class="logo">
+                <i class="fas fa-check-square"></i>
+            </div>
             <h2>Register</h2>
             <p>Create your voting account</p>
 
-            <form method="POST" class="register-form">
+            <form action="{% url 'accounts:register' %}" method="POST">
                 {% csrf_token %}
-                {{ form.non_field_errors }}
-
-                <!-- Username Field -->
                 <div class="input-group">
-                    <label for="id_username">Username</label>
-                    {{ form.username }}
-                    {% if form.username.errors %}
-                        <span class="error-box">⚠️ Oops! Username Already exist.</span>
-                    {% endif %}
-                </div>
-
-                <!-- Date of Birth Field -->
-                <div class="input-group">
-                    <label for="id_dob">Date of Birth</label>
-                    {{ form.dob }}
-                    {% if form.dob.errors %}
-                        <span class="error-box">🛑 {{ form.dob.errors.0 }}</span>
-                    {% endif %}
-                </div>
-
-                <!-- Email Field -->
-                <div class="input-group">
-                    <label for="id_email">Email</label>
-                    {{ form.email }}
-                    {% if form.email.errors %}
-                        <span class="error-box">⚠️Email already exits. Maybe try another one?</span>
-                    {% endif %}
-                </div>
-
-                <!-- Password Field -->
-                <div class="input-group">
-                    <label for="id_password1">Password</label>
-                    {{ form.password1 }}
-                    {% if form.password1.errors %}
-                        <span class="error-box">⚠️ {{ form.password1.errors.0 }} Make it strong!</span>
-                    {% endif %}
-                </div>
-
-                <!-- Confirm Password Field -->
-                <div class="input-group">
-                    <label for="id_password2">Confirm Password</label>
-                    {{ form.password2 }}
-                    {% if form.password2.errors %}
-                        <span class="error-box">🛑 {{ form.password2.errors.0 }} Please double-check.</span>
-                    {% endif %}
-                </div>
-
-                <!-- User Type Field - Original Emojis Preserved -->
-                <div class="input-group">
-                    <label for="id_user_type">Register as</label>
+                    <label for="username">Username</label>
                     <div class="input-box">
-                        🏷️ {{ form.user_type }}
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="username" name="username" placeholder="Enter your username" required>
                     </div>
-                    {% if form.user_type.errors %}
-                        <span class="error-box">⚠️ {{ form.user_type.errors.0 }}</span>
-                    {% endif %}
                 </div>
 
-                <!-- Submit Button -->
-                <button type="submit">➕ Register</button>
+                <div class="input-group">
+                    <label for="dob">Date of Birth</label>
+                    <div class="input-box">
+                        <i class="fas fa-calendar-alt"></i>
+                        <input type="date" id="dob" name="dob" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <div class="input-box">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <div class="input-box">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                        <i class="fas fa-eye toggle-password" onclick="togglePassword('password', this)"></i>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="confirm_password">Confirm Password</label>
+                    <div class="input-box">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm your password" required>
+                        <i class="fas fa-eye toggle-password" onclick="togglePassword('confirm_password', this)"></i>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="user_type">Register as</label>
+                    <div class="input-box">
+                        <i class="fas fa-user-tag"></i>
+                        <select id="user_type" name="user_type" required>
+                            <option value="voter">General Voter</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                        {% if messages %}
+                        <div class="messages">
+                            {% for message in messages %}
+                                <div class="alert {{ message.tags }}">{{ message }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                </div>      
+
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-user-plus"></i> Register
+                </button>
             </form>
 
             <div class="register">
                 <p>Already have an account?</p>
-                <a href="{% url 'accounts:login' %}">Login ➡️</a>
+                <a href="{% url 'accounts:login' %}">Login <i class="fas fa-arrow-right"></i></a>
             </div>
-        </div>
-    </div>
+        </div>    
 
-    <script>
-        function togglePassword(id, element) {
-            var input = document.getElementById(id);
-            input.type = input.type === "password" ? "text" : "password";
-        }
-    </script>
+        <script>
+            function togglePassword(id, element) {
+                var input = document.getElementById(id);
+                if (input.type === "password") {
+                    input.type = "text";
+                    element.classList.remove("fa-eye");
+                    element.classList.add("fa-eye-slash");
+                } else {
+                    input.type = "password";
+                    element.classList.remove("fa-eye-slash");
+                    element.classList.add("fa-eye");
+                }
+            }
+        </script>
+    </div>
 </body>
 </html>

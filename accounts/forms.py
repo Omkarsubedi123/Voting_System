@@ -1,41 +1,40 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from .models import User
-from django.core.validators import MinValueValidator, MaxValueValidator
-from datetime import date
+from .models import Voter, User, Candidate
 
-class RegistrationForm(UserCreationForm):
-    email = forms.EmailField(required=True)
-    dob = forms.DateField(
-        widget=forms.DateInput(attrs={'type': 'date'}),
-        validators=[
-            MinValueValidator(date(1900, 1, 1)),
-            MaxValueValidator(date.today())
-        ]
-    )
-    user_type = forms.ChoiceField(
-        choices=User.USER_TYPE_CHOICES,
-        widget=forms.Select(attrs={'class': 'form-control'})
-    )
+class RegistrationForm(forms.ModelForm):
+    """Form for user registration"""
+    password = forms.CharField(widget=forms.PasswordInput)  # Add password field manually
 
     class Meta:
         model = User
+        fields = ['username', 'email', 'dob', 'user_type', 'password']
+        widgets = {
+            'dob': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
         fields = ['username', 'email', 'dob', 'user_type']
+        widgets = {
+            'dob': forms.DateInput(attrs={'type': 'date'}),
+        }
 
-    def clean_dob(self):
-        dob = self.cleaned_data.get('dob')
-        if dob and dob > date.today():
-            raise forms.ValidationError("Date of birth cannot be in the future")
-        return dob
+class VoterForm(forms.ModelForm):
+    username = forms.CharField(max_length=50, required=False)
+    dob = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), required=False)
 
-class LoginForm(forms.Form):
-    username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Enter your username'}))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Enter your password'}))
-
-from .models import Candidate
+    class Meta:
+        model = Voter
+        fields = ['name', 'email']
+    
+    def __init__(self, *args, **kwargs):
+        super(VoterForm, self).__init__(*args, **kwargs)
+        if self.instance and hasattr(self.instance, 'user') and self.instance.user:
+            self.fields['username'].initial = self.instance.user.username
+            self.fields['dob'].initial = self.instance.user.dob
 
 class CandidateForm(forms.ModelForm):
     class Meta:
         model = Candidate
         fields = ['name', 'age', 'post', 'description']
-# <a href="{% url 'accounts:candidate_list' %}">Cancel</a>

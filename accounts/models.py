@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
-from django.db import models
 from django.utils.timezone import now
 
 class User(AbstractUser):
@@ -9,7 +8,7 @@ class User(AbstractUser):
         ('admin', 'Admin'),
         ('user', 'General User'),
     ]
-
+    
     username = models.CharField(_('username'), max_length=50, unique=True)
     email = models.EmailField(_('email address'), unique=True)
     dob = models.DateField(_('date of birth'))
@@ -19,35 +18,35 @@ class User(AbstractUser):
         choices=USER_TYPE_CHOICES,
         default='user'
     )
-
+    
     def __str__(self):
         return self.username
-
+    
     def is_admin(self):
         return self.user_type == 'admin'
-
+    
     class Meta:
         db_table = 'users'
 
-# filepath: c:\Users\Hp\Desktop\New Backend\myproject\accounts\models.py
-class Voter(models.Model):
-    name = models.CharField(max_length=255,default="Unknown")
-    email = models.EmailField(unique=True,default="Unknown")
-    registered_at = models.DateTimeField(auto_now_add=True)
 
+class Voter(models.Model):
+    # Link to the User model
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='voter_profile', null=True, blank=True)
+    name = models.CharField(max_length=255, default="Unknown")
+    email = models.EmailField(unique=True, default="Unknown")
+    registered_at = models.DateTimeField(auto_now_add=True)
+    
     def save(self, *args, **kwargs):
-        if not self.registered_at:  
+        if not self.registered_at:
             self.registered_at = now().replace(microsecond=0)  # Remove microseconds
         super().save(*args, **kwargs)
-
+    
     def __str__(self):
         return self.name
-
+    
     class Meta:
-        db_table = 'voters'  # Explicitly set the table name
+        db_table = 'voters'
 
-# candidates/models.py
-from django.db import models
 
 class People(models.Model):
     name = models.CharField(max_length=255)
@@ -57,7 +56,8 @@ class People(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+
 class Candidate(models.Model):
     name = models.CharField(max_length=100)
     age = models.PositiveIntegerField()
@@ -66,5 +66,3 @@ class Candidate(models.Model):
 
     def __str__(self):
         return self.name
-    
-from django.db import models

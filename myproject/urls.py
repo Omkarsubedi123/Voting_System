@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('accounts.urls')),  # This makes accounts URLs available at root level
+    path('', include('accounts.urls', namespace='accounts')),
 ]
 
 # Serve static files during development
