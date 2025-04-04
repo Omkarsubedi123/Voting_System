@@ -3,18 +3,41 @@ document.addEventListener('DOMContentLoaded', function() {
     const themeToggleBtn = document.getElementById('theme-toggle-btn');
     const html = document.documentElement;
   
-    themeToggleBtn.addEventListener('click', function() {
-      html.classList.toggle('light-theme');
+    // themeToggleBtn.addEventListener('click', function() {
+    //   html.classList.toggle('light-theme');
   
-      const icon = themeToggleBtn.querySelector('i');
-      if (html.classList.contains('light-theme')) {
-        icon.classList.remove('fa-moon');
-        icon.classList.add('fa-sun');
-      } else {
-        icon.classList.remove('fa-sun');
-        icon.classList.add('fa-moon');
-      }
-    });
+    //   const icon = themeToggleBtn.querySelector('i');
+    //   if (html.classList.contains('light-theme')) {
+    //     icon.classList.remove('fa-moon');
+    //     icon.classList.add('fa-sun');
+    //   } else {
+    //     icon.classList.remove('fa-sun');
+    //     icon.classList.add('fa-moon');
+    //   }
+    // });
+//     const themeToggleBtn = document.getElementById('themeToggleBtn');
+// const html = document.documentElement;
+
+// Load theme on page load
+if (localStorage.getItem('theme') === 'light') {
+  html.classList.add('light-theme');
+  themeToggleBtn.querySelector('i').classList.replace('fa-moon', 'fa-sun');
+}
+
+// Toggle theme and store it
+themeToggleBtn.addEventListener('click', function () {
+  html.classList.toggle('light-theme');
+
+  const icon = themeToggleBtn.querySelector('i');
+  if (html.classList.contains('light-theme')) {
+    icon.classList.replace('fa-moon', 'fa-sun');
+    localStorage.setItem('theme', 'light');
+  } else {
+    icon.classList.replace('fa-sun', 'fa-moon');
+    localStorage.setItem('theme', 'dark');
+  }
+});
+
   
     // Profile dropdown
     const profileBtn = document.getElementById('profile-btn');

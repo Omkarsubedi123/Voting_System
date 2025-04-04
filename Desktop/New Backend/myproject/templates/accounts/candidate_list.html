@@ -6,8 +6,13 @@
 {% endblock extra_head %}
 
 {% block content %}
-  <h1>Candidate Management</h1>
-  <a href="{% url 'accounts:candidate_create' %}">Add New Candidate</a>
+  <h1 style="margin-bottom: 20px;">Candidate Management</h1>
+  <!-- <a style="text-decoration: none; background-color: blue; color: white; padding: 7px; border-radius:10px; font-size: 12px;" href="{% url 'accounts:candidate_create' %}">Add New Candidate</a> -->
+  <div style="padding: 40px;">
+    <a style="text-decoration: none; max-width: fit-content; float: right;" href="{% url 'accounts:candidate_create' %}" class="btn btn-primary btn-sm">
+        <i class="fas fa-plus-circle"></i> Add 
+    </a>
+</div>
   <table>
     <thead>
       <tr>
@@ -26,8 +31,8 @@
           <td>{{ candidate.post }}</td>
           <td>{{ candidate.description }}</td>
           <td>
-            <a href="{% url 'accounts:candidate_update' candidate.id %}">Edit</a>
-            <a href="{% url 'accounts:candidate_delete' candidate.id %}">Delete</a>
+            <a style="text-decoration: none;" href="{% url 'accounts:candidate_update' candidate.id %}">Edit</a>
+            <a style="text-decoration: none;" href="{% url 'accounts:candidate_delete' candidate.id %}">Delete</a>
           </td>
         </tr>
       {% empty %}
