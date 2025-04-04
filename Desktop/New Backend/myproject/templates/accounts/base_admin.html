@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="dark-theme">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VoteAdmin - {% block title %}Election Management Dashboard{% endblock %}</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90' x='0' y='80'>🗳️</text></svg>" />
+</head>
+<body>
+  <div id="app">
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <i class="fas fa-vote-yea"></i>
+        <span class="app-title">VoteAdmin</span>
+      </div>
+      <div class="menu-item active">
+        <a href="{% url 'accounts:admin_page' %}">
+          <i class="fas fa-th-large"></i>
+          <span>Dashboard</span>
+      </a>
+    </div>
+      <div class="menu-item">
+        <a href="{% url 'accounts:voters_list' %}">
+          <i class="fas fa-users"></i>
+          <span>Voters</span>
+      </a>
+      </div>
+      <div class="menu-item">
+        <a href="{% url 'accounts:candidate_list' %}">
+          <i class="fas fa-user-tie"></i>
+          <span>Candidates</span>
+        </a>
+      </div>
+      <div class="menu-item">
+        <a href="/settings/">
+          <i class="fas fa-cog"></i>
+          <span>Settings</span>
+        </a>
+      </div>
+    </div>
+    <div class="main-content">
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+  <script src="{% static 'js/admin.js' %}"></script>
+</body>
+</html>

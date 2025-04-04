@@ -27,7 +27,7 @@
             </div>
             {% endif %}
 
-            <form action="{% url 'login' %}" method="POST">
+            <form action="{% url 'accounts:login' %}" method="POST">
                 {% csrf_token %}
                 <div class="input-group">
                     <label for="username">Username</label>
@@ -68,7 +68,7 @@
 
             <div class="register">
                 <p>New Voter?</p>
-                <a href="{% url 'register' %}">Register <i class="fas fa-arrow-right"></i></a>
+                <a href="{% url 'accounts:register' %}">Register <i class="fas fa-arrow-right"></i></a>
             </div>
         </div>
 

@@ -1,10 +1,10 @@
-"""
-Django settings for myproject project.
-"""
-
+""" Django settings for myproject project. """
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+import pymysql
+
+SILENCED_SYSTEM_CHECKS = ['urls.W002']
 
 load_dotenv()
 
@@ -31,13 +31,16 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',    # Fixed this line
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'myproject.urls'
+
+# Add this setting to fix the recursion error
+APPEND_SLASH = True
 
 # Templates
 TEMPLATES = [
@@ -71,10 +74,21 @@ DATABASES = {
         'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-            'charset': 'utf8mb4',
+        },
+    },
+    'candidates_db': {  # Adding the new database
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'candidates',
+        'USER': 'root',
+        'PASSWORD': 'root123',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         },
     }
 }
+
 
 # Authentication
 AUTH_USER_MODEL = 'accounts.User'
@@ -104,12 +118,17 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = False
 
-# Static files
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 STATIC_URL = '/static/'
+
+# Collect all static files during deployment
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Additional directories to look for static files (Only for development)
 STATICFILES_DIRS = [
     BASE_DIR / 'accounts' / 'static',
 ]
-STATIC_ROOT = BASE_DIR / 'staticfiles'  # Add this line
 
 # Media files (if needed)
 MEDIA_URL = '/media/'

@@ -1,40 +1,64 @@
-document.addEventListener("DOMContentLoaded", function () {
-  fetchVoters();
+document.addEventListener('DOMContentLoaded', function() {
+    // Theme toggling functionality
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', function() {
+            fetch('/toggle-theme/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.documentElement.classList.toggle('dark-theme', data.theme === 'dark');
+            });
+        });
+    }
+    
+    // Functions to handle voter details via AJAX (if needed)
+    const viewButtons = document.querySelectorAll('.view-btn');
+    viewButtons.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const voterId = this.getAttribute('data-voter-id');
+            if (voterId) {
+                fetchVoterDetails(voterId);
+            }
+        });
+    });
+    
+    function fetchVoterDetails(voterId) {
+        fetch(`/voters/${voterId}/ajax/`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle the returned voter data
+            // For example, populate a modal
+            console.log(data);
+        })
+        .catch(error => {
+            console.error('Error fetching voter details:', error);
+        });
+    }
+    
+    // Helper function to get CSRF cookie
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
 });
-
-function fetchVoters() {
-  fetch("/get-voters/") // Adjust the endpoint based on your Django URL
-      .then(response => response.json())
-      .then(data => {
-          console.log("Fetched voter data:", data); // Log data to console
-          populateVotersTable(data.page_obj);
-      })
-      .catch(error => console.error("Error fetching voter data:", error));
-}
-
-function populateVotersTable(voters) {
-  const tableBody = document.querySelector("tbody");
-
-  if (!tableBody) {
-      console.error("Table body element not found!");
-      return;
-  }
-
-  tableBody.innerHTML = ""; // Clear existing data
-
-  if (voters.length === 0) {
-      tableBody.innerHTML = `<tr><td colspan="3">No voters found.</td></tr>`;
-      return;
-  }
-
-  voters.forEach(user => {
-      console.log("Adding user to table:", user); // Log each user
-      const row = document.createElement("tr");
-      row.innerHTML = `
-          <td>${user.username}</td>
-          <td>${user.email}</td>
-          <td>${user.dob}</td>
-      `;
-      tableBody.appendChild(row);
-  });
-}
