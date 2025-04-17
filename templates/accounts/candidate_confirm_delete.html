@@ -1,5 +1,5 @@
-{% load static %}
 {% extends 'accounts/admin.html' %}
+{% load static %}
 
 {% block extra_head %}
   <link rel="stylesheet" href="{% static 'css/candidates.css' %}">
@@ -13,6 +13,7 @@
     <button type="submit">Yes, delete</button>
     <a href="{% url 'accounts:candidate_list' %}">Cancel</a>
   </form>
+{% endblock %}
 
 {% block extra_js %}
 <script src="{% static 'js/candidates.js' %}"></script>

@@ -13,17 +13,28 @@ urlpatterns = [
     
     path('admin-dashboard/', views.admin_page, name='admin_page'),
     path('', views.home, name='home'),
-    path('voters/', views.voters_list, name='voters_list'),
+    path('voters/', views.users_list, name='users_list'),
     
     # Voter management
-    path('voters/<int:voter_id>/', views.voter_detail, name='voter_detail'),
-    path('voters/add/', views.add_voter, name='add_voter'),
-    path('voters/<int:voter_id>/edit/', views.edit_voter, name='edit_voter'),
-    path('voters/<int:voter_id>/delete/', views.delete_voter, name='delete_voter'),
-    
+    path('users/', views.users_list, name='users_list'),
+    path('users/<int:user_id>/', views.user_detail, name='user_detail'),
+    path('users/<int:user_id>/ajax/', views.user_detail, name='user_detail_ajax'),
+    path('users/<int:user_id>/edit/', views.edit_user, name='edit_user'),
+    path('users/<int:user_id>/delete/', views.delete_user, name='delete_user'),
+
+    # Voter management
+    path('voters/<int:voter_id>/edit/', views.voter_edit, name='voter_edit'),
+    path('voters/<int:voter_id>/delete/', views.voter_delete, name='voter_delete'),
+
     # AJAX endpoints
     path('voters/<int:voter_id>/ajax/', views.ajax_voter_details, name='ajax_voter_details'),
     path('toggle-theme/', views.toggle_theme, name='toggle_theme'),
+
+     # Settings related URLs
+    path('settings/', views.settings_view, name='settings'),
+    path('api/update-profile/', views.update_profile, name='update_profile'),
+    path('api/change-password/', views.change_password, name='change_password'),
+    path('api/delete-account/', views.delete_profile, name='delete_account'),
     
     # Candidate management
     path('candidates/', candidate_list, name='candidate_list'),

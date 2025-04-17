@@ -1,3 +1,15 @@
+themeToggleBtn.addEventListener('click', function() {
+  html.classList.toggle('light-theme');
+
+  const icon = themeToggleBtn.querySelector('i');
+  if (html.classList.contains('light-theme')) {
+    icon.classList.remove('fa-moon');
+    icon.classList.add('fa-sun');
+  } else {
+    icon.classList.remove('fa-sun');
+    icon.classList.add('fa-moon');
+  }
+});
 document.addEventListener("DOMContentLoaded", function () {
   initTheme();
   fetchCandidates();

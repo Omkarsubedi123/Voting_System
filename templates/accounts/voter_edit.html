@@ -1,0 +1,13 @@
+{% extends 'accounts/base_admin.html' %}
+
+{% block title %}Edit Voter{% endblock %}
+
+{% block content %}
+  <h1>Edit Voter</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Update Voter</button>
+    <a href="{% url 'accounts:users_list' %}">Back to Voter List</a>
+  </form>
+{% endblock %}

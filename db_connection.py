@@ -84,7 +84,7 @@ if __name__ == "__main__":
         
         # Insert example
         db.execute_query(
-            "INSERT INTO users (name, email) VALUES (%s, %s)",
+            "INSERT INTO users (name, email,dob) VALUES (%s, %s,%d)",
             ("John Doe", "john@example.com")
         )
         

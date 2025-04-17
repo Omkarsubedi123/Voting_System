@@ -3,18 +3,47 @@ document.addEventListener('DOMContentLoaded', function() {
     const themeToggleBtn = document.getElementById('theme-toggle-btn');
     const html = document.documentElement;
   
-    themeToggleBtn.addEventListener('click', function() {
-      html.classList.toggle('light-theme');
+    // themeToggleBtn.addEventListener('click', function() {
+    //   html.classList.toggle('light-theme');
   
-      const icon = themeToggleBtn.querySelector('i');
-      if (html.classList.contains('light-theme')) {
-        icon.classList.remove('fa-moon');
-        icon.classList.add('fa-sun');
-      } else {
-        icon.classList.remove('fa-sun');
-        icon.classList.add('fa-moon');
-      }
-    });
+    //   const icon = themeToggleBtn.querySelector('i');
+    //   if (html.classList.contains('light-theme')) {
+    //     icon.classList.remove('fa-moon');
+    //     icon.classList.add('fa-sun');
+    //   } else {
+    //     icon.classList.remove('fa-sun');
+    //     icon.classList.add('fa-moon');
+    //   }
+    // });
+//     const themeToggleBtn = document.getElementById('themeToggleBtn');
+// const html = document.documentElement;
+
+// Load theme on page load
+if (localStorage.getItem('theme') === 'light' && themeToggleBtn) {
+  html.classList.add('light-theme');
+  themeToggleBtn.querySelector('i').classList.replace('fa-moon', 'fa-sun');
+} else {
+  console.log('themeToggleBtn not found');
+}
+
+// Toggle theme and store it
+if (themeToggleBtn) {
+  themeToggleBtn.addEventListener('click', function () {
+    html.classList.toggle('light-theme');
+
+    const icon = themeToggleBtn.querySelector('i');
+    if (html.classList.contains('light-theme')) {
+      icon.classList.replace('fa-moon', 'fa-sun');
+      localStorage.setItem('theme', 'light');
+    } else {
+      icon.classList.replace('fa-sun', 'fa-moon');
+      localStorage.setItem('theme', 'dark');
+    }
+  });
+} else {
+  console.log('themeToggleBtn not found');
+}
+
   
     // Profile dropdown
     const profileBtn = document.getElementById('profile-btn');
@@ -223,7 +252,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       });
     }
-  });
   function loadPage(pageUrl) {
     fetch(pageUrl)
       .then(response => response.text())
@@ -232,3 +260,4 @@ document.addEventListener('DOMContentLoaded', function() {
       })
       .catch(error => console.error('Error loading page:', error));
   }
+});

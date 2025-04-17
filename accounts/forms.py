@@ -1,5 +1,9 @@
 from django import forms
-from .models import Voter, User, Candidate
+from .models import User, Candidate
+from django.contrib.auth.forms import UserChangeForm
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class RegistrationForm(forms.ModelForm):
     """Form for user registration"""
@@ -20,21 +24,28 @@ class UserForm(forms.ModelForm):
             'dob': forms.DateInput(attrs={'type': 'date'}),
         }
 
-class VoterForm(forms.ModelForm):
-    username = forms.CharField(max_length=50, required=False)
-    dob = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), required=False)
-
-    class Meta:
-        model = Voter
-        fields = ['name', 'email']
-    
-    def __init__(self, *args, **kwargs):
-        super(VoterForm, self).__init__(*args, **kwargs)
-        if self.instance and hasattr(self.instance, 'user') and self.instance.user:
-            self.fields['username'].initial = self.instance.user.username
-            self.fields['dob'].initial = self.instance.user.dob
+# Voter form completely removed as you mentioned you only need the users table
 
 class CandidateForm(forms.ModelForm):
     class Meta:
         model = Candidate
         fields = ['name', 'age', 'post', 'description']
+
+
+class UserProfileForm(UserChangeForm):
+    """Form for updating user profile information"""
+
+    first_name = forms.CharField(max_length=30, required=False)
+    last_name = forms.CharField(max_length=30, required=False)
+    email = forms.EmailField(required=True)
+    phone = forms.CharField(max_length=15, required=False)
+
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'email', 'phone')
+        widgets = {
+            'first_name': forms.TextInput(attrs={'placeholder': 'First Name'}),
+            'last_name': forms.TextInput(attrs={'placeholder': 'Last Name'}),
+            'email': forms.EmailInput(attrs={'placeholder': 'Email'}),
+            'phone': forms.TextInput(attrs={'placeholder': 'Phone Number'}),
+        }

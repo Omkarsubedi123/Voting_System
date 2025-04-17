@@ -1,6 +1,6 @@
 {% load static %}
 <!-- templates/candidates/candidate_list.html -->
-{% extends 'base.html' %}
+<!-- {% extends 'base.html' %}
 
 {% block extra_head %}
   <link rel="stylesheet" href="{% static 'candidates.css' %}">
@@ -8,7 +8,7 @@
 
 {% block content %}
   <h1>Candidate Management</h1>
-  <a href="{% url 'candidate_create' %}">Add New Candidate</a>
+  <a style="text-decoration: none;" href="{% url 'candidate_create' %}">Add New Candidate</a>
   <table>
     <thead>
       <tr>
@@ -55,13 +55,13 @@
 {% endblock %}
 
 <!-- templates/candidates/candidate_form.html -->
-{% extends 'base.html' %}
+<!-- {% extends 'base.html' %}
 
 {% block extra_head %}
   <link rel="stylesheet" href="{% static 'candidates.css' %}">
-{% endblock %}
+{% endblock %} --> -->
 
-{% block content %}
+<!-- {% block content %}
   <h1>{% if form.instance.pk %}Edit Candidate{% else %}Add New Candidate{% endif %}</h1>
   <form method="post">
     {% csrf_token %}
@@ -69,12 +69,12 @@
     <button type="submit">Save</button>
     <a href="{% url 'candidate_list' %}">Cancel</a>
   </form>
-{% endblock %}
+{% endblock %} -->
 
 <!-- templates/candidates/candidate_confirm_delete.html -->
-{% extends 'base.html' %}
+<!-- {% extends 'base.html' %} -->
 
-{% block extra_head %}
+<!-- {% block extra_head %}
   <link rel="stylesheet" href="{% static 'candidates.css' %}">
 {% endblock %}
 
@@ -89,4 +89,4 @@
 
 {% block extra_js %}
 <script src="{% static 'candidates.js' %}"></script>
-{% endblock %}
+{% endblock %} -->

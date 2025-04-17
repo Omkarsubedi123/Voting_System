@@ -1,0 +1,204 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="dark-theme">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VoteAdmin - User Settings</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="{% static 'css/settings.css' %}">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90' x='0' y='80'>🗳️</text></svg>" />
+</head>
+<body>
+  <div id="app">
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <i class="fas fa-vote-yea"></i>
+        <span class="app-title">VoteAdmin</span>
+      </div>
+      <a href="{% url 'accounts:admin_page' %}" class="menu-item" data-page="dashboard">
+        <i class="fas fa-th-large"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="{% url 'accounts:users_list' %}" class="menu-item" data-page="voters">
+        <i class="fas fa-users"></i>
+        <span>Voters</span>
+      </a>
+      <a href="{% url 'accounts:candidate_list' %}" class="menu-item" data-page="candidates">
+        <i class="fas fa-user-tie"></i>
+        <span>Candidates</span>
+      </a>
+      <a href="{% url 'accounts:settings' %}" class="menu-item active" data-page="settings">
+        <i class="fas fa-cog"></i>
+        <span>Settings</span>
+      </a>
+    </div>
+
+    <div class="main-content">
+      <div class="header">
+        <div>
+          <h1 class="page-title">Settings</h1>
+          <p class="welcome-text">Manage your account preferences</p>
+        </div>
+        <div class="user-profile">
+          <button id="theme-toggle-btn" class="theme-toggle-btn" title="Toggle Light/Dark Mode">
+            <i class="fas fa-moon"></i>
+          </button>
+          <div class="profile-dropdown">
+            <button id="profile-btn" class="profile-btn">
+              <span class="profile-avatar">{{ user.first_name|first|default:'U' }}</span>
+              <span>Profile</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="profile-menu">
+              <div class="profile-info">
+                <i class="fas fa-user-circle"></i>
+                <span>{{ user.email }}</span>
+              </div>
+              <div class="profile-menu-divider"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Account Settings Section -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Account Settings</h2>
+        </div>
+        <div class="settings-content">
+          <!-- User Profile Section -->
+          <div class="user-profile-section">
+            <div class="user-profile-header">
+              <h3>User Profile</h3>
+              <p>Your account information</p>
+            </div>
+            <div class="user-profile-content">
+              <div class="user-avatar">
+                <div class="user-avatar-img">{{ user.first_name|first|default:'U' }}</div>
+              </div>
+              <div class="user-info">
+                <div class="user-info-item">
+                  <span class="user-info-label">Name</span>
+                  <span class="user-info-value">{{ user.first_name }} {{ user.last_name }}</span>
+                </div>
+                <div class="user-info-item">
+                  <span class="user-info-label">Email</span>
+                  <span class="user-info-value">{{ user.email }}</span>
+                </div>
+                <div class="user-info-item">
+                  <span class="user-info-label">Role</span>
+                  <span class="user-info-value">{% if user.is_staff %}Admin{% else %}Voter{% endif %}</span>
+                </div>
+                <div class="user-info-item">
+                  <span class="user-info-label">Last Login</span>
+                  <span class="user-info-value">{{ user.last_login|date:"M d, Y, h:i A" }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-divider"></div>
+
+          <div class="account-settings">
+            <h2>Manage</h2>
+            <div class="settings-container">
+              <!-- Edit Profile Option -->
+              <div class="settings-option">
+                <div class="settings-info">
+                  <i class="fas fa-user-edit"></i>
+                  <div>
+                    <h3>Edit Profile</h3>
+                    <p>Update your personal information</p>
+                  </div>
+                </div>
+                <button class="btn btn-primary" id="update-profile-btn">Edit Profile</button>
+              </div>
+
+             <!-- Logout Option -->
+            <div class="settings-option">
+              <div class="settings-info">
+                <i class="fas fa-sign-out-alt"></i>
+                <div>
+                  <h3>Logout</h3>
+                  <p>Sign out of your account</p>
+                </div>
+              </div>
+              <!-- Use Django URL template tag to generate the logout URL -->
+              <button type="button" class="btn logout-btn" id="logoutButton" data-logout-url="{% url 'accounts:login' %}">Logout</button>
+            </div>
+
+
+              <!-- Delete Account Option -->
+              <div class="settings-option">
+                <div class="settings-info">
+                  <i class="fas fa-user-slash"></i>
+                  <div>
+                    <h3>Delete Account</h3>
+                    <p>Permanently delete your account</p>
+                  </div>
+                </div>
+                <button class="btn" id="delete-account-btn">Delete Account</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Edit Profile Modal -->
+          <div id="update-profile-modal" class="modal">
+            <div class="modal-content">
+              <span class="close-modal">&times;</span>
+              <h2>Edit Profile</h2>
+              <form id="update-profile-form">
+                <div class="form-group">
+                  <label for="profile-first-name">First Name</label>
+                  <input type="text" id="profile-first-name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label for="profile-last-name">Last Name</label>
+                  <input type="text" id="profile-last-name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label for="profile-email">Email</label>
+                  <input type="email" id="profile-email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label for="profile-phone">Phone (Optional)</label>
+                  <input type="tel" id="profile-phone" class="form-control">
+                </div>
+                <div class="form-actions">
+                  <button type="button" class="btn btn-cancel close-update-profile-modal">Cancel</button>
+                  <button type="submit" class="btn btn-primary">Update Profile</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Delete Account Modal -->
+          <div id="delete-account-modal" class="modal">
+            <div class="modal-content">
+              <span class="close-modal">&times;</span>
+              <h2>Delete Account</h2>
+              <p>Warning: This action cannot be undone. All your data will be permanently deleted.</p>
+              <form id="delete-account-form">
+                <div class="form-group">
+                  <label for="delete-account-password">Enter your password to confirm</label>
+                  <input type="password" id="delete-account-password" class="form-control" required>
+                </div>
+                <div class="form-actions">
+                  <button type="button" class="btn btn-cancel close-delete-account-modal">Cancel</button>
+                  <button type="submit" class="btn" id="confirm-delete-btn" style="background-color: #ff5a5a; color: white;">Delete Account</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="{% static 'js/settings.js' %}"></script>
+
+
+</body>
+</html>

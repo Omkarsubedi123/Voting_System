@@ -18,25 +18,32 @@
         <span class="app-title">VoteAdmin</span>
       </div>
       <div class="menu-item active">
-        <a href="{% url 'admin_page' %}">
+        <a style="text-decoration: none; color: blue;" href="{% url 'accounts:admin_page' %}">
           <i class="fas fa-th-large"></i>
           <span>Dashboard</span>
-      </a>
-    </div>
-      <div class="menu-item">
-        <a href="{% url 'accounts:voters_list' %}">
-          <i class="fas fa-users"></i>
-          <span>Voters</span>
-      </a>
+        </a>
       </div>
       <div class="menu-item">
-        <a href="{% url 'accounts:candidate_list' %}">
+        <a style="text-decoration: none; color: blue;" href="{% url 'accounts:users_list' %}">
+          <i class="fas fa-users"></i>
+          <span>Voters</span>
+        </a>
+      </div>
+
+      <!-- <div class="menu-item">
+        <a href="{% url 'accounts:settings' %}">
+          <i class="fas fa-calendar-alt"></i>
+          <span>Settings</span>
+        </a> -->
+
+      <div class="menu-item">
+        <a style="text-decoration: none; color:blue;" href="{% url 'accounts:candidate_list' %}">
           <i class="fas fa-user-tie"></i>
           <span>Candidates</span>
         </a>
       </div>
       <div class="menu-item">
-        <a href="/settings/">
+        <a style="text-decoration: none;color: blue;" href="{% url 'accounts:settings' %}">
           <i class="fas fa-cog"></i>
           <span>Settings</span>
         </a>

@@ -29,23 +29,23 @@ class User(AbstractUser):
         db_table = 'users'
 
 
-class Voter(models.Model):
-    # Link to the User model
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='voter_profile', null=True, blank=True)
-    name = models.CharField(max_length=255, default="Unknown")
-    email = models.EmailField(unique=True, default="Unknown")
-    registered_at = models.DateTimeField(auto_now_add=True)
+# class Voter(models.Model):
+#     # Link to the User model
+#     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='voter_profile', null=True, blank=True)
+#     name = models.CharField(max_length=255, default="Unknown")
+#     email = models.EmailField(unique=True, default="Unknown")
+#     registered_at = models.DateTimeField(auto_now_add=True)
     
-    def save(self, *args, **kwargs):
-        if not self.registered_at:
-            self.registered_at = now().replace(microsecond=0)  # Remove microseconds
-        super().save(*args, **kwargs)
+#     def save(self, *args, **kwargs):
+#         if not self.registered_at:
+#             self.registered_at = now().replace(microsecond=0)  # Remove microseconds
+#         super().save(*args, **kwargs)
     
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
     
-    class Meta:
-        db_table = 'voters'
+#     class Meta:
+#         db_table = 'voters'
 
 
 class People(models.Model):
