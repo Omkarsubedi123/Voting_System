@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Online Voting System</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="login-box">
+            <div class="logo">
+                <i class="fas fa-check-square"></i>
+            </div>
+            <h2>Register</h2>
+            <p>Create your voting account</p>
+
+            <form action="{% url 'accounts:register' %}" method="POST">
+                {% csrf_token %}
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <div class="input-box">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="dob">Date of Birth</label>
+                    <div class="input-box">
+                        <i class="fas fa-calendar-alt"></i>
+                        <input type="date" id="dob" name="dob" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <div class="input-box">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <div class="input-box">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                        <i class="fas fa-eye toggle-password" onclick="togglePassword('password', this)"></i>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="confirm_password">Confirm Password</label>
+                    <div class="input-box">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm your password" required>
+                        <i class="fas fa-eye toggle-password" onclick="togglePassword('confirm_password', this)"></i>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="user_type">Register as</label>
+                    <div class="input-box">
+                        <i class="fas fa-user-tag"></i>
+                        <select id="user_type" name="user_type" required>
+                            <option value="voter">General Voter</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                        {% if messages %}
+                        <div class="messages">
+                            {% for message in messages %}
+                                <div class="alert {{ message.tags }}">{{ message }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                </div>      
+
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-user-plus"></i> Register
+                </button>
+            </form>
+
+            <div class="register">
+                <p>Already have an account?</p>
+                <a href="{% url 'accounts:login' %}">Login <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>    
+
+        <script>
+            function togglePassword(id, element) {
+                var input = document.getElementById(id);
+                if (input.type === "password") {
+                    input.type = "text";
+                    element.classList.remove("fa-eye");
+                    element.classList.add("fa-eye-slash");
+                } else {
+                    input.type = "password";
+                    element.classList.remove("fa-eye-slash");
+                    element.classList.add("fa-eye");
+                }
+            }
+        </script>
+    </div>
+</body>
+</html>
