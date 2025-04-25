@@ -8,7 +8,7 @@ app_name = 'accounts'  # This defines the namespace
 urlpatterns = [
     path('', views.home, name='home'),
     path('login/', views.user_login, name='login'),
-    path('logout/', auth_views.LogoutView.as_view(next_page='accounts:login'), name='logout'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='accounts:home'), name='logout'),
     path('register/', views.user_register, name='register'),
     
     path('admin-dashboard/', views.admin_page, name='admin_page'),

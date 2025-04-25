@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login,authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
@@ -8,25 +8,45 @@ from django.db.models import Q
 from .models import User, Candidate
 from .forms import RegistrationForm, CandidateForm, UserForm, UserProfileForm
 from django.contrib.auth import update_session_auth_hash
-from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_protect
-
-
-# views.py for the accounts app
-
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
-from django.views.decorators.http import require_POST
-import json
 from django.contrib.auth.forms import PasswordChangeForm
+import json
 
+# ===== Basic Pages =====
 
 def home(request):
+    """Render the home page"""
     return render(request, 'accounts/home.html')
 
+def about(request): 
+    """Render the about page"""
+    return render(request, 'accounts/about.html')
+
+def how_it_works(request): 
+    """Render how it works page"""
+    return render(request, 'accounts/how_it_works.html')
+
+def security(request): 
+    """Render the security page"""
+    return render(request, 'accounts/security.html')
+
+def faq(request): 
+    """Render the FAQ page"""
+    return render(request, 'accounts/faq.html')
+
+def elections(request): 
+    """Render the elections page"""
+    return render(request, 'accounts/elections.html')
+
+def results(request): 
+    """Render the results page"""
+    return render(request, 'accounts/results.html')
+
+# ===== User Registration/Login =====
+
 def user_register(request):
+    """Handle user registration"""
     if request.method == 'POST':
         username = request.POST.get('username')
         email = request.POST.get('email')
@@ -56,6 +76,7 @@ def user_register(request):
     return render(request, 'accounts/register.html')
 
 def user_login(request):
+    """Handle user login"""
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -77,290 +98,197 @@ def user_login(request):
 
     return render(request, 'accounts/login.html')
 
-# ===== About and Information Pages =====
+@login_required
+def logout_view(request):
+    """Log out the user and redirect to login"""
+    logout(request)
+    messages.success(request, 'You have been successfully logged out.')
+    return redirect('accounts:login')
 
-def about(request): 
-    return render(request, 'accounts/about.html')
-
-def how_it_works(request): 
-    return render(request, 'accounts/how_it_works.html')
-
-def security(request): 
-    return render(request, 'accounts/security.html')
-
-def faq(request): 
-    return render(request, 'accounts/faq.html')
-
-def elections(request): 
-    return render(request, 'accounts/elections.html')
-
-def results(request): 
-    return render(request, 'accounts/results.html')
-
-# ===== Admin Pages =====
+# ===== Admin Dashboard =====
 
 @login_required
 def admin_page(request):
+    """Admin dashboard page"""
     return render(request, 'accounts/admin.html')
 
 # ===== User Management =====
 
 @login_required
 def users_list(request):
-    # Fetch all users with user_type='user', ordered by newest first
+    """List of users with pagination and search"""
     users = User.objects.filter(user_type='user').order_by('-id')
-    
-    # Apply search filter if provided
     search_query = request.GET.get('q', '')
     if search_query:
-        users = users.filter(
-            Q(username__icontains=search_query) | Q(email__icontains=search_query)
-        )
-    
-    # Set up pagination
+        users = users.filter(Q(username__icontains=search_query) | Q(email__icontains=search_query))
     paginator = Paginator(users, 10)
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
-    
-    context = {
+    return render(request, 'accounts/user_list.html', {
         'page_obj': page_obj,
         'total_entries': users.count(),
-        'search_query': search_query,
-    }
-    
-    return render(request, 'accounts/user_list.html', context)
+        'search_query': search_query
+    })
 
 @login_required
 def user_detail(request, user_id):
+    """User detail view, supports AJAX"""
     user = get_object_or_404(User, id=user_id, user_type='user')
-    
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        data = {
+        return JsonResponse({
             'id': user.id,
             'username': user.username,
             'email': user.email,
             'dob': user.dob.strftime('%Y-%m-%d') if user.dob else None,
-        }
-        return JsonResponse(data)
-    
+        })
     return render(request, 'accounts/user_detail.html', {'user': user})
 
 def add_user(request):
+    """Add a new user (AJAX supported)"""
     if request.method == 'POST':
         form = UserForm(request.POST)
         if form.is_valid():
             user = form.save()
-            messages.success(request, "User added successfully!")
-            
-            # If AJAX request, return JSON
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                data = {
+                return JsonResponse({
                     'id': user.id,
                     'username': user.username,
                     'email': user.email,
                     'dob': user.dob.strftime('%Y-%m-%d') if user.dob else None,
                     'success': True
-                }
-                return JsonResponse(data)
-                
+                })
             return redirect(reverse('accounts:users_list') + '?added=true')
 
 @login_required
 def edit_user(request, user_id):
+    """Edit a user"""
     user = get_object_or_404(User, id=user_id, user_type='user')
-    
-    if request.method == 'POST':
-        form = UserForm(request.POST, instance=user)
-        if form.is_valid():
-            form.save()
-            return redirect('accounts:users_list')
-    else:
-        form = UserForm(instance=user)
-    
+    form = UserForm(request.POST or None, instance=user)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        return redirect('accounts:users_list')
     return render(request, 'accounts/edit_user.html', {'form': form, 'user': user})
 
 @login_required
 def delete_user(request, user_id):
+    """Delete a user"""
     user = get_object_or_404(User, id=user_id, user_type='user')
-    
     if request.method == 'POST':
         user.delete()
         return redirect('accounts:users_list')
-    
     return render(request, 'accounts/delete_user.html', {'user': user})
 
 @login_required
 def voter_edit(request, voter_id):
+    """Edit voter details"""
     user = get_object_or_404(User, id=voter_id, user_type='user')
-
-    if request.method == 'POST':
-        form = UserForm(request.POST, instance=user)
-        if form.is_valid():
-            form.save()
-            return redirect('accounts:users_list')
-    else:
-        form = UserForm(instance=user)
-
+    form = UserForm(request.POST or None, instance=user)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        return redirect('accounts:users_list')
     return render(request, 'accounts/voter_edit.html', {'form': form, 'user': user})
-
 
 @login_required
 def voter_delete(request, voter_id):
+    """Delete voter after confirmation"""
     user = get_object_or_404(User, id=voter_id, user_type='user')
-
     if request.method == 'POST':
         user.delete()
         return redirect('accounts:users_list')
-
     return render(request, 'accounts/voter_confirm_delete.html', {'user': user})
 
 @login_required
-def settings_view(request):
-    """
-    Display the user settings page
-    """
-    user = request.user
-    context = {
-        'user': user,
-    }
-    return render(request, 'accounts/settings.html', context)
+def ajax_voter_details(request, voter_id):
+    """Return voter details via AJAX for modals"""
+    if not request.user.is_admin:
+        return JsonResponse({'error': 'Access denied'}, status=403)
+    try:
+        user = User.objects.get(id=voter_id, user_type='user')
+        return JsonResponse({
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'dob': user.dob.strftime('%Y-%m-%d') if user.dob else None,
+        })
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
+
+# ===== User Settings =====
 
 @login_required
 def settings_view(request):
-    """
-    Display user settings page
-    """
+    """Render user settings page"""
     return render(request, 'accounts/settings.html')
-
 
 @login_required
 @csrf_protect
 @require_POST
 def update_profile(request):
-    """
-    API endpoint to update user profile
-    """
+    """API endpoint to update user profile"""
     try:
         data = json.loads(request.body)
         user = request.user
-        
-        # Update user data
         user.first_name = data.get('first_name', user.first_name)
         user.last_name = data.get('last_name', user.last_name)
         user.email = data.get('email', user.email)
-        
-        # Handle phone if your User model has this field
         if hasattr(user, 'phone'):
             user.phone = data.get('phone', user.phone)
-        
         user.save()
-        
-        return JsonResponse({
-            'status': 'success',
-            'message': 'Profile updated successfully'
-        })
+        return JsonResponse({'status': 'success', 'message': 'Profile updated successfully'})
     except Exception as e:
-        return JsonResponse({
-            'status': 'error',
-            'message': str(e)
-        }, status=400)
-
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
 @login_required
 @csrf_protect
 @require_POST
 def change_password(request):
-    """
-    API endpoint to change user password
-    """
+    """API endpoint to change password"""
     try:
         data = json.loads(request.body)
         user = request.user
         current_password = data.get('current_password', '')
         new_password = data.get('new_password', '')
         confirm_password = data.get('confirm_password', '')
-        
-        # Check if current password is correct
+
         if not user.check_password(current_password):
-            return JsonResponse({
-                'status': 'error',
-                'message': 'Current password is incorrect'
-            }, status=400)
-        
-        # Check if new passwords match
+            return JsonResponse({'status': 'error', 'message': 'Current password is incorrect'}, status=400)
         if new_password != confirm_password:
-            return JsonResponse({
-                'status': 'error',
-                'message': 'New passwords do not match'
-            }, status=400)
-        
-        # Update password
+            return JsonResponse({'status': 'error', 'message': 'New passwords do not match'}, status=400)
+
         user.set_password(new_password)
         user.save()
-        
-        # Update session to prevent logout
         update_session_auth_hash(request, user)
-        
-        return JsonResponse({
-            'status': 'success',
-            'message': 'Password changed successfully'
-        })
-    except Exception as e:
-        return JsonResponse({
-            'status': 'error',
-            'message': str(e)
-        }, status=400)
 
+        return JsonResponse({'status': 'success', 'message': 'Password changed successfully'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
 @login_required
 @csrf_protect
 @require_POST
 def delete_profile(request):
-    """
-    API endpoint to delete/deactivate user profile
-    """
+    """API endpoint to deactivate user profile"""
     try:
         data = json.loads(request.body)
         user = request.user
         password = data.get('password', '')
-        
-        # Validate password
+
         if not user.check_password(password):
-            return JsonResponse({
-                'status': 'error', 
-                'message': 'Password is incorrect'
-            }, status=400)
-        
-        # Deactivate user instead of deleting
+            return JsonResponse({'status': 'error', 'message': 'Password is incorrect'}, status=400)
+
         user.is_active = False
         user.save()
         logout(request)
-        
-        return JsonResponse({
-            'status': 'success',
-            'message': 'Account deactivated successfully'
-        })
+
+        return JsonResponse({'status': 'success', 'message': 'Account deactivated successfully'})
     except Exception as e:
-        return JsonResponse({
-            'status': 'error',
-            'message': str(e)
-        }, status=400)
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
-
-@login_required
-def logout_view(request):
-    """
-    Logout the user and redirect to login page
-    """
-    logout(request)
-    messages.success(request, 'You have been successfully logged out.')
-    return redirect('accounts:user_login')
-  
-
-# ===== Candidate Management =====
+# ===== Candidate Management (Admin only) =====
 
 @login_required
 def candidate_list(request):
+    """List all candidates"""
     if not request.user.is_admin:
         messages.error(request, "Access Denied! Admins Only.")
         return redirect('accounts:home')
@@ -368,6 +296,7 @@ def candidate_list(request):
 
 @login_required
 def candidate_create(request):
+    """Create a new candidate"""
     if not request.user.is_admin:
         messages.error(request, "Access Denied! Admins Only.")
         return redirect('accounts:home')
@@ -380,6 +309,7 @@ def candidate_create(request):
 
 @login_required
 def candidate_update(request, pk):
+    """Update candidate"""
     if not request.user.is_admin:
         messages.error(request, "Access Denied! Admins Only.")
         return redirect('accounts:home')
@@ -393,6 +323,7 @@ def candidate_update(request, pk):
 
 @login_required
 def candidate_delete(request, pk):
+    """Delete a candidate"""
     if not request.user.is_admin:
         messages.error(request, "Access Denied! Admins Only.")
         return redirect('accounts:home')
@@ -403,29 +334,12 @@ def candidate_delete(request, pk):
         return redirect('accounts:candidate_list')
     return render(request, 'accounts/candidate_confirm_delete.html', {'candidate': candidate})
 
-# ===== Utility Functions =====
+# ===== Theme Toggle =====
 
 @login_required
 def toggle_theme(request):
+    """Toggle between light and dark themes"""
     current_theme = request.session.get('theme', 'light')
     new_theme = 'dark' if current_theme == 'light' else 'light'
     request.session['theme'] = new_theme
     return JsonResponse({'theme': new_theme})
-@login_required
-def ajax_voter_details(request, voter_id):
-    """Return voter details via AJAX"""
-    if not request.user.is_admin:
-        return JsonResponse({'error': 'Access denied'}, status=403)
-
-    try:
-        # Since we're using User model instead of Voter model in the cleaned code
-        user = User.objects.get(id=voter_id, user_type='user')
-        data = {
-            'id': user.id,
-            'username': user.username,
-            'email': user.email,
-            'dob': user.dob.strftime('%Y-%m-%d') if user.dob else None,
-        }
-        return JsonResponse(data)
-    except User.DoesNotExist:
-        return JsonResponse({'error': 'User not found'}, status=404)

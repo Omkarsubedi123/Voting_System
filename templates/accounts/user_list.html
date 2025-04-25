@@ -4,7 +4,7 @@
 {% block title %}User Management{% endblock %}
 
 {% block content %}
-<h1 style="color: red; font-size: 30px; margin-left: 10px; margin-top: 15px;">Users List</h1>
+<h1 class="users-list-title">Users List</h1>
 
 <div style="padding-top:20px ;" class="container-fluid px-4">
     <div class="card mb-4">
@@ -16,25 +16,48 @@
             </div>
           
         </div>
-        <div style="display: flex; flex-direction: column;" class="card-body">
+        <div class="card-body">
             <!-- Search Form -->
             <div class="row mb-3">
                 <div class="col-md-6 ">
-                    <form style="display:flex; gap:12px; padding-left: 10px;" method="get">
-                        <input 
-                        type="text" 
-                        name="q" 
-                        class="form-control rounded-pill shadow-sm border border-4 border-danger px-4 fs-5" 
-                        style="width: 400px; height: 40px; padding-left: 10px; font-size: 16px; border-radius: 10px;"
-                        placeholder="🔍 Search by name or email" 
-                        value="{{ search_query }}">
-                    
-                        <button style="width: 120px; height: 38px; border-radius: 10px;" type="submit" class="btn btn-primary ms-2">Search</button>
+                    <form class="search-form" method="get">
+                        <div class="search-form-fields" style="display: flex; align-items: center; gap: 0.75rem; margin-top: 1rem; flex-wrap: wrap;">
+                            <input 
+                              type="text" 
+                              name="q" 
+                              class="form-control" 
+                              placeholder="🔍 Search by name or email" 
+                              value="{{ search_query }}"
+                              style="
+                                border-radius: 50px; 
+                                padding: 0.6rem 1.2rem; 
+                                font-size: 1rem; 
+                                border: 2px solid #ccc; 
+                                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+                                transition: all 0.3s ease; 
+                                min-width: 250px; 
+                                flex-grow: 1;
+                              "
+                            >
+                            
+                            <button 
+                              type="submit" 
+                              class="btn btn-primary" 
+                              style="
+                                padding: 0.6rem 1.4rem; 
+                                font-size: 1rem; 
+                                border-radius: 30px; 
+                                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); 
+                                transition: all 0.3s ease;
+                              "
+                            >
+                              Search
+                            </button>
+                          </div>
+                          
                         {% if search_query %}
                             <a href="{% url 'accounts:users_list' %}" class="btn btn-secondary ms-2">Clear</a>
                         {% endif %}
-                    </form>
-                </div>
             </div>
 
             <!-- Users Table -->

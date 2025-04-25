@@ -352,6 +352,8 @@ html:not(.light-theme) .theme-toggle-btn .fa-sun {
   justify-content: center;
   font-size: 0.9rem;
   transition: background-color 0.2s ease;
+  margin-bottom: 10px;
+  width: 70px;
 }
 
 .btn i {

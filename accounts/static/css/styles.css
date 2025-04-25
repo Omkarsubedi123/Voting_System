@@ -160,3 +160,45 @@ label {
     cursor: pointer;
 }
 
+/* Custom Styles */
+.users-list-title {
+    color: red;
+    font-size: 30px;
+    margin-left: 10px;
+    margin-top: 15px;
+}
+
+.search-form-container {
+    display:flex; 
+    gap:12px; 
+    padding-left: 10px;
+}
+
+.search-input {
+    width: 400px; 
+    height: 40px; 
+    padding-left: 10px; 
+    font-size: 16px; 
+    border-radius: 10px;
+}
+
+.search-button {
+    width: 120px; 
+    height: 38px; 
+    border-radius: 10px;
+}
+
+.add-candidate-container {
+    padding: 40px;
+}
+
+.add-candidate-btn {
+    text-decoration: none; 
+    max-width: fit-content; 
+    float: right;
+}
+
+.edit-candidate-link,
+.delete-candidate-link {
+    text-decoration: none;
+}
