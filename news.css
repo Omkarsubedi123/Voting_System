@@ -1,0 +1,17 @@
+/* News Section Specific Styles */
+
+.news-section {
+    padding: 0;
+  }
+  
+  .news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 25px;
+  }
+  
+  @media (max-width: 768px) {
+    .news-grid {
+      grid-template-columns: 1fr;
+    }
+  }
