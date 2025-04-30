@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.read-more').forEach(link => {
       link.addEventListener('click', function(e) {
         e.preventDefault();
-        alert('Feature coming soon: Full article view!');
+        alert('Feature coming soon...');
       });
     });
   });
