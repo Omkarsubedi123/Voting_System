@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings Page</title>
+  <link rel="stylesheet" href="../static/css/settings.css">
+</head>
+<body>
+  <!-- Theme Toggle -->
+  <button id="theme-toggle" class="btn toggle-theme" title="Toggle Theme">
+    <span id="theme-icon">🌙</span>
+  </button>
+
+  <!-- Settings Section -->
+  <div class="settings-section fade-in">
+    <div class="settings-card">
+      <div class="settings-header">
+        <span class="settings-title">Account Preferences</span>
+      </div>
+      <form class="settings-form" id="settings-form">
+        <div class="form-group">
+          <label class="form-label" for="user-name">Display Name</label>
+          <input class="form-input" type="text" name="displayName" id="user-name" placeholder="Enter your name" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="notification-toggle">Email Notifications</label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="notification-toggle" />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="language">Preferred Language</label>
+          <select class="form-select" id="language">
+            <option value="en">English</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+          </select>
+        </div>
+        <div class="settings-actions">
+          <button class="btn btn-primary" type="submit">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const settingsForm = document.getElementById('settings-form');
+      const themeToggle = document.getElementById('theme-toggle');
+      const themeIcon = document.getElementById('theme-icon');
+
+      // Handle settings form submission
+      if (settingsForm) {
+        settingsForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          alert('Settings saved! Changes will take effect soon.');
+        });
+      }
+
+      // Apply saved theme or default
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        document.body.classList.add(savedTheme);
+        themeIcon.textContent = savedTheme === 'dark' ? '🌞' : '🌙';
+      } else {
+        document.body.classList.add('light');
+      }
+
+      // Toggle theme
+      themeToggle.addEventListener('click', function () {
+        if (document.body.classList.contains('dark')) {
+          document.body.classList.remove('dark');
+          document.body.classList.add('light');
+          localStorage.setItem('theme', 'light');
+          themeIcon.textContent = '🌙';
+        } else {
+          document.body.classList.remove('light');
+          document.body.classList.add('dark');
+          localStorage.setItem('theme', 'dark');
+          themeIcon.textContent = '🌞';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
