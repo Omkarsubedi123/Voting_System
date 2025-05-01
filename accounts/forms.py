@@ -11,7 +11,7 @@ class RegistrationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'dob', 'user_type', 'password']
+        fields = ['user_id', 'email', 'dob', 'user_type', 'password']
         widgets = {
             'dob': forms.DateInput(attrs={'type': 'date'}),
         }
@@ -19,7 +19,7 @@ class RegistrationForm(forms.ModelForm):
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'email', 'dob', 'user_type']
+        fields = ['user_id', 'email', 'dob', 'user_type']
         widgets = {
             'dob': forms.DateInput(attrs={'type': 'date'}),
         }

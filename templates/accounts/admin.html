@@ -6,6 +6,7 @@
 {% block content %}
 
   <div class="header">
+    <!-- Font Awesome stylesheet can remain here if needed -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <div>
@@ -14,6 +15,7 @@
     </div>
 
     <div class="user-profile">
+      <!-- Theme toggle button: only available on Dashboard -->
       <button id="theme-toggle-btn" class="theme-toggle-btn" title="Toggle Light/Dark Mode">
         <i class="fas fa-moon"></i>
       </button>
@@ -29,10 +31,9 @@
             <span>{{ user.email }}</span>
           </div>
           <div class="profile-menu-divider"></div>
-          <a href="{% url 'accounts:logout' %}" class="profile-menu-item">
+          <a href="{% url 'accounts:home' %}" class="profile-menu-item">
             <i class="fas fa-sign-out-alt"></i>
             <span>Logout</span>
-        </a>
           </a>
         </div>
       </div>

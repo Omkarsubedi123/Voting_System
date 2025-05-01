@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" class="dark-theme">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,7 +12,7 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90' x='0' y='80'>🗳️</text></svg>" />
 
   <style>
-    /* Theme support */
+    /* Theme styles */
     .light-theme {
       background-color: #f4f4f4;
       color: #222;
@@ -21,27 +21,11 @@
       background-color: #222;
       color: #f4f4f4;
     }
-
-    #theme-toggle-btn {
-      position: fixed;
-      top: 15px;
-      right: 20px;
-      z-index: 1000;
-      background: none;
-      border: none;
-      color: inherit;
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
   </style>
 
   {% block extra_head %}{% endblock %}
 </head>
 <body>
-  <button id="theme-toggle-btn" title="Toggle Theme">
-    <i class="fas fa-moon"></i>
-  </button>
-
   <div id="app">
     <div class="sidebar">
       <div class="sidebar-header">
@@ -49,22 +33,22 @@
         <span class="app-title">VoteAdmin</span>
       </div>
 
-      <a class="menu-item active" href="{% url 'accounts:admin_page' %}">
+      <a class="menu-item {% if request.resolver_match.url_name == 'admin_page' %}active{% endif %}" href="{% url 'accounts:admin_page' %}">
         <i class="fas fa-th-large"></i>
         <span>Dashboard</span>
       </a>
 
-      <a class="menu-item" href="{% url 'accounts:users_list' %}">
+      <a class="menu-item {% if request.resolver_match.url_name == 'users_list' %}active{% endif %}" href="{% url 'accounts:users_list' %}">
         <i class="fas fa-users"></i>
         <span>Voters</span>
       </a>
 
-      <a class="menu-item" href="{% url 'accounts:candidate_list' %}">
+      <a class="menu-item {% if request.resolver_match.url_name == 'candidate_list' %}active{% endif %}" href="{% url 'accounts:candidate_list' %}">
         <i class="fas fa-user-tie"></i>
         <span>Candidates</span>
       </a>
 
-      <a class="menu-item" href="{% url 'accounts:settings' %}">
+      <a class="menu-item {% if request.resolver_match.url_name == 'settings' %}active{% endif %}" href="{% url 'accounts:settings' %}">
         <i class="fas fa-cog"></i>
         <span>Settings</span>
       </a>
@@ -75,26 +59,18 @@
     </div>
   </div>
 
+  <!-- Apply saved theme (no toggle button here) -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const themeToggleBtn = document.getElementById('theme-toggle-btn');
-      const icon = themeToggleBtn?.querySelector('i');
       const html = document.documentElement;
-
+      // If the user saved a 'light' theme in localStorage, apply it; otherwise, default to dark
       if (localStorage.getItem('theme') === 'light') {
         html.classList.add('light-theme');
         html.classList.remove('dark-theme');
-        icon?.classList.replace('fa-moon', 'fa-sun');
+      } else {
+        html.classList.add('dark-theme');
+        html.classList.remove('light-theme');
       }
-
-      themeToggleBtn?.addEventListener('click', () => {
-        html.classList.toggle('light-theme');
-        html.classList.toggle('dark-theme');
-
-        const isLight = html.classList.contains('light-theme');
-        icon?.classList.replace(isLight ? 'fa-moon' : 'fa-sun', isLight ? 'fa-sun' : 'fa-moon');
-        localStorage.setItem('theme', isLight ? 'light' : 'dark');
-      });
     });
   </script>
 

@@ -49,4 +49,9 @@ urlpatterns = [
     path('how-it-works/', views.how_it_works, name='how_it_works'),
     path('security/', views.security, name='security'),
     path('faq/', views.faq, name='faq'),
+    path('user/', views.user_page, name='user_page'),
+    
+    path('about/', views.about, name='about'),
+
+
 ]

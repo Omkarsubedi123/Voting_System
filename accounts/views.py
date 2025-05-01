@@ -12,6 +12,13 @@ from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.forms import PasswordChangeForm
 import json
+import random
+import string
+
+def generate_user_id(length=10):
+    """Generate a random string of letters and digits"""
+    characters = string.ascii_letters + string.digits
+    return ''.join(random.choice(characters) for _ in range(length))
 
 # ===== Basic Pages =====
 
@@ -60,15 +67,22 @@ def user_register(request):
             return render(request, 'accounts/register.html')
 
         try:
-            user = User.objects.create_user(
+            # Generate a unique user_id
+            user_id = generate_user_id()
+            while User.objects.filter(user_id=user_id).exists():
+                user_id = generate_user_id()
+
+            user = User(
                 username=username,
                 email=email,
                 dob=dob,
-                password=password,
-                user_type=user_type
+                user_type=user_type,
             )
-            messages.success(request, "Registration successful! Please log in.")
-            return redirect('accounts:login')
+            user.user_id = user_id
+            user.set_password(password)
+            user.save()
+            messages.success(request, f"Registration successful! Your User ID is: {user.user_id}")
+            return render(request, 'accounts/register.html')
         except Exception as e:
             messages.error(request, f"Registration failed: {str(e)}")
             return render(request, 'accounts/register.html')
@@ -90,7 +104,7 @@ def user_login(request):
                 if user_type == 'admin':
                     return redirect('accounts:admin_page')
                 else:
-                    return redirect('accounts:home')
+                    return redirect('accounts:user_page')
             else:
                 messages.error(request, 'Invalid user type selected.')
         else:
@@ -343,3 +357,7 @@ def toggle_theme(request):
     new_theme = 'dark' if current_theme == 'light' else 'light'
     request.session['theme'] = new_theme
     return JsonResponse({'theme': new_theme})
+
+def user_page(request):
+    """Render the user page"""
+    return render(request, 'accounts/user.html')

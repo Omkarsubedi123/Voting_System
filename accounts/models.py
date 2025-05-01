@@ -3,47 +3,55 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from django.utils.timezone import now
 
+
 class User(AbstractUser):
     USER_TYPE_CHOICES = [
         ('admin', 'Admin'),
         ('user', 'General User'),
     ]
-    
-    username = models.CharField(_('username'), max_length=50, unique=True)
+
+    # Remove username and replace with user_id
+    username = None
+    user_id = models.CharField(_('user ID'), max_length=10, unique=True, blank=True, null=True)
     email = models.EmailField(_('email address'), unique=True)
-    dob = models.DateField(_('date of birth'))
+    dob = models.DateField(_('date of birth'), blank=True, null=True)
     user_type = models.CharField(
         _('user type'),
         max_length=10,
         choices=USER_TYPE_CHOICES,
         default='user'
     )
-    
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['user_id', 'dob', 'user_type']
+
+    USERNAME_FIELD = 'user_id'  # This is now the login field
+    REQUIRED_FIELDS = ['email', 'dob', 'user_type']
+
     def __str__(self):
-        return self.username
-    
+        return self.user_id
+
     def is_admin(self):
         return self.user_type == 'admin'
-    
+
     class Meta:
         db_table = 'users'
 
 
 # class Voter(models.Model):
-#     # Link to the User model
 #     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='voter_profile', null=True, blank=True)
 #     name = models.CharField(max_length=255, default="Unknown")
 #     email = models.EmailField(unique=True, default="Unknown")
 #     registered_at = models.DateTimeField(auto_now_add=True)
-    
+
 #     def save(self, *args, **kwargs):
 #         if not self.registered_at:
-#             self.registered_at = now().replace(microsecond=0)  # Remove microseconds
+#             self.registered_at = now().replace(microsecond=0)
 #         super().save(*args, **kwargs)
-    
+
 #     def __str__(self):
 #         return self.name
-    
+
 #     class Meta:
 #         db_table = 'voters'
 

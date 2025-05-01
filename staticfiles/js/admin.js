@@ -1,154 +1,120 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Theme toggling
-    const themeToggleBtn = document.getElementById('theme-toggle-btn');
-    const html = document.documentElement;
-  
-    themeToggleBtn.addEventListener('click', function() {
+document.addEventListener('DOMContentLoaded', function () {
+  // ========================
+  // Theme Toggling
+  // ========================
+  const themeToggleBtn = document.getElementById('theme-toggle-btn');
+  const html = document.documentElement;
+
+  if (themeToggleBtn) {
+    // Load theme from localStorage
+    if (localStorage.getItem('theme') === 'light') {
+      html.classList.add('light-theme');
+      themeToggleBtn.querySelector('i').classList.replace('fa-moon', 'fa-sun');
+    }
+
+    // Toggle theme and store it
+    themeToggleBtn.addEventListener('click', function () {
       html.classList.toggle('light-theme');
-  
+
       const icon = themeToggleBtn.querySelector('i');
       if (html.classList.contains('light-theme')) {
-        icon.classList.remove('fa-moon');
-        icon.classList.add('fa-sun');
+        icon.classList.replace('fa-moon', 'fa-sun');
+        localStorage.setItem('theme', 'light');
       } else {
-        icon.classList.remove('fa-sun');
-        icon.classList.add('fa-moon');
+        icon.classList.replace('fa-sun', 'fa-moon');
+        localStorage.setItem('theme', 'dark');
       }
     });
-  
-    // Profile dropdown
-    const profileBtn = document.getElementById('profile-btn');
-    const profileDropdown = document.querySelector('.profile-dropdown');
-  
-    profileBtn.addEventListener('click', function() {
+  }
+
+  // ========================
+  // Profile Dropdown Toggle
+  // ========================
+  const profileBtn = document.getElementById('profile-btn');
+  const profileDropdown = document.querySelector('.profile-dropdown');
+
+  if (profileBtn && profileDropdown) {
+    profileBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
       profileDropdown.classList.toggle('active');
     });
-  
-    // Close profile dropdown when clicking outside
-    document.addEventListener('click', function(event) {
-      if (!profileDropdown.contains(event.target) && !profileBtn.contains(event.target)) {
+
+    document.addEventListener('click', function (e) {
+      if (!profileDropdown.contains(e.target) && !profileBtn.contains(e.target)) {
         profileDropdown.classList.remove('active');
       }
     });
-  
-    // Navigation (REMOVED)
-    // const menuItems = document.querySelectorAll('.menu-item');
-    // const pageContents = document.querySelectorAll('.page-content');
-    // const pageTitle = document.querySelector('.page-title');
+  }
 
-    // menuItems.forEach(item => {
-    //   item.addEventListener('click', function(event) {
-    //     // Check if the clicked element is a link
-    //     if (this.tagName === 'A') {
-    //       // Do nothing, let the link handle the navigation
-    //       return;
-    //     }
+  // ========================
+  // Pagination Buttons
+  // ========================
+  const paginationButtons = document.querySelectorAll('.pagination-btn');
 
-    //     const targetPage = this.getAttribute('data-page');
-
-    //     // Update active menu item
-    //     menuItems.forEach(mi => mi.classList.remove('active'));
-    //     this.classList.add('active');
-
-    //     // Show target page
-    //     pageContents.forEach(pc => pc.classList.remove('active'));
-    //     document.getElementById(targetPage + '-page').classList.add('active');
-
-    //     // Update page title
-    //     switch (targetPage) {
-    //       case 'dashboard':
-    //         pageTitle.textContent = 'Dashboard Overview';
-    //         break;
-    //       case 'voters':
-    //         pageTitle.textContent = 'Voter Management';
-    //         break;
-    //       case 'candidates':
-    //         pageTitle.textContent = 'Candidate Management';
-    //         break;
-    //       case 'settings':
-    //         pageTitle.textContent = 'Settings';
-    //         break;
-    //       default:
-    //         pageTitle.textContent = 'Dashboard';
-    //     }
-    //   });
-    // });
-  
-    // Voter pagination
-    const paginationButtons = document.querySelectorAll('.pagination-btn');
-  
-    if (paginationButtons.length > 0) {
-      paginationButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          // If not active already (don't do anything when clicking the current active page)
-          if (!this.classList.contains('active')) {
-            // Remove active class from all pagination buttons
-            paginationButtons.forEach(btn => btn.classList.remove('active'));
-  
-            // Add active class to clicked button
-            this.classList.add('active');
-  
-            // In a real application, you would fetch the appropriate page of voter data here
-            console.log(`Changing page`);
-          }
-        });
+  if (paginationButtons.length > 0) {
+    paginationButtons.forEach(button => {
+      button.addEventListener('click', function () {
+        if (!this.classList.contains('active')) {
+          paginationButtons.forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+          console.log('Changing page');
+        }
       });
-    }
-  
-    // Candidate modal handling
-    const newCandidateBtn = document.getElementById('new-candidate-btn');
-    const candidateModal = document.getElementById('candidate-modal');
-    const cancelCandidateBtn = document.getElementById('cancel-candidate');
-    const closeModalBtns = document.querySelectorAll('.close-modal');
-    const candidateForm = document.getElementById('candidate-form');
-  
-    if (newCandidateBtn) {
-      newCandidateBtn.addEventListener('click', function() {
-        document.getElementById('modal-title').textContent = 'Add New Candidate';
-        candidateModal.style.display = 'block';
-      });
-    }
-  
-    if (cancelCandidateBtn) {
-      cancelCandidateBtn.addEventListener('click', function() {
-        candidateModal.style.display = 'none';
-      });
-    }
-  
+    });
+  }
+
+  // ========================
+  // Candidate Modal Handling
+  // ========================
+  const newCandidateBtn = document.getElementById('new-candidate-btn');
+  const candidateModal = document.getElementById('candidate-modal');
+  const cancelCandidateBtn = document.getElementById('cancel-candidate');
+  const closeModalBtns = document.querySelectorAll('.close-modal');
+  const candidateForm = document.getElementById('candidate-form');
+
+  if (newCandidateBtn && candidateModal) {
+    newCandidateBtn.addEventListener('click', function () {
+      document.getElementById('modal-title').textContent = 'Add New Candidate';
+      candidateModal.style.display = 'block';
+    });
+  }
+
+  if (cancelCandidateBtn) {
+    cancelCandidateBtn.addEventListener('click', function () {
+      candidateModal.style.display = 'none';
+    });
+  }
+
+  if (closeModalBtns.length > 0) {
     closeModalBtns.forEach(btn => {
-      btn.addEventListener('click', function() {
-        // Find the closest modal parent
+      btn.addEventListener('click', function () {
         const modal = this.closest('.modal');
         modal.style.display = 'none';
       });
     });
-  
-    // Close modal when clicking outside the modal content
-    document.addEventListener('click', function(event) {
-      if (event.target.classList.contains('modal')) {
-        event.target.style.display = 'none';
-      }
-    });
-  
-    if (candidateForm) {
-      candidateForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-  
-        // Get form values
-        const name = document.getElementById('candidate-name').value;
-        const age = document.getElementById('candidate-age').value;
-        const post = document.getElementById('candidate-post').value;
-  
-        // Sample implementation to add candidate to table
-        const tableBody = document.getElementById('candidates-table-body');
-  
-        // Remove empty message if it exists
+  }
+
+  document.addEventListener('click', function (event) {
+    if (event.target.classList.contains('modal')) {
+      event.target.style.display = 'none';
+    }
+  });
+
+  if (candidateForm) {
+    candidateForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById('candidate-name').value;
+      const age = document.getElementById('candidate-age').value;
+      const post = document.getElementById('candidate-post').value;
+      const tableBody = document.getElementById('candidates-table-body');
+
+      if (tableBody) {
         const emptyMessage = tableBody.querySelector('.empty-table-message');
         if (emptyMessage) {
           tableBody.innerHTML = '';
         }
-  
-        // Add new row
+
         const newRow = document.createElement('tr');
         newRow.innerHTML = `
           <td>${name}</td>
@@ -160,70 +126,66 @@ document.addEventListener('DOMContentLoaded', function() {
             <button class="action-btn delete-candidate-btn" title="Delete"><i class="fas fa-trash"></i></button>
           </td>
         `;
-  
         tableBody.appendChild(newRow);
-  
-        // Close modal and reset form
-        candidateModal.style.display = 'none';
-        candidateForm.reset();
-      });
-    }
-  
-    // Logout functionality
-    const logoutBtn = document.getElementById('logout-btn');
-    const quickLogoutBtn = document.getElementById('quick-logout');
-  
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', handleLogout);
-    }
-  
-    if (quickLogoutBtn) {
-      quickLogoutBtn.addEventListener('click', handleLogout);
-    }
-  
-    function handleLogout(e) {
+      }
+
+      candidateModal.style.display = 'none';
+      candidateForm.reset();
+    });
+  }
+
+  // ========================
+  // Logout Functionality
+  // ========================
+  const logoutBtn = document.getElementById('logout-btn');
+  const quickLogoutBtn = document.getElementById('quick-logout');
+
+  function handleLogout(e) {
+    e.preventDefault();
+    alert('You have been logged out successfully.');
+    // window.location.href = 'login.html'; // Uncomment in real app
+  }
+
+  if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
+  if (quickLogoutBtn) quickLogoutBtn.addEventListener('click', handleLogout);
+
+  // ========================
+  // Delete Account Modal
+  // ========================
+  const deleteAccountBtn = document.getElementById('delete-account-btn');
+  const deleteAccountModal = document.getElementById('delete-account-modal');
+  const deleteAccountForm = document.getElementById('delete-account-form');
+  const closeDeleteAccountBtn = document.querySelector('.close-delete-account-modal');
+
+  if (deleteAccountBtn && deleteAccountModal) {
+    deleteAccountBtn.addEventListener('click', function () {
+      deleteAccountModal.style.display = 'block';
+    });
+  }
+
+  if (closeDeleteAccountBtn) {
+    closeDeleteAccountBtn.addEventListener('click', function () {
+      deleteAccountModal.style.display = 'none';
+    });
+  }
+
+  if (deleteAccountForm) {
+    deleteAccountForm.addEventListener('submit', function (e) {
       e.preventDefault();
-      // In a real app, you would call a logout API endpoint
-      alert('You have been logged out successfully.');
-      // Redirect to login page
-      // window.location.href = 'login.html';
-    }
-  
-    // Delete Account functionality
-    const deleteAccountBtn = document.getElementById('delete-account-btn');
-    const deleteAccountModal = document.getElementById('delete-account-modal');
-    const deleteAccountForm = document.getElementById('delete-account-form');
-    const closeDeleteAccountBtn = document.querySelector('.close-delete-account-modal');
-  
-    if (deleteAccountBtn) {
-      deleteAccountBtn.addEventListener('click', function() {
-        deleteAccountModal.style.display = 'block';
-      });
-    }
-  
-    if (closeDeleteAccountBtn) {
-      closeDeleteAccountBtn.addEventListener('click', function() {
-        deleteAccountModal.style.display = 'none';
-      });
-    }
-  
-    if (deleteAccountForm) {
-      deleteAccountForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-  
-        const password = document.getElementById('delete-account-password').value;
-  
-        // In a real app, you would verify the password with the server
-        if (password) {
-          alert('Your account has been deleted successfully.');
-          // Redirect to login page
-          // window.location.href = 'login.html';
-        } else {
-          alert('Please enter your password to confirm account deletion.');
-        }
-      });
-    }
-  });
+      const password = document.getElementById('delete-account-password').value;
+
+      if (password) {
+        alert('Your account has been deleted successfully.');
+        // window.location.href = 'login.html'; // Uncomment in real app
+      } else {
+        alert('Please enter your password to confirm account deletion.');
+      }
+    });
+  }
+
+  // ========================
+  // Load Page (Unused but Kept)
+  // ========================
   function loadPage(pageUrl) {
     fetch(pageUrl)
       .then(response => response.text())
@@ -232,3 +194,4 @@ document.addEventListener('DOMContentLoaded', function() {
       })
       .catch(error => console.error('Error loading page:', error));
   }
+});

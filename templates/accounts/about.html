@@ -1,2 +1,208 @@
-<h2>About</h2>
-<p>Placeholder for about page.</p>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - VoteSystem</title>
+
+    <!-- Static CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- External fontawesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <!-- Navigation -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <img src="{% static 'img/image_1_1.png' %}" alt="votesystem">
+                <span>VoteSystem</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{% url 'accounts:home' %}">Home</a></li>
+                <li><a href="#">Results</a></li>
+                <li><a href="{% url 'accounts:about' %}" class="active">About</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <a href="{% url 'accounts:login' %}" class="login-btn">Login</a>
+                <a href="{% url 'accounts:register' %}" class="signup-btn">Register</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <h1>About VoteSystem</h1>
+        <p>Leading the way in secure, accessible online voting technology since 2025.</p>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section">
+        <div class="about-container">
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="VoteSystem Office">
+            </div>
+            <div class="about-content">
+                <h2>Our Story</h2>
+                <p>VoteSystem was founded in 2025 with a simple mission: to make voting accessible, secure, and transparent for everyone. What started as a small project with a team of five passionate developers has grown into a trusted platform used by organizations worldwide.</p>
+                <p>Our journey began when our founder, Sarah Chen, a cybersecurity expert, identified critical vulnerabilities in existing voting systems. Determined to create a more secure alternative, she assembled a team of like-minded professionals to develop what would become VoteSystem.</p>
+                <p>Today, we're proud to have facilitated thousands of elections for organizations of all sizes, from university student governments to professional associations and corporate boards. Our commitment to security, usability, and innovation continues to drive everything we do.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission & Values Section -->
+    <section class="mission-values">
+        <div class="mission-values-container">
+            <h2>Our Mission & Values</h2>
+            <p>We're guided by our commitment to democracy, transparency, and technological innovation.</p>
+
+            <div class="values-grid">
+                <div class="value-card">
+                    <h3><i class="fas fa-lock"></i> Security First</h3>
+                    <p>We implement the highest standards of encryption and security protocols to ensure vote integrity and protect user data. Our system undergoes regular independent security audits.</p>
+                </div>
+                <div class="value-card">
+                    <h3><i class="fas fa-universal-access"></i> Accessibility</h3>
+                    <p>We believe democracy should be accessible to everyone. Our platform is designed to be user-friendly and compliant with accessibility standards, ensuring everyone can participate regardless of technical ability.</p>
+                </div>
+                <div class="value-card">
+                    <h3><i class="fas fa-eye"></i> Transparency</h3>
+                    <p>We believe in complete transparency in the voting process. Our system provides detailed audit logs and results verification while maintaining voter privacy.</p>
+                </div>
+                <div class="value-card">
+                    <h3><i class="fas fa-lightbulb"></i> Innovation</h3>
+                    <p>We continuously explore and implement cutting-edge technologies to improve our platform, staying ahead of security threats and enhancing user experience.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team-section">
+        <h2>Meet Our Leadership Team</h2>
+        <p>We're a diverse team of experts passionate about secure voting technology and democratic participation.</p>
+
+        <div class="team-grid">
+            <div class="team-member">
+                <div class="team-photo">
+                    <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Omkar Subedi">
+                </div>
+                <div class="team-info">
+                    <h3>Omkar Subedi</h3>
+                    <p>Project Manager</p>
+                    <div class="team-social">
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="team-member">
+                <div class="team-photo">
+                    <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Binisha Shakya">
+                </div>
+                <div class="team-info">
+                    <h3>Binisha Shakya</h3>
+                    <p>Business Analyst</p>
+                    <div class="team-social">
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="team-member">
+                <div class="team-photo">
+                    <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Sikha Limbu">
+                </div>
+                <div class="team-info">
+                    <h3>Sikha Limbu</h3>
+                    <p>Head Developer</p>
+                    <div class="team-social">
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="team-member">
+                <div class="team-photo">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Bibidh Raj Shrestha">
+                </div>
+                <div class="team-info">
+                    <h3>Bibidh Raj Shrestha</h3>
+                    <p>Developer</p>
+                    <div class="team-social">
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-dribbble"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="team-member">
+                <div class="team-photo">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Shirish Pandit Chhetri">
+                </div>
+                <div class="team-info">
+                    <h3>Shirish Pandit Chhetri</h3>
+                    <p>Developer</p>
+                    <div class="team-social">
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-dribbble"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="team-member">
+                <div class="team-photo">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Ananta Lamsal">
+                </div>
+                <div class="team-info">
+                    <h3>Ananta Lamsal</h3>
+                    <p>Developer</p>
+                    <div class="team-social">
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-dribbble"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section about">
+                <h3>VoteSystem</h3>
+                <p>Secure and reliable online voting platform for organizations and institutions.</p>
+            </div>
+            <div class="footer-section links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="{% url 'accounts:about' %}">About Us</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section contact">
+                <h3>Contact</h3>
+                <p><i class="fas fa-envelope"></i> info@votesystem.com</p>
+                <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+            </div>
+            <div class="footer-section social">
+                <h3>Follow Us</h3>
+                <div class="social-icons">
+                    <a href="https://x.com/"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.facebook.com/"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 VoteSystem. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Static JS -->
+    <script src="{% static 'js/script.js' %}"></script>
+
+</body>
+</html>
