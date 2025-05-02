@@ -10,22 +10,16 @@ class User(AbstractUser):
         ('user', 'General User'),
     ]
 
-    # Remove username and replace with user_id
-    username = None
-    user_id = models.CharField(_('user ID'), max_length=10, unique=True, blank=True, null=True)
-    email = models.EmailField(_('email address'), unique=True)
-    dob = models.DateField(_('date of birth'), blank=True, null=True)
-    user_type = models.CharField(
-        _('user type'),
-        max_length=10,
-        choices=USER_TYPE_CHOICES,
-        default='user'
-    )
+    username = None  # Remove default username field
+    user_id = models.CharField(_('User ID'), max_length=20, unique=True)
+    email = models.EmailField(_('Email Address'), unique=True)
+    dob = models.DateField(_('Date of Birth'), blank=True, null=True)
+    user_type = models.CharField(_('User Type'), max_length=10, choices=USER_TYPE_CHOICES, default='user')
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['user_id', 'dob', 'user_type']
+    USERNAME_FIELD = 'id'  # Custom login field
+    REQUIRED_FIELDS = ['email', 'dob', 'user_type']
 
-    USERNAME_FIELD = 'user_id'  # This is now the login field
+    USERNAME_FIELD = 'id'  # This is now the login field
     REQUIRED_FIELDS = ['email', 'dob', 'user_type']
 
     def __str__(self):
@@ -36,7 +30,6 @@ class User(AbstractUser):
 
     class Meta:
         db_table = 'users'
-
 
 # class Voter(models.Model):
 #     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='voter_profile', null=True, blank=True)

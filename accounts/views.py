@@ -92,11 +92,11 @@ def user_register(request):
 def user_login(request):
     """Handle user login"""
     if request.method == 'POST':
-        username = request.POST.get('username')
+        userId = request.POST.get('userId')
         password = request.POST.get('password')
         user_type = request.POST.get('user_type')
 
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, username=userId, password=password)
 
         if user is not None:
             if user.user_type == user_type:
