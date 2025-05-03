@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Voter Dashboard</title>
+  <link rel="stylesheet" href="../static/css/voter-dashboard.css">
+</head>
+<body>
+
+  <!-- Dashboard Overview Section -->
+  <div class="dashboard-grid fade-in">
+    <div class="time-remaining card" id="time-remaining">
+      <div class="card-header">
+        <span class="card-title">Time Remaining to Vote</span>
+      </div>
+      <div class="card-body">
+        <span id="countdown-timer">Loading countdown...</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Voter Turnout</span>
+      </div>
+      <div class="card-body">
+        <div class="chart-container">
+          <div id="voter-bar-chart" class="bar-chart">
+            <!-- Bars inserted via JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Results Breakdown</span>
+      </div>
+      <div class="card-body">
+        <div class="chart-container">
+          <div id="result-pie-chart" class="pie-chart"></div>
+          <div class="chart-legend" id="pie-chart-legend">
+            <!-- Legends via JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Countdown Timer
+      const countdownEl = document.getElementById('countdown-timer');
+      if (countdownEl) {
+        const endDate = new Date();
+        endDate.setDate(endDate.getDate() + 1);
+        endDate.setHours(12, 0, 0, 0);
+
+        function updateCountdown() {
+          const now = new Date();
+          const diff = endDate - now;
+          if (diff > 0) {
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const mins = Math.floor(diff / (1000 * 60)) % 60;
+            const secs = Math.floor(diff / 1000) % 60;
+            countdownEl.textContent = `${hours}h ${mins}m ${secs}s left`;
+          } else {
+            countdownEl.textContent = 'Voting closed';
+          }
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+      }
+
+      // Bar Chart
+      const barChart = document.getElementById('voter-bar-chart');
+      if (barChart) {
+        barChart.innerHTML = '';
+        const data = [45, 30, 25];
+        const labels = ['District A', 'District B', 'District C'];
+        data.forEach((value, idx) => {
+          const div = document.createElement('div');
+          div.className = 'bar-container';
+          div.innerHTML = `
+            <div class="bar" style="height: ${value * 2}px;"></div>
+            <span class="bar-value">${value}%</span>
+            <div class="bar-label">${labels[idx]}</div>
+          `;
+          barChart.appendChild(div);
+        });
+      }
+
+      // Pie Chart
+      const pieChart = document.getElementById('result-pie-chart');
+      const pieLegend = document.getElementById('pie-chart-legend');
+      if (pieChart && pieLegend) {
+        const legendItems = [
+          { color: 'var(--primary-color)', label: 'Alice (President)' },
+          { color: 'var(--success-color)', label: 'Bob (Secretary)' },
+          { color: 'var(--warning-color)', label: 'Carol (Treasurer)' },
+          { color: 'var(--danger-color)', label: 'David (Other)' }
+        ];
+        pieLegend.innerHTML = '';
+        legendItems.forEach(item => {
+          pieLegend.innerHTML += `
+            <span class="legend-item">
+              <span class="legend-color" style="background:${item.color}"></span>
+              ${item.label}
+            </span>`;
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>
