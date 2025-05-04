@@ -23,25 +23,22 @@
           <label class="form-label" for="user-name">Display Name</label>
           <input class="form-input" type="text" name="displayName" id="user-name" placeholder="Enter your name" />
         </div>
-        <div class="form-group">
-          <label class="form-label" for="notification-toggle">Email Notifications</label>
-          <label class="toggle-switch">
-            <input type="checkbox" id="notification-toggle" />
-            <span class="slider"></span>
-          </label>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="language">Preferred Language</label>
-          <select class="form-select" id="language">
-            <option value="en">English</option>
-            <option value="es">Spanish</option>
-            <option value="fr">French</option>
-          </select>
-        </div>
+
+        <!-- Save Changes and Logout buttons -->
         <div class="settings-actions">
-          <button class="btn btn-primary" type="submit">Save Changes</button>
+          <button class="btn btn-primary save-btn" type="submit">Save Changes</button>
+          <button class="btn btn-danger logout-btn" type="button" id="logout-btn">Logout</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Logout Confirmation Popup (Overlay) -->
+  <div id="logout-popup" class="popup-overlay">
+    <div class="popup-content">
+      <h3>Are you sure you want to logout?</h3>
+      <button class="btn btn-secondary" id="cancel-btn">Cancel</button>
+      <button class="btn btn-primary" id="confirm-logout-btn">Yes, Logout</button>
     </div>
   </div>
 
@@ -50,6 +47,10 @@
       const settingsForm = document.getElementById('settings-form');
       const themeToggle = document.getElementById('theme-toggle');
       const themeIcon = document.getElementById('theme-icon');
+      const logoutButton = document.getElementById('logout-btn');
+      const popup = document.getElementById('logout-popup');
+      const cancelBtn = document.getElementById('cancel-btn');
+      const confirmLogoutBtn = document.getElementById('confirm-logout-btn');
 
       // Handle settings form submission
       if (settingsForm) {
@@ -81,6 +82,22 @@
           localStorage.setItem('theme', 'dark');
           themeIcon.textContent = '🌞';
         }
+      });
+
+      // Show the logout popup
+      logoutButton.addEventListener('click', function () {
+        popup.style.display = 'flex';  // Show the popup
+      });
+
+      // Cancel logout
+      cancelBtn.addEventListener('click', function () {
+        popup.style.display = 'none';  // Hide the popup
+      });
+
+      // Confirm logout
+      confirmLogoutBtn.addEventListener('click', function () {
+        // Handle logout here, e.g., redirect to login page or clear session
+        window.location.href = '/login'; // Example: Redirect to login page
       });
     });
   </script>
