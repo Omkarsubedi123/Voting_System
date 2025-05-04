@@ -1,57 +1,111 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="news.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lions Elections News</title>
+  <link rel="stylesheet" href="news.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    <!-- Election News Section -->
-<div class="news-section fade-in">
-    <h2>Latest Election News</h2>
-    <div class="news-grid">
-      <div class="news-card">
-        <div class="news-image" style="background:url('https://images.unsplash.com/photo-1515168833906-d2a3b82b1ebb?auto=format&fit=crop&w=400&q=80') center/cover;"></div>
-        <div class="news-content">
-          <div class="news-date">Apr 20, 2025</div>
-          <div class="news-headline">Lions Club Holds Record Voter Turnout.</div>
-          <div class="news-excerpt">This year's voter turnout has reached unprecedented numbers, demonstrating a new era of engagement in the club's history. Organizers thank volunteers for the smooth election process.</div>
-          <div class="news-author">
-            <div class="author-image" style="background:url('https://randomuser.me/api/portraits/men/32.jpg') center/cover;"></div>
-            <div class="author-name">By Samuel Vote</div>
+  <div id="app">
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <a href="#" class="sidebar-logo">
+          <i class="fas fa-vote-yea"></i>
+          <span>VoteTracker</span>
+        </a>
+      </div>
+      <ul class="nav-menu">
+        <li class="nav-item">
+          <a class="nav-link" href="index.html" data-page="dashboard">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="index.html" data-page="vote">
+            <i class="fas fa-vote-yea"></i>
+            <span>Vote Section</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="news.html" data-page="news">
+            <i class="fas fa-newspaper"></i>
+            <span>Election News</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="index.html" data-page="settings">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="main-content">
+      <div class="topbar">
+        <h1 class="page-title">Election News</h1>
+        <div class="user-menu">
+          <button class="theme-toggle" aria-label="Toggle theme">
+            <i class="fas fa-moon"></i>
+          </button>
+          <div class="user-profile">
+            <span>Welcome, Username</span>
           </div>
-          <a class="read-more" href="#">Read More</a>
         </div>
       </div>
-      <div class="news-card">
-        <div class="news-image" style="background:url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80') center/cover;"></div>
-        <div class="news-content">
-          <div class="news-date">Apr 18, 2025</div>
-          <div class="news-headline">Candidates Debate Community Projects.</div>
-          <div class="news-excerpt">The final debate between presidential candidates focused on new community projects and youth engagement for the coming year...</div>
-          <div class="news-author">
-            <div class="author-image" style="background:url('https://randomuser.me/api/portraits/women/44.jpg') center/cover;"></div>
-            <div class="author-name">By Gina Herald</div>
+      <div class="content">
+        <div class="news-section fade-in">
+          <h2>Latest Election News</h2>
+          <div class="news-grid">
+            <div class="news-card">
+              <div class="news-image">District Election Coverage Image</div>
+              <div class="news-content">
+                <div class="news-date">March 15, 2025</div>
+                <h3 class="news-headline">District 306 A1 Election Results Announced</h3>
+                <p class="news-excerpt">The annual district governor election concluded with record participation from club delegates...</p>
+                <div class="news-author">
+                  <div class="author-image"></div>
+                  <div class="author-name">By John Smith</div>
+                </div>
+                <a href="#" class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
+              </div>
+            </div>
+            <div class="news-card">
+              <div class="news-image">Club Elections Image</div>
+              <div class="news-content">
+                <div class="news-date">March 12, 2025</div>
+                <h3 class="news-headline">Club Elections Schedule Released</h3>
+                <p class="news-excerpt">Multiple Lions Clubs announce their election dates for the upcoming term...</p>
+                <div class="news-author">
+                  <div class="author-image"></div>
+                  <div class="author-name">By Sarah Johnson</div>
+                </div>
+                <a href="#" class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
+              </div>
+            </div>
+            <div class="news-card">
+              <div class="news-image">Nomination Process Image</div>
+              <div class="news-content">
+                <div class="news-date">March 10, 2025</div>
+                <h3 class="news-headline">Nomination Process Begins for District Offices</h3>
+                <p class="news-excerpt">District leadership positions open for nominations with new digital submission system...</p>
+                <div class="news-author">
+                  <div class="author-image"></div>
+                  <div class="author-name">By Mike Wilson</div>
+                </div>
+                <a href="#" class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
+              </div>
+            </div>
           </div>
-          <a class="read-more" href="#">Read More</a>
         </div>
       </div>
-      <div class="news-card">
-        <div class="news-image" style="background:url('https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80') center/cover;"></div>
-        <div class="news-content">
-          <div class="news-date">Apr 17, 2025</div>
-          <div class="news-headline">Meet The First-Time Candidates.</div>
-          <div class="news-excerpt">First-time nominees share their visions and commitment to innovation in interviews with the Lions Club Publication Team.</div>
-          <div class="news-author">
-            <div class="author-image" style="background:url('https://randomuser.me/api/portraits/men/55.jpg') center/cover;"></div>
-            <div class="author-name">By Leo Reporter</div>
-          </div>
-          <a class="read-more" href="#">Read More</a>
-        </div>
+      <div class="footer">
+        <div>© 2025 Lions Club Elections. All rights reserved.</div>
       </div>
     </div>
   </div>
+  <script src="news.js"></script>
 </body>
-<script src="news.js"></script>
 </html>
