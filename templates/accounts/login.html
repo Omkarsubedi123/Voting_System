@@ -16,7 +16,8 @@
             </div>
             <h2>Voting System</h2>
             <p>Access your voting account</p>
-            
+
+            <!-- Styled messages (optional to show visually on screen) -->
             {% if messages %}
             <div class="messages">
                 {% for message in messages %}
@@ -30,10 +31,10 @@
             <form action="{% url 'accounts:login' %}" method="POST">
                 {% csrf_token %}
                 <div class="input-group">
-                    <label for="username">UserID</label>
+                    <label for="userId">UserID</label>
                     <div class="input-box">
                         <i class="fas fa-id-card"></i>
-                        <input type="text" id="username" name="username" placeholder=" Enter your userId" required>
+                        <input type="text" id="userId" name="userId" placeholder="Enter your userId" required>
                     </div>
                 </div>
                 
@@ -41,7 +42,7 @@
                     <label for="password">Password</label>
                     <div class="input-box">
                         <i class="fas fa-lock"></i>
-                        <input type="password" id="password" name="password" placeholder=" Enter your password" required>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
                         <i class="fas fa-eye toggle-password" onclick="togglePassword('password', this)"></i>
                     </div>
                 </div>  
@@ -72,9 +73,10 @@
             </div>
         </div>
 
+        <!-- Toggle password visibility -->
         <script>
             function togglePassword(id, element) {
-                var input = document.getElementById(id);
+                const input = document.getElementById(id);
                 if (input.type === "password") {
                     input.type = "text";
                     element.classList.remove("fa-eye");
@@ -86,6 +88,17 @@
                 }
             }
         </script>
+
+        <!-- Show Django messages as alert popups -->
+        {% if messages %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                {% for message in messages %}
+                    alert("{{ message|escapejs }}");
+                {% endfor %}
+            });
+        </script>
+        {% endif %}
     </div>
 </body>
 </html>

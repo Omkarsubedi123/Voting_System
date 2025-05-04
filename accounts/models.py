@@ -1,7 +1,23 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import gettext_lazy as _
 from django.utils.timezone import now
+
+
+class CustomUserManager(BaseUserManager):
+    def create_user(self, id, email, dob, user_type, password=None, **extra_fields):
+        if not id:
+            raise ValueError('The ID must be set')
+        email = self.normalize_email(email)
+        user = self.model(id=id, email=email, dob=dob, user_type=user_type, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    # def create_superuser(self, id, email, dob, user_type, password=None, **extra_fields):
+    #     extra_fields.setdefault('is_staff', True)
+    #     extra_fields.setdefault('is_superuser', True)
+    #     return self.create_user(id, email, dob, user_type, password, **extra_fields)
 
 
 class User(AbstractUser):
@@ -11,19 +27,17 @@ class User(AbstractUser):
     ]
 
     username = None  # Remove default username field
-    user_id = models.CharField(_('User ID'), max_length=20, unique=True)
     email = models.EmailField(_('Email Address'), unique=True)
     dob = models.DateField(_('Date of Birth'), blank=True, null=True)
     user_type = models.CharField(_('User Type'), max_length=10, choices=USER_TYPE_CHOICES, default='user')
 
-    USERNAME_FIELD = 'id'  # Custom login field
+    USERNAME_FIELD = 'id'
     REQUIRED_FIELDS = ['email', 'dob', 'user_type']
 
-    USERNAME_FIELD = 'id'  # This is now the login field
-    REQUIRED_FIELDS = ['email', 'dob', 'user_type']
+    objects = CustomUserManager()
 
     def __str__(self):
-        return self.user_id
+        return str(self.id)
 
     def is_admin(self):
         return self.user_type == 'admin'

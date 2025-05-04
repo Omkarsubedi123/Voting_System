@@ -11,7 +11,7 @@
 
     <div>
       <h1 class="page-title">Dashboard Overview</h1>
-      <p class="welcome-text">Welcome back, {{ user.username }}</p>
+      <p class="welcome-text">Welcome back, {{ user.userId }}</p>
     </div>
 
     <div class="user-profile">
@@ -21,7 +21,10 @@
       </button>
       <div class="profile-dropdown">
         <button id="profile-btn" class="profile-btn">
-          <span class="profile-avatar">{{ user.username|first|upper }}</span>
+          <a href="{% url 'accounts:admin_page' %}">
+            <span class="profile-avatar">{{ user.userId|first|upper }}</span>
+        </a>
+        Id
           <span>Profile</span>
           <i class="fas fa-chevron-down"></i>
         </button>

@@ -3,6 +3,7 @@
 from django.db import migrations, models
 
 
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -10,10 +11,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='user',
-            name='username',
-        ),
+        # migrations.RemoveField(
+        #     model_name='user',
+        #     name='username',
+        # ),
         migrations.AlterField(
             model_name='user',
             name='dob',

@@ -55,7 +55,7 @@ def results(request):
 def user_register(request):
     """Handle user registration"""
     if request.method == 'POST':
-        username = request.POST.get('username')
+        user_id = request.POST.get('user_id')
         email = request.POST.get('email')
         dob = request.POST.get('dob')
         password = request.POST.get('password')
@@ -73,7 +73,7 @@ def user_register(request):
                 user_id = generate_user_id()
 
             user = User(
-                username=username,
+                user_id=user_id,
                 email=email,
                 dob=dob,
                 user_type=user_type,
@@ -90,27 +90,34 @@ def user_register(request):
     return render(request, 'accounts/register.html')
 
 def user_login(request):
-    """Handle user login"""
     if request.method == 'POST':
         userId = request.POST.get('userId')
         password = request.POST.get('password')
         user_type = request.POST.get('user_type')
 
-        user = authenticate(request, username=userId, password=password)
+        # Validate ID is numeric
+        if not userId.isdigit():
+            messages.error(request, 'User ID must be a number.')
+            return render(request, 'accounts/login.html')
 
-        if user is not None:
-            if user.user_type == user_type:
-                login(request, user)
-                if user_type == 'admin':
-                    return redirect('accounts:admin_page')
+        try:
+            user = User.objects.get(id=int(userId))
+            if user.check_password(password):
+                if user.user_type == user_type:
+                    login(request, user)
+                    if user_type == 'admin':
+                        return redirect('accounts:admin_page')
+                    else:
+                        return redirect('accounts:user_page')
                 else:
-                    return redirect('accounts:user_page')
+                    messages.error(request, 'Invalid user type selected.')
             else:
-                messages.error(request, 'Invalid user type selected.')
-        else:
-            messages.error(request, 'Invalid username or password.')
+                messages.error(request, 'Invalid password.')
+        except User.DoesNotExist:
+            messages.error(request, 'Wrong ID! User does not exist.')
 
     return render(request, 'accounts/login.html')
+
 
 @login_required
 def logout_view(request):
@@ -134,7 +141,7 @@ def users_list(request):
     users = User.objects.filter(user_type='user').order_by('-id')
     search_query = request.GET.get('q', '')
     if search_query:
-        users = users.filter(Q(username__icontains=search_query) | Q(email__icontains=search_query))
+        users = users.filter(Q(id__icontains=search_query) | Q(email__icontains=search_query))
     paginator = Paginator(users, 10)
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
@@ -151,7 +158,6 @@ def user_detail(request, user_id):
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return JsonResponse({
             'id': user.id,
-            'username': user.username,
             'email': user.email,
             'dob': user.dob.strftime('%Y-%m-%d') if user.dob else None,
         })
@@ -166,7 +172,7 @@ def add_user(request):
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return JsonResponse({
                     'id': user.id,
-                    'username': user.username,
+                    'user_id': user.user_id,
                     'email': user.email,
                     'dob': user.dob.strftime('%Y-%m-%d') if user.dob else None,
                     'success': True
@@ -220,7 +226,6 @@ def ajax_voter_details(request, voter_id):
         user = User.objects.get(id=voter_id, user_type='user')
         return JsonResponse({
             'id': user.id,
-            'username': user.username,
             'email': user.email,
             'dob': user.dob.strftime('%Y-%m-%d') if user.dob else None,
         })
