@@ -20,10 +20,10 @@
             <form action="{% url 'accounts:register' %}" method="POST">
                 {% csrf_token %}
                 <div class="input-group">
-                    <label for="username">Username</label>
+                    <label for="UserId">UserId</label>
                     <div class="input-box">
                         <i class="fas fa-user"></i>
-                        <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                        <input type="text" id="username" name="username" placeholder="Enter your UserId" required>
                     </div>
                 </div>
 

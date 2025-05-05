@@ -1,23 +1,22 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import gettext_lazy as _
-from django.utils.timezone import now
 
 
 class CustomUserManager(BaseUserManager):
-    def create_user(self, id, email, dob, user_type, password=None, **extra_fields):
-        if not id:
-            raise ValueError('The ID must be set')
+    def create_user(self, user_id, email, dob, user_type, password=None, **extra_fields):
+        if not user_id:
+            raise ValueError('The User ID must be set')
         email = self.normalize_email(email)
-        user = self.model(id=id, email=email, dob=dob, user_type=user_type, **extra_fields)
+        user = self.model(user_id=user_id, email=email, dob=dob, user_type=user_type, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    # def create_superuser(self, id, email, dob, user_type, password=None, **extra_fields):
-    #     extra_fields.setdefault('is_staff', True)
-    #     extra_fields.setdefault('is_superuser', True)
-    #     return self.create_user(id, email, dob, user_type, password, **extra_fields)
+    def create_superuser(self, user_id, email, dob, user_type='admin', password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        return self.create_user(user_id, email, dob, user_type, password, **extra_fields)
 
 
 class User(AbstractUser):
@@ -26,41 +25,25 @@ class User(AbstractUser):
         ('user', 'General User'),
     ]
 
-    username = None  # Remove default username field
+    username = None  # Disable default username field
+    user_id = models.CharField(max_length=150, unique=True)
     email = models.EmailField(_('Email Address'), unique=True)
     dob = models.DateField(_('Date of Birth'), blank=True, null=True)
     user_type = models.CharField(_('User Type'), max_length=10, choices=USER_TYPE_CHOICES, default='user')
 
-    USERNAME_FIELD = 'id'
+    USERNAME_FIELD = 'user_id'
     REQUIRED_FIELDS = ['email', 'dob', 'user_type']
 
     objects = CustomUserManager()
 
     def __str__(self):
-        return str(self.id)
+        return self.user_id
 
     def is_admin(self):
         return self.user_type == 'admin'
 
     class Meta:
         db_table = 'users'
-
-# class Voter(models.Model):
-#     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='voter_profile', null=True, blank=True)
-#     name = models.CharField(max_length=255, default="Unknown")
-#     email = models.EmailField(unique=True, default="Unknown")
-#     registered_at = models.DateTimeField(auto_now_add=True)
-
-#     def save(self, *args, **kwargs):
-#         if not self.registered_at:
-#             self.registered_at = now().replace(microsecond=0)
-#         super().save(*args, **kwargs)
-
-#     def __str__(self):
-#         return self.name
-
-#     class Meta:
-#         db_table = 'voters'
 
 
 class People(models.Model):
@@ -81,3 +64,20 @@ class Candidate(models.Model):
 
     def __str__(self):
         return self.name
+
+# class Voter(models.Model):
+#     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='voter_profile', null=True, blank=True)
+#     name = models.CharField(max_length=255, default="Unknown")
+#     email = models.EmailField(unique=True, default="Unknown")
+#     registered_at = models.DateTimeField(auto_now_add=True)
+
+#     def save(self, *args, **kwargs):
+#         if not self.registered_at:
+#             self.registered_at = now().replace(microsecond=0)
+#         super().save(*args, **kwargs)
+
+#     def __str__(self):
+#         return self.name
+
+#     class Meta:
+#         db_table = 'voters'

@@ -55,7 +55,7 @@ def results(request):
 def user_register(request):
     """Handle user registration"""
     if request.method == 'POST':
-        user_id = request.POST.get('user_id')
+        userId = request.POST.get('userId')
         email = request.POST.get('email')
         dob = request.POST.get('dob')
         password = request.POST.get('password')
@@ -66,26 +66,25 @@ def user_register(request):
             messages.error(request, "Passwords do not match.")
             return render(request, 'accounts/register.html')
 
-        try:
-            # Generate a unique user_id
-            user_id = generate_user_id()
-            while User.objects.filter(user_id=user_id).exists():
-                user_id = generate_user_id()
+        if User.objects.filter(user_id=userId).exists():
+            messages.error(request, "User with this User ID already exists.")
+            return render(request, 'accounts/register.html')
 
-            user = User(
-                user_id=user_id,
-                email=email,
-                dob=dob,
-                user_type=user_type,
-            )
-            user.user_id = user_id
-            user.set_password(password)
-            user.save()
-            messages.success(request, f"Registration successful! Your User ID is: {user.user_id}")
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "User with this email already exists.")
             return render(request, 'accounts/register.html')
-        except Exception as e:
-            messages.error(request, f"Registration failed: {str(e)}")
-            return render(request, 'accounts/register.html')
+
+        # Create a new user using the custom manager
+        # User.objects.create_user(
+        #     user_id=userId,
+        #     email=email,
+        #     dob=dob,
+        #     password=password,
+        #     user_type=user_type
+        # )
+
+        # messages.success(request, "Registration successful!")
+        # return redirect('accounts:login')
 
     return render(request, 'accounts/register.html')
 
@@ -101,7 +100,7 @@ def user_login(request):
             return render(request, 'accounts/login.html')
 
         try:
-            user = User.objects.get(id=int(userId))
+            user = User.objects.get(user_id=userId)
             if user.check_password(password):
                 if user.user_type == user_type:
                     login(request, user)
