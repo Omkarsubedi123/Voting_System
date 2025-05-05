@@ -1,12 +1,20 @@
 // Theme and navigation for news.html
-let currentTheme = "light";
+let currentTheme = localStorage.getItem('theme') || "light";
+
 document.addEventListener('DOMContentLoaded', function () {
-  // Theme toggle functionality
+  const htmlElement = document.documentElement;
   const themeToggle = document.querySelector('.theme-toggle');
+  const themeIcon = themeToggle?.querySelector('i');
+
+  // Apply saved theme on page load
+  htmlElement.setAttribute("data-theme", currentTheme);
+  if (themeIcon) {
+    themeIcon.className = currentTheme === "light" ? "fas fa-moon" : "fas fa-sun";
+  }
+
+  // Theme toggle functionality
   if (themeToggle) {
     themeToggle.addEventListener('click', function () {
-      const htmlElement = document.documentElement;
-      const themeIcon = themeToggle.querySelector('i');
       if (currentTheme === "light") {
         htmlElement.setAttribute("data-theme", "dark");
         currentTheme = "dark";
@@ -16,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
         currentTheme = "light";
         if (themeIcon) themeIcon.className = "fas fa-moon";
       }
+      localStorage.setItem('theme', currentTheme); // Save theme preference
     });
   }
 
