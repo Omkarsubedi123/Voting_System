@@ -2,38 +2,42 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import gettext_lazy as _
 
-
 class CustomUserManager(BaseUserManager):
-    def create_user(self, user_id, email, dob, user_type, password=None, **extra_fields):
-        if not user_id:
-            raise ValueError('The User ID must be set')
+    def create_user(self, id, email, dob, user_type, user_id=None, password=None, **extra_fields):
+        if not id:
+            raise ValueError('The ID must be set')
         email = self.normalize_email(email)
-        user = self.model(user_id=user_id, email=email, dob=dob, user_type=user_type, **extra_fields)
+        
+        # If user_id is not provided, use id as user_id
+        if not user_id:
+            user_id = id
+            
+        user = self.model(id=id, user_id=user_id, email=email, dob=dob, user_type=user_type, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
-
-    def create_superuser(self, user_id, email, dob, user_type='admin', password=None, **extra_fields):
+    
+    def create_superuser(self, id, email, dob, user_type='admin', user_id=None, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-        return self.create_user(user_id, email, dob, user_type, password, **extra_fields)
-
+        return self.create_user(id, email, dob, user_type, user_id, password, **extra_fields)
 
 class User(AbstractUser):
     USER_TYPE_CHOICES = [
         ('admin', 'Admin'),
         ('user', 'General User'),
     ]
-
+    
     username = None  # Disable default username field
+    # id field is inherited from Model and serves as primary key
     user_id = models.CharField(max_length=150, unique=True)
     email = models.EmailField(_('Email Address'), unique=True)
     dob = models.DateField(_('Date of Birth'), blank=True, null=True)
-    user_type = models.CharField(_('User Type'), max_length=10, choices=USER_TYPE_CHOICES, default='user')
-
-    USERNAME_FIELD = 'user_id'
-    REQUIRED_FIELDS = ['email', 'dob', 'user_type']
-
+    user_type = models.CharField(_('User Type'), max_length=10, choices=USER_TYPE_CHOICES, default='users')
+    
+    USERNAME_FIELD = 'id'  # Use the primary key id for login
+    REQUIRED_FIELDS = ['email', 'dob', 'user_type', 'user_id']
+    
     objects = CustomUserManager()
 
     def __str__(self):

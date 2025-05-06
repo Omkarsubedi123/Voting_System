@@ -15,11 +15,6 @@ import json
 import random
 import string
 
-def generate_user_id(length=10):
-    """Generate a random string of letters and digits"""
-    characters = string.ascii_letters + string.digits
-    return ''.join(random.choice(characters) for _ in range(length))
-
 # ===== Basic Pages =====
 
 def home(request):
@@ -55,68 +50,80 @@ def results(request):
 def user_register(request):
     """Handle user registration"""
     if request.method == 'POST':
-        userId = request.POST.get('userId')
+        user_id = request.POST.get('username')  # Form field name matches the template
         email = request.POST.get('email')
         dob = request.POST.get('dob')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
         user_type = request.POST.get('user_type')
-
+        
+        # Validation checks
         if password != confirm_password:
             messages.error(request, "Passwords do not match.")
             return render(request, 'accounts/register.html')
-
-        if User.objects.filter(user_id=userId).exists():
-            messages.error(request, "User with this User ID already exists.")
+        
+        if User.objects.filter(id=user_id).exists():
+            messages.error(request, "User with this ID already exists.")
             return render(request, 'accounts/register.html')
-
+        
         if User.objects.filter(email=email).exists():
             messages.error(request, "User with this email already exists.")
             return render(request, 'accounts/register.html')
-
+        
         # Create a new user using the custom manager
-        # User.objects.create_user(
-        #     user_id=userId,
-        #     email=email,
-        #     dob=dob,
-        #     password=password,
-        #     user_type=user_type
-        # )
-
-        # messages.success(request, "Registration successful!")
-        # return redirect('accounts:login')
-
+        try:
+            User.objects.create_user(
+                id=user_id,  # Use the input as primary key id
+                user_id=user_id,  # Also set the user_id field
+                email=email,
+                dob=dob,
+                password=password,
+                user_type=user_type
+            )
+            messages.success(request, "Registration successful!")
+            return redirect('accounts:login')
+        except Exception as e:
+            messages.error(request, f"Registration failed: {str(e)}")
+    
     return render(request, 'accounts/register.html')
 
 def user_login(request):
+    """Handle user login"""
     if request.method == 'POST':
         userId = request.POST.get('userId')
         password = request.POST.get('password')
         user_type = request.POST.get('user_type')
-
-        # Validate ID is numeric
-        if not userId.isdigit():
-            messages.error(request, 'User ID must be a number.')
+        
+        # Validate input - ensuring ID is numeric would be good here
+        if not userId:
+            messages.error(request, 'Please enter your ID.')
             return render(request, 'accounts/login.html')
-
+        
         try:
-            user = User.objects.get(user_id=userId)
-            if user.check_password(password):
-                if user.user_type == user_type:
-                    login(request, user)
-                    if user_type == 'admin':
-                        return redirect('accounts:admin_page')
-                    else:
-                        return redirect('accounts:user_page')
-                else:
-                    messages.error(request, 'Invalid user type selected.')
-            else:
+            # Try to find the user by ID (primary key)
+            user = User.objects.get(id=userId)
+            
+            # Check password
+            if not user.check_password(password):
                 messages.error(request, 'Invalid password.')
+                return render(request, 'accounts/login.html')
+            
+            # Check user type matches what's expected
+            if user.user_type != user_type:
+                messages.error(request, 'Invalid user type selected.')
+                return render(request, 'accounts/login.html')
+            
+            # All validations passed
+            login(request, user)
+            if user_type == 'admin':
+                return redirect('accounts:admin_page')
+            else:
+                return redirect('accounts:user_page')
+        
         except User.DoesNotExist:
             messages.error(request, 'Wrong ID! User does not exist.')
-
+    
     return render(request, 'accounts/login.html')
-
 
 @login_required
 def logout_view(request):

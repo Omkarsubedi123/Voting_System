@@ -17,13 +17,24 @@
             <h2>Register</h2>
             <p>Create your voting account</p>
 
+            <!-- Message display area -->
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
             <form action="{% url 'accounts:register' %}" method="POST">
                 {% csrf_token %}
                 <div class="input-group">
-                    <label for="UserId">UserId</label>
+                    <label for="username">ID</label>
                     <div class="input-box">
                         <i class="fas fa-user"></i>
-                        <input type="text" id="username" name="username" placeholder="Enter your UserId" required>
+                        <input type="text" id="username" name="username" placeholder="Enter your ID" required>
                     </div>
                 </div>
 
@@ -69,16 +80,8 @@
                             <option value="users">General Voter</option>
                             <option value="admin">Admin</option>
                         </select>
-                        {% if messages %}
-                        <div class="messages">
-                            {% for message in messages %}
-                                <div class="alert {{ message.tags }}">{{ message }}</div>
-                            {% endfor %}
-                        </div>
-                        {% endif %}
                     </div>
                 </div>
-                </div>      
 
                 <button type="submit" class="login-btn">
                     <i class="fas fa-user-plus"></i> Register
@@ -105,6 +108,17 @@
                 }
             }
         </script>
+
+        <!-- Script to show Django messages as alert popups -->
+        {% if messages %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                {% for message in messages %}
+                    alert("{{ message|escapejs }}");
+                {% endfor %}
+            });
+        </script>
+        {% endif %}
     </div>
 </body>
 </html>
