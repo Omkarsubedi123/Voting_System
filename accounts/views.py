@@ -41,67 +41,82 @@ def elections(request):
     """Render the elections page"""
     return render(request, 'accounts/elections.html')
 
-def results(request): 
-    """Render the results page"""
-    return render(request, 'accounts/results.html')
+def news(request): 
+    """Render the  page"""
+    return render(request, 'accounts/news.html')
 
 # ===== User Registration/Login =====
 
 def user_register(request):
     """Handle user registration"""
     if request.method == 'POST':
-        user_id = request.POST.get('username')  # Form field name matches the template
+        id = request.POST.get('id')
         email = request.POST.get('email')
         dob = request.POST.get('dob')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
         user_type = request.POST.get('user_type')
-        
-        # Validation checks
+
+        # Validate required fields
+        if not all([id, email, password, confirm_password, user_type]):
+            messages.error(request, "All fields are required")
+            return render(request, 'accounts/register.html')
+
+        # Check password match
         if password != confirm_password:
-            messages.error(request, "Passwords do not match.")
+            messages.error(request, "Passwords do not match")
             return render(request, 'accounts/register.html')
-        
-        if User.objects.filter(id=user_id).exists():
-            messages.error(request, "User with this ID already exists.")
+
+        # Check user ID limit (1014)
+        try:
+            if int(id) > 1014:
+                messages.error(request, "Registration is limited to IDs up to 1014")
+                return render(request, 'accounts/register.html')
+        except ValueError:
+            messages.error(request, "Invalid user ID format")
             return render(request, 'accounts/register.html')
-        
+
+        # Check for existing user
+        if User.objects.filter(id=id).exists():
+            messages.error(request, "User ID already exists")
+            return render(request, 'accounts/register.html')
+
         if User.objects.filter(email=email).exists():
-            messages.error(request, "User with this email already exists.")
+            messages.error(request, "Email already registered")
             return render(request, 'accounts/register.html')
-        
-        # Create a new user using the custom manager
+
+        # Create new user
         try:
             User.objects.create_user(
-                id=user_id,  # Use the input as primary key id
-                user_id=user_id,  # Also set the user_id field
+                id=id,
                 email=email,
                 dob=dob,
                 password=password,
                 user_type=user_type
             )
-            messages.success(request, "Registration successful!")
+            messages.success(request, "Registration successful! Please login")
             return redirect('accounts:login')
         except Exception as e:
             messages.error(request, f"Registration failed: {str(e)}")
-    
+            return render(request, 'accounts/register.html')
+
     return render(request, 'accounts/register.html')
 
 def user_login(request):
     """Handle user login"""
     if request.method == 'POST':
-        userId = request.POST.get('userId')
+        id = request.POST.get('user.id')
         password = request.POST.get('password')
         user_type = request.POST.get('user_type')
         
         # Validate input - ensuring ID is numeric would be good here
-        if not userId:
+        if not id:
             messages.error(request, 'Please enter your ID.')
             return render(request, 'accounts/login.html')
         
         try:
             # Try to find the user by ID (primary key)
-            user = User.objects.get(id=userId)
+            user = User.objects.get(id=id)
             
             # Check password
             if not user.check_password(password):
@@ -144,17 +159,16 @@ def admin_page(request):
 @login_required
 def users_list(request):
     """List of users with pagination and search"""
-    users = User.objects.filter(user_type='user').order_by('-id')
+    users = User.objects.filter(id__lte=1014, id__gte=1001).order_by('-id')
+    
     search_query = request.GET.get('q', '')
     if search_query:
         users = users.filter(Q(id__icontains=search_query) | Q(email__icontains=search_query))
-    paginator = Paginator(users, 10)
-    page_number = request.GET.get('page', 1)
-    page_obj = paginator.get_page(page_number)
+    
     return render(request, 'accounts/user_list.html', {
-        'page_obj': page_obj,
+        'users': users,
         'total_entries': users.count(),
-        'search_query': search_query
+        'search_query': search_query,
     })
 
 @login_required
@@ -169,22 +183,21 @@ def user_detail(request, user_id):
         })
     return render(request, 'accounts/user_detail.html', {'user': user})
 
-def add_user(request):
-    """Add a new user (AJAX supported)"""
-    if request.method == 'POST':
-        form = UserForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return JsonResponse({
-                    'id': user.id,
-                    'user_id': user.user_id,
-                    'email': user.email,
-                    'dob': user.dob.strftime('%Y-%m-%d') if user.dob else None,
-                    'success': True
-                })
-            return redirect(reverse('accounts:users_list') + '?added=true')
-
+# def add_user(request):
+#     """Add a new user (AJAX supported)"""
+#     if request.method == 'POST':
+#         form = UserForm(request.POST)
+#         if form is_valid():
+#             user = form.save()
+#             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+#                 return JsonResponse({
+#                     'id': user.id,
+#                     'user_id': user.user_id,
+#                     'email': user.email,
+#                     'dob': user.dob.strftime('%Y-%m-%d') if user.dob else None,
+#                     'success': True
+#                 })
+#             return redirect(reverse('accounts:users_list') + '?added=true')
 @login_required
 def edit_user(request, user_id):
     """Edit a user"""
@@ -202,12 +215,15 @@ def delete_user(request, user_id):
     if request.method == 'POST':
         user.delete()
         return redirect('accounts:users_list')
-    return render(request, 'accounts/delete_user.html', {'user': user})
+    
+    # Render a confirmation form instead of just the object
+    form = UserForm(instance=user)
+    return render(request, 'accounts/delete_user.html', {'form': form, 'user': user})
 
 @login_required
 def voter_edit(request, voter_id):
     """Edit voter details"""
-    user = get_object_or_404(User, id=voter_id, user_type='user')
+    user = get_object_or_404(User, id=voter_id, user_type='users')
     form = UserForm(request.POST or None, instance=user)
     if request.method == 'POST' and form.is_valid():
         form.save()
@@ -217,7 +233,8 @@ def voter_edit(request, voter_id):
 @login_required
 def voter_delete(request, voter_id):
     """Delete voter after confirmation"""
-    user = get_object_or_404(User, id=voter_id, user_type='user')
+    # Changed 'user' to 'users'
+    user = get_object_or_404(User, id=voter_id, user_type='users')
     if request.method == 'POST':
         user.delete()
         return redirect('accounts:users_list')
@@ -368,6 +385,57 @@ def toggle_theme(request):
     new_theme = 'dark' if current_theme == 'light' else 'light'
     request.session['theme'] = new_theme
     return JsonResponse({'theme': new_theme})
+
+@login_required
+def get_voting_statistics(request):
+    """Return the voting statistics"""
+    vote_distribution = update_voting_statistics()
+    return JsonResponse(vote_distribution)
+
+@login_required
+@require_POST
+def submit_vote(request):
+    """Handle vote submission"""
+    try:
+        data = json.loads(request.body)
+        selected_candidates = data.get('candidates')
+
+        # Store the votes in the database
+        for position, candidate_id in selected_candidates.items():
+            try:
+                candidate = Candidate.objects.get(pk=candidate_id)
+                Vote.objects.create(user=request.user, candidate=candidate, position=position)
+            except Candidate.DoesNotExist:
+                return JsonResponse({'status': 'error', 'message': f'Candidate with id {candidate_id} does not exist'}, status=400)
+
+        # Update the voting statistics
+        vote_distribution = update_voting_statistics()
+
+        return JsonResponse({'status': 'success', 'message': 'Vote submitted successfully', 'vote_distribution': vote_distribution})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
+def update_voting_statistics():
+    """Update the voting statistics"""
+    # Get all candidates
+    candidates = Candidate.objects.all()
+
+    # Calculate the vote distribution for each candidate
+    total_votes = Vote.objects.count()
+    vote_distribution = {}
+    for candidate in candidates:
+        vote_count = Vote.objects.filter(candidate=candidate).count()
+        if total_votes > 0:
+            vote_percentage = (vote_count / total_votes) * 100
+        else:
+            vote_percentage = 0
+        vote_distribution[candidate.name] = vote_percentage
+
+    # Store the vote distribution in the cache or database (replace with your actual logic)
+    # Example:
+    # cache.set('vote_distribution', vote_distribution, timeout=300)
+
+    return vote_distribution
 
 def user_page(request):
     """Render the user page"""

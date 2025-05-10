@@ -68,9 +68,10 @@ TEMPLATES = [
     },
 ]
 
+DATABASE_ROUTERS = ['accounts.db_router.AccountsRouter']
+
 WSGI_APPLICATION = 'myproject.wsgi.application'
 
-# Database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -83,7 +84,7 @@ DATABASES = {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         },
     },
-    'candidates_db': {  # Adding the new database
+    'candidates_db': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'candidates',
         'USER': 'root',
@@ -93,7 +94,7 @@ DATABASES = {
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         },
-    }
+    },
 }
 
 

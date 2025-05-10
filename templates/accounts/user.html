@@ -59,7 +59,7 @@
             <i class="fas fa-moon"></i>
           </button>
           <div class="user-profile">
-            <span>Welcome, {{ user.username }}</span> <!-- Django user variable -->
+            <span>Welcome, {{ user.userId}}</span> <!-- Django user variable -->
           </div>
         </div>
       </div>
@@ -76,6 +76,7 @@
   </div>
 
   <!-- Static JS -->
+    {% csrf_token %}
   <script src="{% static 'js/user.js' %}"></script>
 </body>
 

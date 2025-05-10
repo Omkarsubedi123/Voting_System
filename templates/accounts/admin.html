@@ -11,7 +11,7 @@
 
     <div>
       <h1 class="page-title">Dashboard Overview</h1>
-      <p class="welcome-text">Welcome back, {{ user.userId }}</p>
+      <p class="welcome-text">Welcome back, Admin</p>
     </div>
 
     <div class="user-profile">
@@ -24,7 +24,6 @@
           <a href="{% url 'accounts:admin_page' %}">
             <span class="profile-avatar">{{ user.userId|first|upper }}</span>
         </a>
-        Id
           <span>Profile</span>
           <i class="fas fa-chevron-down"></i>
         </button>
@@ -108,5 +107,6 @@
         </tbody>
       </table>
     </div>
+
   </div>
 {% endblock %}

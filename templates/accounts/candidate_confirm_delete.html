@@ -2,19 +2,21 @@
 {% load static %}
 
 {% block extra_head %}
-  <link rel="stylesheet" href="{% static 'css/candidates.css' %}">
+  <link rel="stylesheet" href="{% static 'css/candidates_delete.css' %}">
 {% endblock extra_head %}
 
 {% block content %}
-  <h1>Delete Candidate</h1>
-  <p>Are you sure you want to delete "{{ candidate.name }}"?</p>
-  <form method="post">
-    {% csrf_token %}
-    <button type="submit">Yes, delete</button>
-    <a href="{% url 'accounts:candidate_list' %}">Cancel</a>
-  </form>
+  <div class="delete-box">
+    <h1>Delete Candidate</h1>
+    <p>Are you sure you want to delete "<strong>{{ candidate.name }}</strong>"?</p>
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn-delete">Yes, delete</button>
+      <a href="{% url 'accounts:candidate_list' %}" class="btn-cancel">Cancel</a>
+    </form>
+  </div>
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/candidates.js' %}"></script>
+  <script src="{% static 'js/candidates.js' %}"></script>
 {% endblock extra_js %}

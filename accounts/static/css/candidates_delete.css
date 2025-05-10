@@ -1,0 +1,68 @@
+/* candidates.css */
+
+body {
+  background-color: black;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.delete-box {
+  background-color: white;
+  padding: 30px 40px;
+  margin: 80px auto;
+  max-width: 400px;
+  text-align: center;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+.delete-box h1 {
+  color: #e74c3c;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.delete-box p {
+  font-size: 18px;
+  margin-bottom: 25px;
+  color: #2d3436;
+}
+
+.delete-box strong {
+  color: #2d3436;
+}
+
+form {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.btn-delete {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-delete:hover {
+  background-color: #c0392b;
+}
+
+.btn-cancel {
+  background-color: #dfe6e9;
+  color: #2d3436;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 16px;
+  transition: background 0.3s;
+}
+
+.btn-cancel:hover {
+  background-color: #b2bec3;
+}

@@ -44,13 +44,15 @@ urlpatterns = [
     
     # Additional pages
     path('elections/', views.elections, name='elections'),
-    path('results/', views.results, name='results'),
+    path('news/', views.news, name='news'),
     path('about/', views.about, name='about'),
     path('how-it-works/', views.how_it_works, name='how_it_works'),
     path('security/', views.security, name='security'),
     path('faq/', views.faq, name='faq'),
     path('user/', views.user_page, name='user_page'),
-    
+    path('submit_vote/', views.submit_vote, name='submit_vote'),
+    path('api/voting_statistics/', views.get_voting_statistics, name='get_voting_statistics'),
+
     path('about/', views.about, name='about'),
 
 
