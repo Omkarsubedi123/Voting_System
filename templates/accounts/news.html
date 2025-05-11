@@ -1,2 +1,96 @@
-<h2>Results</h2>
-<p>Placeholder for results page.</p>
+{% load static %}
+""<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Election News</title>
+    <link rel="stylesheet" href="{% static 'css/news.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <div id="app">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <a href="#" class="sidebar-logo">
+                    <i class="fas fa-vote-yea"></i>
+                    <span>VoteTracker</span>
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'dashboard' %}">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'vote_section' %}">
+                        <i class="fas fa-vote-yea"></i>
+                        <span>Vote Section</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'news_page' %}">
+                        <i class="fas fa-newspaper"></i>
+                        <span>Election News</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'settings' %}">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="main-content">
+            <div class="topbar">
+                <h1 class="page-title">Election News</h1>
+                <div class="user-menu">
+                    <button class="theme-toggle" aria-label="Toggle theme">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <div class="user-profile">
+                        <span>Welcome, Username</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="news-section fade-in">
+                    <h2>Latest Election News</h2>
+                    <div class="news-grid">
+                        {% for article in news_articles %}
+                        <div class="news-card">
+                            <div class="news-image">
+                                <img src="{{ article.image }}" alt="" height="180px" width="100%">
+                            </div>
+                            <div class="news-content">
+                                <div class="news-date">{{ article.date }}</div>
+                                <h3 class="news-headline">{{ article.title }}</h3>
+                                <p class="news-excerpt">{{ article.excerpt }}</p>
+                                <div class="news-author">
+                                    <div class="author-image">
+                                        <img src="{{ article.author_image }}" alt="" height="30px" width="30px" style="border-radius: 50%;">
+                                    </div>
+                                    <div class="author-name">By {{ article.author_name }}</div>
+                                </div>
+                                <a href="#" class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div>© 2025 Lions Club Elections. All rights reserved.</div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'js/news.js' %}"></script>
+</body>
+</html>
+""

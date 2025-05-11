@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth import get_user_model
-from .models import Candidate
+from .models import People
 
 User = get_user_model()
 
@@ -35,11 +35,10 @@ class RegistrationForm(forms.ModelForm):
         return user
 
 class LoginForm(forms.Form):
-    # Changed field name to match the template input name
-    id = forms.IntegerField(label='id')
+    id = forms.IntegerField(label='ID')
     password = forms.CharField(widget=forms.PasswordInput())
     user_type = forms.ChoiceField(choices=[
-        ('user', 'General Voter'),  # Match this with your template option value
+        ('users', 'General User'),
         ('admin', 'Admin')
     ])
 
@@ -52,8 +51,9 @@ class UserForm(forms.ModelForm):
         }
 
 class CandidateForm(forms.ModelForm):
+    # Using People model with the renamed table
     class Meta:
-        model = Candidate
+        model = People
         fields = ['name', 'membership', 'post', 'description']
 
 class UserProfileForm(UserChangeForm):

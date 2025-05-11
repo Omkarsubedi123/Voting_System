@@ -1,12 +1,16 @@
 class AccountsRouter:
     def db_for_read(self, model, **hints):
         if model._meta.app_label == 'accounts':
-            return 'candidates_db'
+            if model.__name__ == "People":
+                return 'candidates_db'
+            return 'default'
         return None
 
     def db_for_write(self, model, **hints):
         if model._meta.app_label == 'accounts':
-            return 'candidates_db'
+            if model.__name__ == "People":
+                return 'candidates_db'
+            return 'default'
         return None
 
     def allow_relation(self, obj1, obj2, **hints):
@@ -16,5 +20,5 @@ class AccountsRouter:
 
     def allow_migrate(self, db, app_label, model_name=None, **hints):
         if app_label == 'accounts':
-            return db == 'candidates_db'
+            return False
         return None

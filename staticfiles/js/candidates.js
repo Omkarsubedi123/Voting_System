@@ -37,7 +37,7 @@ function renderCandidates(candidates) {
       return;
   }
 
-  candidates.forEach(candidate => {
+  candidates.forEach(people => {
       const row = document.createElement("tr");
       row.innerHTML = `
           <td>${candidate.name}</td>

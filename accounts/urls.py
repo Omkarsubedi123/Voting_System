@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import candidate_list, candidate_create, candidate_update, candidate_delete
+from .views import candidate_list, candidate_create, candidate_update, candidate_delete,candidate_list_json
 from django.contrib.auth import views as auth_views
 
 app_name = 'accounts'  # This defines the namespace
@@ -36,11 +36,13 @@ urlpatterns = [
     path('api/change-password/', views.change_password, name='change_password'),
     path('api/delete-account/', views.delete_profile, name='delete_account'),
     
-    # Candidate management
     path('candidates/', candidate_list, name='candidate_list'),
     path('candidates/new/', candidate_create, name='candidate_create'),
     path('candidates/<int:pk>/edit/', candidate_update, name='candidate_update'),
     path('candidates/<int:pk>/delete/', candidate_delete, name='candidate_delete'),
+    
+    # Candidate list as JSON
+    path('candidates_json/', views.candidate_list_json, name='candidates_json'),
     
     # Additional pages
     path('elections/', views.elections, name='elections'),
@@ -52,6 +54,10 @@ urlpatterns = [
     path('user/', views.user_page, name='user_page'),
     path('submit_vote/', views.submit_vote, name='submit_vote'),
     path('api/voting_statistics/', views.get_voting_statistics, name='get_voting_statistics'),
+
+     path('submit_vote/', views.submit_vote, name='submit_vote'),
+    path('vote_results/', views.vote_results, name='vote_results'),
+    path('check_vote_status/', views.check_vote_status, name='check_vote_status'),
 
     path('about/', views.about, name='about'),
 

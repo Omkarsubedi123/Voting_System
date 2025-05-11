@@ -1,7 +1,8 @@
-# models.py - Fixed user_type consistency
+# models.py
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import User
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, id, email, dob, user_type, password=None, **extra_fields):
@@ -14,7 +15,7 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
     
-    def create_superuser(self, id, email, dob, user_type='admins', password=None, **extra_fields):
+    def create_superuser(self, id, email, dob, user_type='admin', password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         return self.create_user(id, email, dob, user_type, password, **extra_fields)
@@ -44,129 +45,28 @@ class User(AbstractUser):
 
     class Meta:
         db_table = 'users'
-
-class Candidate(models.Model):
+class People(models.Model):
     name = models.CharField(max_length=100)
-    membership = models.PositiveIntegerField()
+    membership = models.CharField(max_length=255)
     post = models.CharField(max_length=100)
     description = models.TextField()
 
     def __str__(self):
         return self.name
 
-# forms.py - Fixed with consistent field names and choices
-from django import forms
-from django.contrib.auth.forms import UserChangeForm
-from django.contrib.auth import get_user_model
-from .models import Candidate
-
-User = get_user_model()
-
-class RegistrationForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput)
-    confirm_password = forms.CharField(widget=forms.PasswordInput)
-    
     class Meta:
-        model = User
-        fields = ['email', 'dob', 'user_type']
-        widgets = {
-            'dob': forms.DateInput(attrs={'type': 'date'}),
-        }
-    
-    def clean(self):
-        cleaned_data = super().clean()
-        password = cleaned_data.get('password')
-        confirm_password = cleaned_data.get('confirm_password')
+        db_table = 'people'  # Explicitly set the table name
+        managed = False  
         
-        if password and confirm_password and password != confirm_password:
-            self.add_error('confirm_password', 'Passwords do not match')
-        
-        return cleaned_data
-    
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.set_password(self.cleaned_data['password'])
-        
-        if commit:
-            user.save()
-        return user
+class Vote(models.Model):
+    name = models.ForeignKey(User, on_delete=models.CASCADE)  # This is the user field
+    candidate = models.ForeignKey(People, on_delete=models.CASCADE)
+    position = models.CharField(max_length=100)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
-class LoginForm(forms.Form):
-    id = forms.IntegerField(label='ID')
-    password = forms.CharField(widget=forms.PasswordInput())
-    user_type = forms.ChoiceField(choices=[
-        ('users', 'General User'),  # Changed to match the database value
-        ('admins', 'Admin')
-    ])
-
-class UserForm(forms.ModelForm):
     class Meta:
-        model = User
-        fields = ['email', 'dob', 'user_type']
-        widgets = {
-            'dob': forms.DateInput(attrs={'type': 'date'}),
-        }
+        unique_together = ('name', 'position')  # Use 'name' instead of 'user'
+        db_table = 'voters'  # Explicitly set the table name
 
-class CandidateForm(forms.ModelForm):
-    class Meta:
-        model = Candidate
-        fields = ['name', 'membership', 'post', 'description']
-
-class UserProfileForm(UserChangeForm):
-    first_name = forms.CharField(max_length=30, required=False)
-    last_name = forms.CharField(max_length=30, required=False)
-    email = forms.EmailField(required=True)
-    phone = forms.CharField(max_length=15, required=False)
-    
-    class Meta:
-        model = User
-        fields = ('first_name', 'last_name', 'email', 'phone')
-        widgets = {
-            'first_name': forms.TextInput(attrs={'placeholder': 'First Name'}),
-            'last_name': forms.TextInput(attrs={'placeholder': 'Last Name'}),
-            'phone': forms.TextInput(attrs={'placeholder': 'Phone Number'}),
-        }
-
-# views.py - Fixed login view
-from django.contrib import messages
-from django.shortcuts import render, redirect
-from django.contrib.auth import login
-from .models import User
-
-def user_login(request):
-    """Handle user login"""
-    if request.method == 'POST':
-        id = request.POST.get('id')
-        password = request.POST.get('password')
-        user_type = request.POST.get('user_type')
-        
-        # Validate input - ensuring ID is numeric would be good here
-        if not id:
-            messages.error(request, 'Please enter your ID.')
-            return render(request, 'accounts/login.html')
-        
-        try:
-            # Try to find the user by ID (primary key)
-            user = User.objects.get(id=id)
-            
-            # Check password
-            if not user.check_password(password):
-                messages.error(request, 'Invalid password.')
-                return render(request, 'accounts/login.html')
-            
-            # Check user type matches what's expected
-            if user.user_type != user_type:
-                messages.error(request, f'Invalid user type selected. Your account is registered as {user.get_user_type_display()}.')
-                return render(request, 'accounts/login.html')
-            
-            # All validations passed
-            login(request, user)
-            if user_type == 'admins':
-                return redirect('accounts:admin_page')
-            else:
-                return redirect('accounts:user_page')
-        
-        except User.DoesNotExist:
-            messages.error(request, 'Wrong ID! User does not exist.')
-    
-    return render(request, 'accounts/login.html')
+    def __str__(self):
+        return f"{self.name.email} voted for {self.candidate.name} as {self.position}"

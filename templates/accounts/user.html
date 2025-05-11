@@ -1,83 +1,92 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lions Elections Dashboard</title>
-
-  <!-- Static CSS -->
-  <link rel="stylesheet" href="{% static 'css/user.css' %}">
-  
-  <!-- FontAwesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lions Elections Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/user.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-
 <body>
-  <div id="app">
-    <div class="sidebar">
-      <div class="sidebar-header">
-        <a href="#" class="sidebar-logo">
-          <i class="fas fa-vote-yea"></i>
-          <span>VoteTracker</span>
-        </a>
-      </div>
-      <ul class="nav-menu">
-        <li class="nav-item">
-          <a class="nav-link active" href="#" data-page="dashboard">
-            <i class="fas fa-home"></i>
-            <span>Dashboard</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#" data-page="vote">
-            <i class="fas fa-vote-yea"></i>
-            <span>Vote Section</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#" data-page="news">
-            <i class="fas fa-newspaper"></i>
-            <span>Election News</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#" data-page="settings">
-            <i class="fas fa-cog"></i>
-            <span>Settings</span>
-          </a>
-        </li>
-      </ul>
-    </div>
-
-    <div class="main-content">
-      <div class="topbar">
-        <h1 class="page-title">Dashboard Overview</h1>
-        <div class="user-menu">
-          <button class="theme-toggle" aria-label="Toggle theme">
-            <i class="fas fa-moon"></i>
-          </button>
-          <div class="user-profile">
-            <span>Welcome, {{ user.userId}}</span> <!-- Django user variable -->
-          </div>
+    <div id="app">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <a href="#" class="sidebar-logo">
+                    <i class="fas fa-vote-yea"></i>
+                    <span>VoteTracker</span>
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" data-page="dashboard">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-page="vote">
+                        <i class="fas fa-vote-yea"></i>
+                        <span>Vote Section</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-page="news">
+                        <i class="fas fa-newspaper"></i>
+                        <span>Election News</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-page="settings">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a> 
+                </li>
+            </ul>
         </div>
-      </div>
 
-      <div class="content">
-        <!-- Content will be loaded here by JavaScript -->
-      </div>
+        <div class="main-content">
+            <div class="topbar">
+                <h1 class="page-title">Vote Section</h1>
+                <div class="user-menu">
+                    <button class="theme-toggle" aria-label="Toggle theme">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <div class="user-profile">
+                        <span>Welcome, {{ user.id }}</span>
+                    </div>
+                </div>
+            </div>
 
-      <div class="footer">
-        <div>© 2025 Lions Club Elections. All rights reserved.</div>
-      </div>
-      
+            <div class="content">
+                <h2>Cast Your Vote</h2>
+                {% for candidate in candidates %}
+                    <div class="candidate-card">
+                        <h3>{{ candidate.name }}</h3>
+                        <p><strong>Membership:</strong> {{ candidate.membership }}</p>
+                        <p><strong>Position:</strong> {{ candidate.position }}</p>
+                        <p><strong>Description:</strong> {{ candidate.description }}</p>
+                        <div class="vote-option">
+                            <input type="radio" name="{{ candidate.position }}" id="candidate-{{ candidate.id }}" value="{{ candidate.id }}">
+                            <label for="candidate-{{ candidate.id }}">Vote</label>
+                            <button class="vote-button" data-candidate-id="{{ candidate.id }}">
+                                <i class="fas fa-check-circle"></i> Vote
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+                <button class="vote-submit-button" onclick="submitVote(getSelectedCandidateId(), getSelectedPosition())">Submit Vote</button>
+
+
+
+            </div>
+        </div>
     </div>
-  </div>
-
-  <!-- Static JS -->
+    
     {% csrf_token %}
-  <script src="{% static 'js/user.js' %}"></script>
+    <script src="{% static 'js/user.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static 'js/chart.min.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
-
 </html>

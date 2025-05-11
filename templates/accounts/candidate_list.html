@@ -17,7 +17,7 @@
     <thead>
       <tr>
         <th>Name</th>
-        <th>Age</th>
+        <th>Membership</th>
         <th>Post</th>
         <th>Description</th>
         <th>Actions</th>
@@ -27,12 +27,13 @@
       {% for candidate in candidates %}
         <tr>
           <td>{{ candidate.name }}</td>
-          <td>{{ candidate.age }}</td>
+          <td>{{ candidate.membership }}</td>
           <td>{{ candidate.post }}</td>
           <td>{{ candidate.description }}</td>
           <td>
-            <a style="text-decoration: none;" href="{% url 'accounts:candidate_update' candidate.id %}">Edit</a>
-            <a style="text-decoration: none;" href="{% url 'accounts:candidate_delete' candidate.id %}">Delete</a>
+          <a href="{% url 'accounts:candidate_update' candidate.id %}">Edit</a>
+          <a href="{% url 'accounts:candidate_delete' candidate.id %}">Delete</a>
+
           </td>
         </tr>
       {% empty %}

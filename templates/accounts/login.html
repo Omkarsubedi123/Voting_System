@@ -31,10 +31,10 @@
             <form action="{% url 'accounts:login' %}" method="POST">
                 {% csrf_token %}
                 <div class="input-group">
-                    <label for="userId">User ID</label>
+                    <label for="id">User ID</label>
                     <div class="input-box">
                         <i class="fas fa-id-card"></i>
-                        <input type="text" id="userId" name="userId" placeholder="Enter your ID" required>
+                        <input type="text" id="id" name="id" placeholder="Enter your ID" required>
                     </div>
                 </div>
                 
