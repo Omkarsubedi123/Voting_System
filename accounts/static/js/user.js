@@ -119,40 +119,20 @@ function navigateToPage(page) {
 
 // Fetch vote results and render charts
 function fetchVoteResults() {
-  const resultsContainer = document.getElementById('vote-results');
-  if (!resultsContainer) return;
-  
-  // Show loading indicator
-  resultsContainer.innerHTML = '<div class="loading">Loading vote results...</div>';
-  
   fetch('/vote_results/', {
     method: 'GET',
     headers: {
       'X-CSRFToken': getCookie('csrftoken')
     }
   })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    return response.json();
-  })
+  .then(response => response.json())
   .then(data => {
     console.log('Vote results data:', data);
-    
-    // Check if data is empty
-    if (!data || Object.keys(data).length === 0) {
-      resultsContainer.innerHTML = '<p>No voting data available yet. Check back after votes have been cast.</p>';
-      return;
-    }
-    
-    // Reset the container to original HTML before rendering charts
-    document.querySelector('.content').innerHTML = getDashboardHTML();
     renderVoteCharts(data);
   })
   .catch(error => {
     console.error('Error fetching vote results:', error);
-    resultsContainer.innerHTML = '<p>Error loading vote results. Please try again later.</p>';
+    document.getElementById('vote-results').innerHTML = '<p>Error loading vote results. Please try again later.</p>';
   });
 }
 
@@ -162,172 +142,109 @@ function renderVoteCharts(resultsData) {
   renderPieChart(resultsData);
 }
 
-// Render bar chart with improved error handling
-function renderBarChart(resultsData) {
-  const barCtx = document.getElementById('barChart');
-  if (!barCtx) return;
+// Render both bar chart and pie chart
+function renderVoteCharts(resultsData) {
+    renderBarChart(resultsData);
+    renderPieChart(resultsData);
+}
 
-  try {
+// Render bar chart
+function renderBarChart(resultsData) {
+    const barCtx = document.getElementById('barChart');
+    if (!barCtx) return;
+      // Adjust canvas size for a more compact display
+    barCtx.width = 100;   // Reduced width
+    barCtx.height = 50;  // Reduced height
+
     // Process data for chart
     const positions = Object.keys(resultsData);
     const datasets = [];
-    const allCandidateNames = [];
-    
+    const candidateNames = []; // Collect candidate names
+
     // Create datasets for each position
     positions.forEach(position => {
-      const positionData = resultsData[position];
-      
-      // Check if position data is a valid array
-      if (!Array.isArray(positionData)) {
-        console.error(`Expected an array for position ${position}, but got:`, positionData);
-        return; // Skip this position
-      }
-      
-      const candidateNames = [];
-      const candidateVotes = [];
-      
-      positionData.forEach(candidate => {
-        if (candidate && typeof candidate === 'object' && 'name' in candidate && 'votes' in candidate) {
-          candidateNames.push(candidate.name);
-          candidateVotes.push(candidate.votes);
-          
-          // Add to all candidates list if not already included
-          if (!allCandidateNames.includes(candidate.name)) {
-            allCandidateNames.push(candidate.name);
-          }
-        } else {
-          console.error('Invalid candidate data structure:', candidate);
-        }
-      });
-      
-      if (candidateNames.length > 0) {
+        const candidateVotes = [];
+
+        resultsData[position].forEach(candidate => {
+            if (!candidateNames.includes(candidate.name)) {
+                candidateNames.push(candidate.name); // Ensure unique names
+            }
+            candidateVotes.push(candidate.votes);
+        });
+
         // Create a dataset for this position
         datasets.push({
-          label: position,
-          data: candidateVotes,
-          backgroundColor: getRandomColor(),
-          categoryPercentage: 0.7,
-          barPercentage: 0.8
+            label: position,
+            data: candidateVotes,
+            backgroundColor: getRandomColor(),
+            categoryPercentage: 0.5,
+            barPercentage: 0.5
         });
-      }
     });
-    
-    // If we have valid data, create the chart
-    if (datasets.length > 0 && allCandidateNames.length > 0) {
-      new Chart(barCtx, {
+
+    new Chart(barCtx, {
         type: 'bar',
         data: {
-          labels: allCandidateNames,
-          datasets: datasets
+            labels: candidateNames, // Add labels correctly
+            datasets: datasets
         },
         options: {
-          responsive: true,
-          scales: {
-            y: {
-              beginAtZero: true,
-              title: {
-                display: true,
-                text: 'Number of Votes'
-              }
-            },
-            x: {
-              title: {
-                display: true,
-                text: 'Candidates'
-              }
-            }
-          },
-          plugins: {
-            title: {
-              display: true,
-              text: 'Vote Results by Position and Candidate'
-            },
-            legend: {
-              display: true,
-              position: 'top'
-            }
-          }
+            responsive: true
         }
-      });
-    } else {
-      document.querySelector('.chart-wrapper:first-child').innerHTML = '<h4>Results by Candidate</h4><p>No valid voting data to display.</p>';
-    }
-  } catch (error) {
-    console.error('Error rendering bar chart:', error);
-    document.querySelector('.chart-wrapper:first-child').innerHTML = '<h4>Results by Candidate</h4><p>Error rendering chart.</p>';
-  }
+    });
 }
-
-// Render pie chart with improved error handling
+""// Render pie chart
 function renderPieChart(resultsData) {
   const pieCtx = document.getElementById('pieChart');
   if (!pieCtx) return;
 
-  try {
-    // Process data for pie chart - we'll show total votes per position
-    const positions = Object.keys(resultsData);
-    const labels = [];
-    const data = [];
-    const backgroundColors = [];
-    
-    // Calculate total votes per position
-    positions.forEach(position => {
-      const positionData = resultsData[position];
-      
-      // Skip invalid data
-      if (!Array.isArray(positionData)) {
-        console.error(`Expected an array for position ${position}, but got:`, positionData);
-        return; // Skip this position
-      }
-      
-      let positionTotal = 0;
-      positionData.forEach(candidate => {
-        if (candidate && typeof candidate === 'object' && 'votes' in candidate) {
-          positionTotal += candidate.votes;
-        }
-      });
-      
-      if (positionTotal > 0) {
-        labels.push(position);
-        data.push(positionTotal);
-        backgroundColors.push(getRandomColor());
-      }
+  // Process data for pie chart - we'll show total votes for each candidate per position
+  const positions = Object.keys(resultsData);
+  const labels = [];
+  const datasets = [];
+
+  // Create a dataset for each position
+  positions.forEach(position => {
+    const candidateNames = resultsData[position].map(candidate => candidate.name);
+    const candidateVotes = resultsData[position].map(candidate => candidate.votes);
+
+    datasets.push({
+      label: position,
+      data: candidateVotes,
+      backgroundColor: candidateNames.map(() => getRandomColor())
     });
 
-    if (labels.length > 0) {
-      new Chart(pieCtx, {
-        type: 'pie',
-        data: {
-          labels: labels,
-          datasets: [{
-            data: data,
-            backgroundColor: backgroundColors
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            title: {
-              display: true,
-              text: 'Total Votes by Position'
-            },
-            legend: {
-              display: true,
-              position: 'top'
-            }
-          }
-        }
-      });
-    } else {
-      document.querySelector('.chart-wrapper:last-child').innerHTML = '<h4>Distribution by Position</h4><p>No valid voting data to display.</p>';
-    }
-  } catch (error) {
-    console.error('Error rendering pie chart:', error);
-    document.querySelector('.chart-wrapper:last-child').innerHTML = '<h4>Distribution by Position</h4><p>Error rendering chart.</p>';
-  }
-}
+    // Add candidate names only if they're not already present
+    candidateNames.forEach(name => {
+      if (!labels.includes(name)) labels.push(name);
+    });
+  });
 
-// Helper function to generate random colors with consistent mapping
+  new Chart(pieCtx, {
+    type: 'pie',
+    data: {
+      labels: labels,
+      datasets: datasets
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      radius: '35%', // Make the pie smaller
+      plugins: {
+        title: {
+          display: true,
+          text: 'Votes Distribution by Candidate'
+        },
+        legend: {
+          display: true,
+          position: 'top'
+        }
+      }
+    }
+  });
+}""
+
+// Helper function to generate random colors
 function getRandomColor() {
   const colors = [
     '#4CAF50', '#2196F3', '#FF9800', '#E91E63', '#9C27B0', 
@@ -339,9 +256,6 @@ function getRandomColor() {
 // Updated function to fetch candidates with proper URL and debugging
 function fetchCandidates() {
   console.log('Fetching candidates...');
-  
-  const content = document.querySelector('.content');
-  content.innerHTML = '<h2>Loading candidates...</h2><div class="loading-spinner"></div>';
 
   fetch('/candidates_json/', {
     method: 'GET',
@@ -365,7 +279,7 @@ function fetchCandidates() {
 
     // Check if data is empty array
     if (Array.isArray(data) && data.length === 0) {
-      content.innerHTML = '<h2>No candidates found.</h2>';
+      document.querySelector('.content').innerHTML = '<h2>No candidates found.</h2>';
       return;
     }
 
@@ -405,20 +319,14 @@ function fetchCandidates() {
     });
 
     candidateHTML += `<button class="vote-submit-button">Submit Vote</button>`;
-    content.innerHTML = candidateHTML;
+    document.querySelector('.content').innerHTML = candidateHTML;
 
     // Set up event handlers for the newly created buttons
     setupCandidateEvents();
   })
   .catch(error => {
     console.error('Error fetching candidates:', error);
-    content.innerHTML = `<h2>Error loading candidates.</h2><p>${error.message}</p><button class="retry-button">Retry</button>`;
-    
-    // Add retry button functionality
-    const retryButton = content.querySelector('.retry-button');
-    if (retryButton) {
-      retryButton.addEventListener('click', fetchCandidates);
-    }
+    document.querySelector('.content').innerHTML = `<h2>Error loading candidates.</h2><p>${error.message}</p>`;
   });
 }
 
@@ -463,39 +371,17 @@ function toggleVoteSelection(candidateCard) {
   }
 }
 
-// Improved submitVote function with validation
+// Improved submitVote function
 function submitVote() {
-  const positions = document.querySelectorAll('.position-group');
+  const selectedCandidates = document.querySelectorAll('input[type="radio"]:checked');
   const voteData = {};
-  let allPositionsVoted = true;
-  let missingPositions = [];
-  
-  // Check if all positions have been voted for
-  positions.forEach(positionGroup => {
-    const positionName = positionGroup.querySelector('h3').textContent;
-    const selectedCandidate = positionGroup.querySelector('input[type="radio"]:checked');
-    
-    if (selectedCandidate) {
-      voteData[positionName] = selectedCandidate.value;
-    } else {
-      allPositionsVoted = false;
-      missingPositions.push(positionName);
-    }
+
+  selectedCandidates.forEach(input => {
+    const position = input.name;
+    voteData[position] = input.value;
   });
-  
-  if (!allPositionsVoted) {
-    alert(`Please vote for all positions. Missing: ${missingPositions.join(', ')}`);
-    return;
-  }
 
   console.log('Submitting votes:', voteData);
-  
-  // Show loading indicator
-  const submitButton = document.querySelector('.vote-submit-button');
-  if (submitButton) {
-    submitButton.disabled = true;
-    submitButton.innerHTML = 'Submitting...';
-  }
 
   fetch('/submit_vote/', {
     method: 'POST',
@@ -505,35 +391,19 @@ function submitVote() {
     },
     body: JSON.stringify({ candidates: voteData })
   })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return response.json();
-  })
+  .then(response => response.json())
   .then(data => {
     if (data.status === 'success') {
       alert('Vote submitted successfully!');
       hasVoted = true; // Update the voting status
       navigateToPage('dashboard'); // Redirect to dashboard to see results
     } else {
-      alert('Failed to submit vote: ' + (data.message || 'Unknown error'));
-      // Re-enable submit button
-      if (submitButton) {
-        submitButton.disabled = false;
-        submitButton.innerHTML = 'Submit Vote';
-      }
+      alert('Failed to submit vote: ' + (data.message || ''));
     }
   })
   .catch(error => {
     console.error('Error submitting vote:', error);
     alert('Error submitting vote. Please try again.');
-    
-    // Re-enable submit button
-    if (submitButton) {
-      submitButton.disabled = false;
-      submitButton.innerHTML = 'Submit Vote';
-    }
   });
 }
 
@@ -544,7 +414,7 @@ function getCookie(name) {
   return csrfToken ? csrfToken.split('=')[1] : null;
 }
 
-// Updated Dashboard Content with loading indicators
+// Updated Dashboard Content
 function getDashboardHTML() {
   return `
     <h2>Dashboard Overview</h2>

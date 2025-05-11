@@ -340,15 +340,15 @@ def submit_vote(request):
             return JsonResponse({'status': 'error', 'message': 'No vote data provided'}, status=400)
         
         # Check if the user has already voted for the same position
-        for position, candidate_id in candidates_data.items():
-            if Voter.objects.filter(name=user, position=position).exists():  # Use 'name' instead of 'user'
-                return JsonResponse({'status': 'error', 'message': f'You have already voted for {position}.'}, status=400)
+        for post, candidate_id in candidates_data.items():  # Use 'post' instead of 'position'
+            if Vote.objects.filter(name=user, position=post).exists():  # Use 'post' for filtering
+                return JsonResponse({'status': 'error', 'message': f'You have already voted for {post}.'}, status=400)
             
             # Ensure the candidate exists
             candidate = People.objects.get(id=candidate_id)
             
             # Save the vote in the voters table
-            Vote.objects.create(name=user, candidate=candidate, position=position)
+            Vote.objects.create(name=user, candidate=candidate, position=post)  # Use 'post' here
         
         return JsonResponse({'status': 'success', 'message': 'Vote submitted successfully.'})
     
@@ -367,7 +367,8 @@ from django.views.decorators.http import require_http_methods
 import json
 import traceback
 
-@require_http_methods(["GET"])
+
+@require_http_methods(["GET"])  
 def vote_results(request):
     try:
         # Debug information
@@ -376,7 +377,7 @@ def vote_results(request):
         # Using a dictionary to organize data by position
         results = {}
         
-        # Using raw SQL that matches your actual database structure
+        # Using raw SQL with the exact query as provided
         with connection.cursor() as cursor:
             # Get all votes grouped by position and candidate
             cursor.execute("""
@@ -403,11 +404,13 @@ def vote_results(request):
                     "votes": vote_count
                 })
         
+        # Return the results as JSON response
         return JsonResponse(results)
+        
     except Exception as e:
+        # Log the error and return a proper error response
         print(f"Error fetching vote results: {e}")
         return JsonResponse({"error": str(e)}, status=500)
-    
 @login_required
 def user_page(request):
     return render(request, 'accounts/user.html')
