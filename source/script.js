@@ -1,7 +1,4 @@
-// Add mobile navigation toggle functionality
 document.addEventListener('DOMContentLoaded', function() {
-    // This could be expanded to add a mobile menu toggle button
-    // For now, we'll just add some scroll animation
 
     // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
