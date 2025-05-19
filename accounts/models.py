@@ -45,6 +45,7 @@ class User(AbstractUser):
 
     class Meta:
         db_table = 'users'
+
 class People(models.Model):
     name = models.CharField(max_length=100)
     membership = models.CharField(max_length=255)
@@ -56,17 +57,18 @@ class People(models.Model):
 
     class Meta:
         db_table = 'people'  # Explicitly set the table name
-        managed = False  
+        managed = True  # Change to True to allow Django to manage the table
         
 class Vote(models.Model):
     name = models.ForeignKey(User, on_delete=models.CASCADE)  # This is the user field
-    candidate = models.ForeignKey(People, on_delete=models.CASCADE)
+    candidate = models.ForeignKey(People, on_delete=models.CASCADE, related_name='votes')  # Add related_name
     position = models.CharField(max_length=100)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ('name', 'position')  # Use 'name' instead of 'user'
         db_table = 'voters'  # Explicitly set the table name
+        managed = True  # Change to True to allow Django to manage the table
 
     def __str__(self):
         return f"{self.name.email} voted for {self.candidate.name} as {self.position}"

@@ -1,3 +1,5 @@
+from collections import defaultdict
+from datetime import datetime
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
@@ -8,14 +10,16 @@ from django.db.models import Q, Count
 from .models import User, People, Vote
 from .forms import RegistrationForm, CandidateForm, LoginForm, UserForm
 from django.contrib.auth import update_session_auth_hash
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_http_methods
 from django.views.decorators.csrf import csrf_protect
-from django.db import IntegrityError
+from django.db import connection, IntegrityError
+from django.contrib.auth.decorators import login_required
 import json
 import logging
+import traceback
+
 
 # ===== Basic Pages =====
-
 def home(request):
     return render(request, 'accounts/home.html')
 
@@ -38,7 +42,6 @@ def news(request):
     return render(request, 'accounts/news.html')
 
 # ===== User Registration/Login =====
-
 def user_register(request):
     if request.method == 'POST':
         id = request.POST.get('id')
@@ -70,6 +73,10 @@ def user_register(request):
 
         if User.objects.filter(email=email).exists():
             messages.error(request, "Email already registered")
+            return render(request, 'accounts/register.html')
+
+        if user_type == 'admin' and User.objects.filter(user_type='admin').exists():
+            messages.error(request, "An admin already exists. Please delete the existing admin to register a new one.")
             return render(request, 'accounts/register.html')
 
         try:
@@ -125,8 +132,9 @@ def user_login(request):
 def logout_view(request):
     logout(request)
     messages.success(request, 'You have been successfully logged out.')
-    return redirect('accounts:login')
+    return redirect('accounts:home')
 
+# ===== Admin Views =====
 @login_required
 def admin_page(request):
     return render(request, 'accounts/admin.html')
@@ -163,14 +171,14 @@ def edit_user(request, user_id):
         return redirect('accounts:users_list')
     return render(request, 'accounts/edit_user.html', {'form': form, 'user': user})
 
-@login_required
-def delete_user(request, user_id):
-    user = get_object_or_404(User, id=user_id, user_type='user')
-    if request.method == 'POST':
-        user.delete()
-        return redirect('accounts:users_list')
-    form = UserForm(instance=user)
-    return render(request, 'accounts/delete_user.html', {'form': form, 'user': user})
+# @login_required
+# def delete_user(request, user_id):
+#     user = get_object_or_404(User, id=user_id, user_type='user')
+#     if request.method == 'POST':
+#         user.delete()
+#         return redirect('accounts:users_list')
+#     form = UserForm(instance=user)
+#     return render(request, 'accounts/delete_user.html', {'form': form, 'user': user})
 
 @login_required
 def voter_edit(request, voter_id):
@@ -182,12 +190,12 @@ def voter_edit(request, voter_id):
     return render(request, 'accounts/voter_edit.html', {'form': form, 'user': user})
 
 @login_required
-def voter_delete(request, voter_id):
-    user = get_object_or_404(User, id=voter_id, user_type='users')
-    if request.method == 'POST':
+def voter_delete(request, id):
+    if request.method == "POST":
+        user = get_object_or_404(User, id=id)
         user.delete()
-        return redirect('accounts:users_list')
-    return render(request, 'accounts/voter_confirm_delete.html', {'user': user})
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False}, status=400)
 
 @login_required
 def ajax_voter_details(request, voter_id):
@@ -203,9 +211,272 @@ def ajax_voter_details(request, voter_id):
     except User.DoesNotExist:
         return JsonResponse({'error': 'User not found'}, status=404)
 
+# ===== Candidate Management =====
+@login_required
+def candidate_list(request):
+    if not request.user.is_admin:
+        messages.error(request, "Access Denied! Admins Only.")
+        return redirect('accounts:home')
+    candidates = People.objects.using('candidates_db').all()
+    return render(request, 'accounts/candidate_list.html', {'candidates': candidates})
+
+@login_required
+def candidate_list_json(request):
+    try:
+        # Get all distinct positions
+        positions = People.objects.values_list('post', flat=True).distinct()
+        
+        result = []
+        
+        for position in positions:
+            # Get candidates for each position
+            candidates = People.objects.filter(post=position)
+            
+            for candidate in candidates:
+                result.append({
+                    'id': candidate.id,
+                    'name': candidate.name,
+                    'position': candidate.post,
+                    'votes': candidate.vote_set.count(),
+                    'description': candidate.description,
+                    'membership': candidate.membership
+                })
+        
+        return JsonResponse(result, safe=False)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+@login_required
+def candidate_create(request):
+    if not request.user.is_admin:
+        messages.error(request, "Access Denied! Admins Only.")
+        return redirect('accounts:home')
+    form = CandidateForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        messages.success(request, "Candidate created successfully.")
+        return redirect('accounts:candidate_list')
+    return render(request, 'accounts/candidate_form.html', {'form': form})
+
+@login_required
+def candidate_update(request, pk):
+    if not request.user.is_admin:
+        messages.error(request, "Access Denied! Admins Only.")
+        return redirect('accounts:home')
+    candidate = get_object_or_404(People.objects.using('candidates_db'), pk=pk)
+    form = CandidateForm(request.POST or None, instance=candidate)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        messages.success(request, "Candidate updated successfully.")
+        return redirect('accounts:candidate_list')
+    return render(request, 'accounts/candidate_form.html', {'form': form})
+
+@login_required
+def candidate_delete(request, pk):
+    if not request.user.is_admin:
+        messages.error(request, "Access Denied! Admins Only.")
+        return redirect('accounts:home')
+    candidate = get_object_or_404(People.objects.using('candidates_db'), pk=pk)
+    if request.method == 'POST':
+        candidate.delete()
+        messages.success(request, "Candidate deleted successfully.")
+        return redirect('accounts:candidate_list')
+    return render(request, 'accounts/candidate_confirm_delete.html', {'people': candidate})
+
+# ===== Voting System =====
+@login_required
+@require_POST
+def submit_vote(request):
+    try:
+        data = json.loads(request.body)
+        candidates = data.get('candidates')
+        if not candidates or not isinstance(candidates, dict):
+            return JsonResponse({'status': 'error', 'message': 'Missing required fields'}, status=400)
+
+        user = request.user
+        already_voted = Vote.objects.filter(name=user).exists()
+        if already_voted:
+            return JsonResponse({'status': 'error', 'message': 'You have already voted.'}, status=400)
+
+        for position, candidate_id in candidates.items():
+            if not candidate_id or not position:
+                return JsonResponse({'status': 'error', 'message': 'Missing required fields'}, status=400)
+            Vote.objects.create(name=user, candidate_id=candidate_id, position=position)
+
+        return JsonResponse({'status': 'success', 'message': 'Vote submitted successfully.'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+@require_http_methods(["GET"])
+def vote_results(request):
+    try:
+    #     with connection.cursor() as cursor:
+    #         # Get comparative results for each position
+    #         cursor.execute("""
+    #             WITH 
+    #             candidate_votes AS (
+    #                 SELECT 
+    #                     v.position,
+    #                     c.name_id as name,
+    #                     COUNT(*) as votes,
+    #                     ROW_NUMBER() OVER (PARTITION BY v.position ORDER BY COUNT(*) DESC) as rank
+    #                 FROM voters v
+    #                 JOIN voters c ON v.candidate_id = c.id
+    #                 GROUP BY v.position, c.name_id
+    #             ),
+    #             position_totals AS (
+    #                 SELECT 
+    #                     position,
+    #                     SUM(votes) as total_votes
+    #                 FROM candidate_votes
+    #                 GROUP BY position
+    #             )
+    #             SELECT 
+    #                 cv.position,
+    #                 cv.name,
+    #                 cv.votes,
+    #                 pt.total_votes,
+    #                 ROUND((cv.votes * 100.0 / pt.total_votes), 2) as percentage,
+    #                 cv.rank
+    #             FROM candidate_votes cv
+    #             JOIN position_totals pt ON cv.position = pt.position
+    #             WHERE cv.rank <= 2
+    #             ORDER BY cv.position, cv.rank
+    #         """)
+
+    #         rows = cursor.fetchall()
+
+    #         # Reformat results to show comparative data
+    #         results = {}
+    #         for row in rows:
+    #             position, name, votes, total_votes, percentage, rank = row
+                
+    #             if position not in results:
+    #                 results[position] = {
+    #                     "total_votes": total_votes,
+    #                     "candidates": []
+    #                 }
+                
+    #             results[position]["candidates"].append({
+    #                 "name": name,
+    #                 "votes": votes,
+    #                 "percentage": percentage,
+    #                 "rank": rank
+    #             })
+        
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM voters;")
+            voters = cursor.fetchall()
+
+            cursor.execute("SELECT * FROM candidates.people;")
+            people = cursor.fetchall()
+
+            vote_count = defaultdict(int)
+            for vote in voters:
+                candidate_id = vote[2]
+                vote_count[candidate_id] += 1
+
+            position_map = defaultdict(dict)
+            for candidate in people:
+                candidate_id, name, _, position, _ = candidate
+                count = vote_count.get(candidate_id, 0)
+                position_map[position][name] = count
+
+            return JsonResponse(position_map)
+        # return JsonResponse(results)
+        
+    except Exception as e:
+        print(f"Error fetching vote results: {e}")
+        return JsonResponse({"error": str(e)}, status=500)
+@login_required
+def get_voting_statistics(request):
+    """
+    Get voting statistics for frontend display.
+    Returns JSON with position-based candidate vote counts.
+    """
+    try:
+        # Check if this is an AJAX request
+        if request.headers.get('X-Requested-With') != 'XMLHttpRequest':
+            return JsonResponse({
+                'error': 'Non-AJAX requests are not allowed for this endpoint'
+            }, status=400)
+
+        # First, check if the People model exists and has data
+        try:
+            positions = People.objects.values_list('post', flat=True).distinct()
+        except Exception as db_error:
+            logging.error(f"Database error querying positions: {str(db_error)}")
+            return JsonResponse({
+                'error': 'Could not retrieve candidate positions from database',
+                'debug_info': str(db_error)
+            }, status=500)
+            
+        if not positions:
+            return JsonResponse({
+                'message': 'No candidate positions found in database'
+            }, status=200)  # Return empty but valid JSON
+
+        results = {}
+        
+        # Process each position
+        for position in positions:
+            try:
+                # Get candidates for this position with vote counts
+                candidates = People.objects.filter(post=position).annotate(
+                    vote_count=Count('vote')
+                ).order_by('-vote_count')[:2]  # Only fetch top 2
+                
+                # Handle case where there are no candidates for a position
+                if not candidates:
+                    results[position] = {
+                        'candidates': [],
+                        'vote_difference': 0
+                    }
+                    continue
+                
+                # Add candidates to results
+                results[position] = {
+                    'candidates': [
+                        {
+                            'id': c.id,
+                            'name': c.name,
+                            'votes': c.vote_count,
+                        } for c in candidates
+                    ],
+                    # Calculate vote difference if there are at least 2 candidates
+                    'vote_difference': (
+                        candidates[0].vote_count - candidates[1].vote_count
+                        if len(candidates) >= 2 else 0
+                    )
+                }
+            except Exception as position_error:
+                logging.error(f"Error processing position {position}: {str(position_error)}")
+                # Skip this position rather than failing the entire request
+                continue
+                
+        print(results)
+        return JsonResponse(results)
+    
+    except Exception as e:
+        # Log the full exception for debugging
+        logging.error(f"Error in get_voting_statistics: {str(e)}")
+        logging.error(traceback.format_exc())
+        
+        return JsonResponse({
+            'error': 'Error retrieving voting statistics',
+            'message': str(e)
+        }, status=500)
+
+@login_required
+def check_vote_status(request):
+    user = request.user
+    has_voted = Vote.objects.filter(name=user).exists()
+    return JsonResponse({'has_voted': has_voted})
+
+# ===== User Settings =====
 @login_required
 def settings_view(request):
-    return render(request, 'accounts/settings.html')
+    return render(request, 'accounts/settings.html', {'user': request.user})
 
 @login_required
 @csrf_protect
@@ -257,65 +528,40 @@ def delete_profile(request):
         return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
 
 @login_required
-def candidate_list(request):
-    if not request.user.is_admin:
-        messages.error(request, "Access Denied! Admins Only.")
-        return redirect('accounts:home')
-    candidates = People.objects.using('candidates_db').all()
-    return render(request, 'accounts/candidate_list.html', {'candidates': candidates})
-
-@login_required
-def candidate_list_json(request):
-    try:
-        candidates = People.objects.all()
-        return JsonResponse([
-            {
-                'id': c.id,
-                'name': c.name,
-                'position': c.post,
-                'description': c.description,
-                'membership': c.membership
-            } for c in candidates
-        ], safe=False)
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
-
-@login_required
-def candidate_create(request):
-    if not request.user.is_admin:
-        messages.error(request, "Access Denied! Admins Only.")
-        return redirect('accounts:home')
-    form = CandidateForm(request.POST or None)
-    if request.method == 'POST' and form.is_valid():
-        form.save()
-        messages.success(request, "Candidate created successfully.")
-        return redirect('accounts:candidate_list')
-    return render(request, 'accounts/candidate_form.html', {'form': form})
-
-@login_required
-def candidate_update(request, pk):
-    if not request.user.is_admin:
-        messages.error(request, "Access Denied! Admins Only.")
-        return redirect('accounts:home')
-    candidate = get_object_or_404(People.objects.using('candidates_db'), pk=pk)
-    form = CandidateForm(request.POST or None, instance=candidate)
-    if request.method == 'POST' and form.is_valid():
-        form.save()
-        messages.success(request, "Candidate updated successfully.")
-        return redirect('accounts:candidate_list')
-    return render(request, 'accounts/candidate_form.html', {'form': form})
-
-@login_required
-def candidate_delete(request, pk):
-    if not request.user.is_admin:
-        messages.error(request, "Access Denied! Admins Only.")
-        return redirect('accounts:home')
-    candidate = get_object_or_404(People.objects.using('candidates_db'), pk=pk)
+def settings_page(request):
+    user = request.user
     if request.method == 'POST':
-        candidate.delete()
-        messages.success(request, "Candidate deleted successfully.")
-        return redirect('accounts:candidate_list')
-    return render(request, 'accounts/candidate_confirm_delete.html', {'people': candidate})
+        if request.content_type == 'application/json':
+            try:
+                data = json.loads(request.body)
+                email = data.get('email', user.email)
+                dob = data.get('dob', None)
+            except Exception:
+                return JsonResponse({'status': 'error', 'message': 'Invalid JSON.'}, status=400)
+        else:
+            email = request.POST.get('email', user.email)
+            dob = request.POST.get('dob', None)
+        
+        user.email = email
+        user.dob = dob
+        if hasattr(user, 'profile') and dob:
+            user.profile.dob = dob
+            user.profile.save()
+        try:
+            user.save()
+            return JsonResponse({'status': 'success', 'message': 'Settings updated successfully.'})
+        except Exception:
+            return JsonResponse({'status': 'error', 'message': 'An unexpected error occurred while updating settings.'}, status=400)
+
+@login_required
+def user_data(request):
+    user = request.user
+    user_data = {
+        "id": user.id,
+        "email": user.email,
+        "dob": user.profile.dob if hasattr(user, 'profile') else user.dob,
+    }
+    return JsonResponse(user_data)
 
 @login_required
 def toggle_theme(request):
@@ -323,137 +569,8 @@ def toggle_theme(request):
     request.session['theme'] = 'dark' if current_theme == 'light' else 'light'
     return JsonResponse({'theme': request.session['theme']})
 
-from django.http import JsonResponse
-from django.views.decorators.http import require_POST
-from django.db import IntegrityError
-import json
+from django.contrib.auth.decorators import login_required
 
-@login_required
-@require_POST
-def submit_vote(request):
-    try:
-        user = request.user
-        data = json.loads(request.body)
-        candidates_data = data.get('candidates', {})
-        
-        if not candidates_data:
-            return JsonResponse({'status': 'error', 'message': 'No vote data provided'}, status=400)
-        
-        # Check if the user has already voted for the same position
-        for post, candidate_id in candidates_data.items():  # Use 'post' instead of 'position'
-            if Vote.objects.filter(name=user, position=post).exists():  # Use 'post' for filtering
-                return JsonResponse({'status': 'error', 'message': f'You have already voted for {post}.'}, status=400)
-            
-            # Ensure the candidate exists
-            candidate = People.objects.get(id=candidate_id)
-            
-            # Save the vote in the voters table
-            Vote.objects.create(name=user, candidate=candidate, position=post)  # Use 'post' here
-        
-        return JsonResponse({'status': 'success', 'message': 'Vote submitted successfully.'})
-    
-    except json.JSONDecodeError:
-        return JsonResponse({'status': 'error', 'message': 'Invalid JSON data.'}, status=400)
-    except People.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': 'Candidate does not exist.'}, status=400)
-    except IntegrityError:
-        return JsonResponse({'status': 'error', 'message': 'Duplicate vote.'}, status=400)
-    except Exception as e:
-        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
-# In views.py
-from django.http import JsonResponse
-from django.db import connection
-from django.views.decorators.http import require_http_methods
-import json
-import traceback
-
-
-@require_http_methods(["GET"])  
-def vote_results(request):
-    try:
-        # Debug information
-        print("Fetching vote results")
-        
-        # Using a dictionary to organize data by position
-        results = {}
-        
-        # Using raw SQL with the exact query as provided
-        with connection.cursor() as cursor:
-            # Get all votes grouped by position and candidate
-            cursor.execute("""
-                SELECT v.position, c.name_id, COUNT(*) as vote_count
-                FROM voters v
-                JOIN voters c ON v.candidate_id = c.id
-                GROUP BY v.position, c.name_id
-                ORDER BY v.position, vote_count DESC
-            """)
-            
-            rows = cursor.fetchall()
-            
-            # Process the query results
-            for row in rows:
-                position, candidate_name, vote_count = row
-                
-                # Initialize the position array if it doesn't exist
-                if position not in results:
-                    results[position] = []
-                
-                # Add candidate with vote count
-                results[position].append({
-                    "name": candidate_name,
-                    "votes": vote_count
-                })
-        
-        # Return the results as JSON response
-        return JsonResponse(results)
-        
-    except Exception as e:
-        # Log the error and return a proper error response
-        print(f"Error fetching vote results: {e}")
-        return JsonResponse({"error": str(e)}, status=500)
-@login_required
+@login_required(login_url='accounts:login')  # Specify the login URL
 def user_page(request):
     return render(request, 'accounts/user.html')
-@login_required
-def get_voting_statistics(request):
-    """Return the voting statistics grouped by position."""
-    try:
-        # Get all unique positions
-        positions = People.objects.values_list('post', flat=True).distinct()
-
-        results = {}
-
-        for position in positions:
-            # Get candidates for this position with vote counts
-            candidates_with_votes = People.objects.filter(post=position).annotate(
-                vote_count=Count('vote')
-            ).values('id', 'name', 'vote_count')
-
-            # Format the results
-            position_results = []
-            for candidate in candidates_with_votes:
-                position_results.append({
-                    'id': candidate['id'],
-                    'name': candidate['name'],
-                    'votes': candidate['vote_count']
-                })
-
-            results[position] = position_results
-
-        return JsonResponse(results)
-
-    except Exception as e:
-        import logging
-        logger = logging.getLogger(__name__)
-        logger.error(f"Error fetching vote results: {str(e)}")
-        return JsonResponse({
-            'status': 'error',
-            'message': 'Error retrieving vote results'
-        }, status=500)
-    
-@login_required
-def check_vote_status(request):
-    """Check if the logged-in user has voted."""
-    user = request.user
-    has_voted = Vote.objects.filter(name=user).exists()  # Use 'name' instead of 'user'
-    return JsonResponse({'has_voted': has_voted})

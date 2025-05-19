@@ -1,96 +1,116 @@
 {% load static %}
-""<!DOCTYPE html>
-<html lang="en" data-theme="light">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Election News</title>
+    <title>Latest News - VoteSystem</title>
     <link rel="stylesheet" href="{% static 'css/news.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div id="app">
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <a href="#" class="sidebar-logo">
-                    <i class="fas fa-vote-yea"></i>
-                    <span>VoteTracker</span>
-                </a>
+    <!-- Navigation -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <img src="https://raw.githubusercontent.com/Omkarsubedi123/Voting_System/LandingPage/img/image_1_1.png" alt="Voting System Image" >
+                <span>VoteSystem</span>
             </div>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'dashboard' %}">
-                        <i class="fas fa-home"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'vote_section' %}">
-                        <i class="fas fa-vote-yea"></i>
-                        <span>Vote Section</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="{% url 'news_page' %}">
-                        <i class="fas fa-newspaper"></i>
-                        <span>Election News</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'settings' %}">
-                        <i class="fas fa-cog"></i>
-                        <span>Settings</span>
-                    </a>
-                </li>
+            <ul class="nav-links">
+                <li><a href="{% url 'accounts:home' %}" class="active">Home</a></li>
+                <li><a href="{% url 'accounts:news' %}" class="active">News</a></li>
+                <li><a href="{% url 'accounts:about' %}" class="active">About</a></li>
+                
             </ul>
-        </div>
-        
-        <div class="main-content">
-            <div class="topbar">
-                <h1 class="page-title">Election News</h1>
-                <div class="user-menu">
-                    <button class="theme-toggle" aria-label="Toggle theme">
-                        <i class="fas fa-moon"></i>
-                    </button>
-                    <div class="user-profile">
-                        <span>Welcome, Username</span>
-                    </div>
+            <div class="auth-buttons">
+                <a href="#" class="login-btn">Login</a>
+                <a href="#" class="signup-btn">Register</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- News Header -->
+    <section class="page-header">
+        <h1>Latest News</h1>
+        <p>Stay up to date with the latest updates, events, and stories from school elections!</p>
+    </section>
+
+    <!-- News Cards Section -->
+    <section class="news-section">
+        <div class="news-grid">
+            <!-- News Card 1 -->
+            <div class="news-card">
+                <img src="https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=600&q=80" alt="Election Campaign">
+                <div class="news-card-content">
+                    <h3>Greenwood High Holds Student Government Elections</h3>
+                    <span class="news-date">April 21, 2025</span>
+                    <p class="news-summary">Greenwood High concluded its annual student government elections with a record turnout. The new council promises to bring fresh ideas for campus sustainability and student engagement.
+                        <span class="read-more-content"> This year saw the introduction of digital ballots powered by VoteSystem, making voting easier and more secure than ever. Elections officer Ms. Bennett said, "We're thrilled with the transparency and participation."</span>
+                    </p>
+                    <button class="read-more-btn">Read more</button>
                 </div>
             </div>
-
-            <div class="content">
-                <div class="news-section fade-in">
-                    <h2>Latest Election News</h2>
-                    <div class="news-grid">
-                        {% for article in news_articles %}
-                        <div class="news-card">
-                            <div class="news-image">
-                                <img src="{{ article.image }}" alt="" height="180px" width="100%">
-                            </div>
-                            <div class="news-content">
-                                <div class="news-date">{{ article.date }}</div>
-                                <h3 class="news-headline">{{ article.title }}</h3>
-                                <p class="news-excerpt">{{ article.excerpt }}</p>
-                                <div class="news-author">
-                                    <div class="author-image">
-                                        <img src="{{ article.author_image }}" alt="" height="30px" width="30px" style="border-radius: 50%;">
-                                    </div>
-                                    <div class="author-name">By {{ article.author_name }}</div>
-                                </div>
-                                <a href="#" class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
+            <!-- News Card 2 -->
+            <div class="news-card">
+                <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80" alt="Students Celebrating">
+                <div class="news-card-content">
+                    <h3>Digital Voting Triples Participation at Crestview School</h3>
+                    <span class="news-date">April 15, 2025</span>
+                    <p class="news-summary">Crestview School reported three times higher participation in this year’s student council elections, thanks to the VoteSystem online platform.
+                        <span class="read-more-content"> Students praised the ease of voting from home or school. Principal Thomas remarked, “The platform’s real-time results helped maintain excitement and transparency throughout the process!”</span>
+                    </p>
+                    <button class="read-more-btn">Read more</button>
                 </div>
             </div>
-
-            <div class="footer">
-                <div>© 2025 Lions Club Elections. All rights reserved.</div>
+            <!-- News Card 3 -->
+            <div class="news-card">
+                <img src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=600&q=80" alt="Voting Booth">
+                <div class="news-card-content">
+                    <h3>VoteSystem Announced for District Board Nomination Polls</h3>
+                    <span class="news-date">April 10, 2025</span>
+                    <p class="news-summary">The school district will use VoteSystem for upcoming Board of Education nomination polls. Officials hope for increased trust and reduced manual errors.
+                        <span class="read-more-content"> Parents will also be able to cast votes this year, a move welcomed by the PTA. Expect detailed guidance sent out next week for secure access.</span>
+                    </p>
+                    <button class="read-more-btn">Read more</button>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section about">
+                <h3>VoteSystem</h3>
+                <p>Secure and reliable online voting platform for organizations and institutions.</p>
+            </div>
+            <div class="footer-section links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="{% url 'accounts:about' %}" class="active">About Us</a></li>
+                    <li><a href="{% url 'accounts:faq' %}" class="active">FAQ</a></li>
+                    <li><a href="{% url 'accounts:security' %}" class="active">Terms and Condition</a></li>
+                    <li><a href="{% url 'accounts:how_it_works' %}" class="active">How it works</a></li>
+                </ul>
+            </div>
+            <div class="footer-section contact">
+                <h3>Contact</h3>
+                <p><i class="fas fa-envelope"></i> <a href="#"><span>info@votesystem.com</span></a></p>
+                <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+            </div>
+            <div class="footer-section social">
+                <h3>Follow Us</h3>
+                <div class="social-icons">
+                    <a href="https://x.com/"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.facebook.com/"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 VoteSystem. All rights reserved.</p>
+        </div>
+    </footer>
     <script src="{% static 'js/news.js' %}"></script>
 </body>
 </html>
-""

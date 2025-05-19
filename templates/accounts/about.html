@@ -18,12 +18,12 @@
     <header>
         <nav class="navbar">
             <div class="logo">
-                <img src="{% static 'img/image_1_1.png' %}" alt="votesystem">
+                <img src="https://raw.githubusercontent.com/Omkarsubedi123/Voting_System/LandingPage/img/image_1_1.png" alt="Voting System Image" class="logo-img">
                 <span>VoteSystem</span>
             </div>
             <ul class="nav-links">
                 <li><a href="{% url 'accounts:home' %}">Home</a></li>
-                <li><a href="#">Results</a></li>
+                <li><a href="{% url 'accounts:news' %}" class="active">News</a></li>
                 <li><a href="{% url 'accounts:about' %}" class="active">About</a></li>
             </ul>
             <div class="auth-buttons">
@@ -89,7 +89,7 @@
         <div class="team-grid">
             <div class="team-member">
                 <div class="team-photo">
-                    <img src="C:\Users\Hp\Pictures\Screenshots\Screenshot 2025-05-05 200048.png" alt="Omkar Subedi">
+                    <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Omkar Subedi">
                 </div>
                 <div class="team-info">
                     <h3>Omkar Subedi</h3>
@@ -179,7 +179,9 @@
                 <h3>Quick Links</h3>
                 <ul>
                     <li><a href="{% url 'accounts:about' %}">About Us</a></li>
-                    <li><a href="#">FAQ</a></li>
+                    <li><a href="{% url 'accounts:security' %}">Terms and Condition</a></li>
+                    <li><a href="{% url 'accounts:faq' %}">FAQ</a></li>
+                    <li><a href="{% url 'accounts:how_it_works' %}" class="active">How it works</a></li>
                 </ul>
             </div>
             <div class="footer-section contact">

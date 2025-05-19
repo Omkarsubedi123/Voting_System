@@ -6,16 +6,24 @@
 {% block content %}
 
   <div class="header">
-    <!-- Font Awesome stylesheet can remain here if needed -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <div>
       <h1 class="page-title">Dashboard Overview</h1>
       <p class="welcome-text">Welcome back, Admin</p>
+
+      <!-- Lion's Club Election Info (Hardcoded Dummy Data) -->
+      <div class="lions-club-info" style="margin-top: 10px; font-size: 15px;">
+        <p>
+          <strong>Lion's Club Election:</strong><br>
+          Start Date: <span>2025-05-01</span> |
+          End Date: <span>2025-05-15</span> |
+          Status: <span class="status-badge active">Active</span>
+        </p>
+      </div>
     </div>
 
     <div class="user-profile">
-      <!-- Theme toggle button: only available on Dashboard -->
       <button id="theme-toggle-btn" class="theme-toggle-btn" title="Toggle Light/Dark Mode">
         <i class="fas fa-moon"></i>
       </button>
@@ -23,7 +31,7 @@
         <button id="profile-btn" class="profile-btn">
           <a href="{% url 'accounts:admin_page' %}">
             <span class="profile-avatar">{{ user.userId|first|upper }}</span>
-        </a>
+          </a>
           <span>Profile</span>
           <i class="fas fa-chevron-down"></i>
         </button>
@@ -46,36 +54,36 @@
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-title">
-          <span>Active Elections</span>
+          <span>Active Elections - Lion's Election</span>
           <i class="fas fa-vote-yea"></i>
         </div>
-        <div class="stat-value">{{ active_elections_count }}</div>
+        <div class="stat-value">1</div>
         <div class="stat-meta increase">
           <i class="fas fa-arrow-up"></i>
-          <span>{{ upcoming_elections_count }} upcoming</span>
+          <span>2 upcoming</span>
         </div>
       </div>
 
       <div class="stat-card">
         <div class="stat-title">
-          <span>Total Voters</span>
+          <span>Total Voters - 14</span>
           <i class="fas fa-users"></i>
         </div>
-        <div class="stat-value">{{ total_voters }}</div>
+        <div class="stat-value">14</div>
         <div class="stat-meta increase">
           <i class="fas fa-arrow-up"></i>
-          <span>{{ voter_growth }}% increase</span>
+          <span>5% increase</span>
         </div>
       </div>
 
       <div class="stat-card">
         <div class="stat-title">
-          <span>Votes Cast</span>
+          <span>Votes Cast - 4</span>
           <i class="fas fa-vote-yea"></i>
         </div>
-        <div class="stat-value">{{ votes_cast }}</div>
+        <div class="stat-value">4</div>
         <div class="stat-meta percentage">
-          <span>{{ voter_turnout }}% turnout</span>
+          <span>18% turnout</span>
         </div>
       </div>
     </div>
@@ -94,16 +102,18 @@
           </tr>
         </thead>
         <tbody>
-          {% for election in active_elections %}
-            <tr>
-              <td>{{ election.name }}</td>
-              <td>{{ election.start_date }}</td>
-              <td>{{ election.end_date }}</td>
-              <td><span class="status-badge active">Active</span></td>
-            </tr>
-          {% empty %}
-            <tr><td colspan="4">No active elections</td></tr>
-          {% endfor %}
+          <tr>
+            <td>Lion's Club Election</td>
+            <td>2025-05-01</td>
+            <td>2025-05-15</td>
+            <td><span class="status-badge active">Active</span></td>
+          </tr>
+          <tr>
+            <td>New Member Board Vote</td>
+            <td>2025-06-01</td>
+            <td>2025-06-10</td>
+            <td><span class="status-badge">Upcoming</span></td>
+          </tr>
         </tbody>
       </table>
     </div>

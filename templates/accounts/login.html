@@ -4,90 +4,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Voting System</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Login - Online Voting System</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
-    <div class="container">
-        <div class="login-box">
-            <div class="logo">
-                <i class="fas fa-check-square"></i>
-            </div>
-            <h2>Voting System</h2>
-            <p>Access your voting account</p>
-
-            <!-- Styled messages -->
-            {% if messages %}
-            <div class="messages">
-                {% for message in messages %}
-                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
-                    {{ message }}
-                </div>
-                {% endfor %}
-            </div>
-            {% endif %}
-
-            <form action="{% url 'accounts:login' %}" method="POST">
-                {% csrf_token %}
-                <div class="input-group">
-                    <label for="id">User ID</label>
-                    <div class="input-box">
-                        <i class="fas fa-id-card"></i>
-                        <input type="text" id="id" name="id" placeholder="Enter your ID" required>
-                    </div>
-                </div>
-                
-                <div class="input-group">
-                    <label for="password">Password</label>
-                    <div class="input-box">
-                        <i class="fas fa-lock"></i>
-                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
-                        <i class="fas fa-eye toggle-password" onclick="togglePassword('password', this)"></i>
-                    </div>
-                </div>  
-                
-                <div class="input-group">
-                    <label for="user_type">Login as</label>
-                    <div class="input-box">
-                        <i class="fas fa-user-tag"></i>
-                        <select id="user_type" name="user_type" required>
-                            <option value="users">General Voter</option>
-                            <option value="admin">Admin</option>
-                        </select>
-                    </div>
-                </div>                          
-
-                <div class="options">
-                    <label><input type="checkbox"> Remember me</label>
-                </div>
-
-                <button type="submit" class="login-btn">
-                    <i class="fas fa-sign-in-alt"></i> Login 
-                </button>
-            </form>
-
-            <div class="register">
-                <p>New Voter?</p>
-                <a href="{% url 'accounts:register' %}">Register <i class="fas fa-arrow-right"></i></a>
-            </div>
+    <div class="auth-container">
+        
+        <!-- ✅ Video animation side -->
+        <div class="video-side">
+            <video autoplay muted loop playsinline>
+                <source src="{% static 'videos/animation.mp4' %}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
         </div>
 
-        <!-- Toggle password visibility -->
-        <script>
-            function togglePassword(id, element) {
-                const input = document.getElementById(id);
-                if (input.type === "password") {
-                    input.type = "text";
-                    element.classList.remove("fa-eye");
-                    element.classList.add("fa-eye-slash");
-                } else {
-                    input.type = "password";
-                    element.classList.remove("fa-eye-slash");
-                    element.classList.add("fa-eye");
-                }
+        <!-- ✅ Login form side -->
+        <div class="form-side">
+            <div class="login-box">
+                <div class="logo header">
+                    <i class="fas fa-check-square"></i>
+                    <h2>Voting System</h2>
+                </div>
+                <p>Access your voting account</p>
+
+                {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <form action="{% url 'accounts:login' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <label for="id">ID</label>
+                        <div class="input-box">
+                            <i class="fas fa-id-card"></i>
+                            <input type="text" id="id" name="id" placeholder="Enter your ID" required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <div class="input-box">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                            <i class="fas fa-eye toggle-password" onclick="togglePassword('password', this)"></i>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="user_type">Login as</label>
+                        <div class="input-box">
+                            <i class="fas fa-user-tag"></i>
+                            <select id="user_type" name="user_type" required>
+                                <option value="users">General Voter</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="login-btn">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                </form>
+
+                <div class="register">
+                    <p>New Voter?</p>
+                    <a href="{% url 'accounts:register' %}">Register <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toggle password visibility -->
+    <script>
+        function togglePassword(id, element) {
+            const input = document.getElementById(id);
+            if (input.type === "password") {
+                input.type = "text";
+                element.classList.replace("fa-eye", "fa-eye-slash");
+            } else {
+                input.type = "password";
+                element.classList.replace("fa-eye-slash", "fa-eye");
             }
-        </script>
+        }
+           </script>
 
         <!-- Show Django messages as alert popups -->
         {% if messages %}
@@ -100,5 +106,6 @@
         </script>
         {% endif %}
     </div>
+    </script>
 </body>
 </html>

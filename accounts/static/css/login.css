@@ -1,0 +1,217 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #e6ebf5;
+}
+
+.auth-container {
+    display: flex;
+    width: 80%;
+    max-width: 1100px;
+    height: 100vh;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.video-side {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+}
+
+.video-side video {
+    width: 200%;              /* Zoom in */
+    height: 100%;
+    object-fit: cover;
+    object-position: left center; /* Focus on blue area */
+}
+
+/* Remove any white stain using an overlay if needed */
+.video-side::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 5%; /* Adjust if needed */
+    height: 100%;
+    background: linear-gradient(to left, white 0%, transparent 100%);
+    pointer-events: none;
+}
+
+.form-side {
+    flex: 1;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 40px;
+    overflow-y: auto;
+    max-height: 100vh;
+}
+
+.form-side::-webkit-scrollbar {
+    width: 6px;
+}
+.form-side::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+}
+
+.login-box {
+    width: 100%;
+}
+
+.logo i {
+    font-size: 40px;
+    color: black;
+}
+
+/* Align the logo and title */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.header i {
+    font-size: 30px;
+    color: #5646eb;
+    margin-right: 10px;
+}
+
+h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-top: 0;
+}
+
+p {
+    font-size: 14px;
+    color: #666;
+}
+
+.input-group {
+    margin: 15px 0;
+}
+
+label {
+    font-size: 14px;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.input-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: white;
+}
+
+.input-box input,
+.input-box select {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    background: transparent;
+}
+
+.input-box i {
+    color: #888;
+    margin-right: 10px;
+}
+
+.input-box .fa-eye,
+.input-box .fa-eye-slash {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.login-btn {
+    background: #5646eb;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    width: 100%;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-btn i {
+    margin-right: 8px;
+}
+
+.login-btn:hover {
+    background: #473ec4;
+}
+
+/* Keep the register link style */
+.register {
+    margin-top: 15px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.register a {
+    color: blue;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.register a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .auth-container {
+        flex-direction: column;
+        width: 90%;
+        height: auto;
+    }
+
+    .video-side, .form-side {
+        width: 100%;
+        height: 50vh;
+    }
+
+    .form-side {
+        max-height: none;
+        overflow-y: visible;
+    }
+
+    .video-side video {
+        width: 100%;
+        object-position: center;
+    }
+
+    .video-side::after {
+        display: none;
+    }
+}

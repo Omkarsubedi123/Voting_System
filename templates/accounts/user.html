@@ -1,4 +1,7 @@
 {% load static %}
+<script>
+    const homeUrl = "{% url 'accounts:home' %}";
+  </script>
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
@@ -31,17 +34,18 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" data-page="news">
-                        <i class="fas fa-newspaper"></i>
-                        <span>Election News</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" data-page="settings">
-                        <i class="fas fa-cog"></i>
-                        <span>Settings</span>
-                    </a> 
-                </li>
+                <a class="nav-link" href="#" data-page="news">
+                    <i class="fas fa-newspaper"></i>
+                    <span id="news-section">Election News</span>
+                </a>
+            </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-page="settings">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </a> 
+                    </li>
             </ul>
         </div>
 
@@ -59,7 +63,7 @@
             </div>
 
             <div class="content">
-                <h2>Cast Your Vote</h2>
+                <!-- <h2>Cast Your Vote</h2> -->
                 {% for candidate in candidates %}
                     <div class="candidate-card">
                         <h3>{{ candidate.name }}</h3>
@@ -75,18 +79,50 @@
                         </div>
                     </div>
                 {% endfor %}
-                <button class="vote-submit-button" onclick="submitVote(getSelectedCandidateId(), getSelectedPosition())">Submit Vote</button>
+                <!-- <button class="vote-submit-button" onclick="submitVote(getSelectedCandidateId(), getSelectedPosition())">Submit Vote</button> -->
 
-
-
+                <!-- <div class="settings-section">
+                    <div class="settings-container"> -->
+                        <!-- <form method="post" class="settings-form" id="settings-form">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="user-id">User ID:</label>
+                                <input type="text" id="user-id" value="{{ user.id }}" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address:</label>
+                                <input type="email" id="email" name="email" value="{{ user.email }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="dob">Date of Birth:</label>
+                                <input type="date" id="dob" name="dob" value="{{ dob_value }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="club-id">Club ID:</label>
+                                <input type="text" id="club-id" value="{{ club_id }}" readonly>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="save-button">
+                                    <i class="fas fa-save"></i> Save Changes
+                                </button>
+                            </div>
+                        </form>
+                        <div id="settings-message"></div>
+                    </div>
+                </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
+        </div> -->
+    <!-- </div> -->
+    <script>
+  const logoutUrl = "{% url 'accounts:home' %}";
+</script>
     
     {% csrf_token %}
     <script src="{% static 'js/user.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="{% static 'js/chart.min.js' %}"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>

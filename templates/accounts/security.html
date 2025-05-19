@@ -1,2 +1,81 @@
-<h2>Security</h2>
-<p>Placeholder for security page.</p>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms & Conditions - Poll Minds</title>
+    <link rel="stylesheet" href="{% static 'css/terms.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="terms-box">
+            <div class="header">
+                <i class="fas fa-scroll"></i>
+                <h2>Terms & Conditions</h2>
+                <p>Poll Minds – Lion’s Club Voting System</p>
+            </div>
+
+            <div class="content">
+                <p><strong>Welcome to Poll Minds</strong>, the official digital voting platform for the Lion’s Club. By accessing or using this system, you agree to the following Terms and Conditions, designed to ensure a fair, secure, and transparent voting experience for all Lion’s Club members.</p>
+
+                <p><strong style="color: green;">1. Acceptance of Terms</strong><br>
+                By registering and using Poll Minds, you confirm that you are an authorized member of the Lion’s Club and agree to abide by these Terms and Conditions.</p>
+
+                <p><strong style="color: green;">2. Eligibility</strong><br>
+                Only verified members of the Lion’s Club with valid credentials are allowed to access the platform and participate in elections.</p>
+
+                <p><strong style="color: green;">3. Voting Rules</strong><br>
+                Each eligible member is permitted to vote only once per election event.<br>
+                Votes submitted are final and cannot be changed or withdrawn.<br>
+                Any attempt to influence or manipulate voting outcomes will result in disqualification and possible disciplinary action as per Lion’s Club policies.</p>
+
+                <p><strong style="color: green;">4. User Responsibility</strong><br>
+                You are responsible for maintaining the confidentiality of your login credentials.<br>
+                You agree not to share your account or vote on behalf of another member.<br>
+                Misuse of the platform may result in account suspension and/or investigation by the Lion’s Club governance.</p>
+
+                <p><strong style="color: green;">5. Privacy and Data Protection</strong><br>
+                Poll Minds is committed to protecting your personal information and voting data.<br>
+                Your information will be used solely for authentication and election-related purposes.<br>
+                All voting is conducted anonymously and securely.</p>
+
+                <p><strong style="color: green;">6. System Access and Maintenance</strong><br>
+                Poll Minds strives to ensure reliable system access; however, technical interruptions may occur due to maintenance or unforeseen issues.<br>
+                Notifications will be provided in advance of scheduled downtimes when possible.</p>
+
+                <p><strong style="color: green;">7. Ownership and Usage</strong><br>
+                Poll Minds is developed specifically for internal use by the Lion’s Club. All content, system logic, and features are proprietary and must not be copied or used outside the organization without permission.</p>
+
+                <p><strong style="color: green;">8. Amendments</strong><br>
+                These Terms and Conditions may be updated or modified by the Lion’s Club administration as needed. Continued use of the platform indicates your acceptance of the revised terms.</p>
+
+                <p><strong style="color: green;">9. Contact and Support</strong><br>
+                For assistance or to report issues, members may contact the Lion’s Club election committee or the designated system administrator.</p>
+            </div>
+
+            <div class="agreement">
+                <input type="checkbox" id="agreeCheckbox">
+                <label for="agreeCheckbox">I agree to the Terms and Conditions</label>
+            </div>
+
+            <div class="continue-button">
+                <button onclick="proceed()">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+ function proceed() {
+    const checkbox = document.getElementById('agreeCheckbox');
+    if (checkbox.checked) {
+        // Redirect to the home page
+        window.location.href = "{% url 'accounts:home' %}";
+    } else {
+        alert('Please agree to the Terms and Conditions to continue.');
+    }
+}
+    </script>
+</body>
+</html>

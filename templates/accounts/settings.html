@@ -43,12 +43,12 @@
           <button id="theme-toggle-btn" class="theme-toggle-btn" title="Toggle Light/Dark Mode">
             <i class="fas fa-moon"></i>
           </button>
-          <div class="profile-dropdown">
+          <!-- <div class="profile-dropdown">
             <button id="profile-btn" class="profile-btn">
               <span class="profile-avatar">{{ user.userId }}</span>
               <span>Profile</span>
               <i class="fas fa-chevron-down"></i>
-            </button>
+            </button>  -->
             <div class="profile-menu">
               <div class="profile-info">
                 <i class="fas fa-user-circle"></i>
@@ -58,7 +58,7 @@
               <a href="{% url 'accounts:home' %}" class="profile-menu-item">
                 <i class="fas fa-sign-out-alt"></i><span>Logout</span>
               </a>
-            </div>
+            <!-- </div> -->
           </div>
         </div>
       </div>
@@ -73,8 +73,8 @@
           <!-- User Info -->
           <div class="user-info">
             <div class="user-info-item">
-              <span class="user-info-label">Name</span>
-              <span class="user-info-value">{{ user.first_name }} {{ user.last_name }}</span>
+              <span class="user-info-label">Id</span>
+              <span class="user-info-value">{{ user.id }}</span>
             </div>
             <div class="user-info-item">
               <span class="user-info-label">Email</span>
