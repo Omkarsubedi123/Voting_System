@@ -32,7 +32,7 @@
           <td>{{ candidate.description }}</td>
           <td>
           <a href="{% url 'accounts:candidate_update' candidate.id %}">Edit</a>
-          <a href="{% url 'accounts:candidate_delete' candidate.id %}">Delete</a>
+          <!-- <a href="{% url 'accounts:candidate_delete' candidate.id %}">Delete</a> -->
 
           </td>
         </tr>
@@ -45,7 +45,7 @@
   </table>
 {% endblock %}
 
-{% block extra_js %}
+<!-- {% block extra_js %}
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       document.querySelectorAll("a[href$='delete']").forEach(button => {
@@ -57,4 +57,4 @@
       });
     });
   </script>
-{% endblock %}
+{% endblock %} -->

@@ -145,55 +145,56 @@ function navigateToPage(page) {
       document.querySelector('.content').innerHTML = '';
       document.querySelector('.content').appendChild(settingsSection.cloneNode(true));
 
-      // Fetch user data to populate the form
-      fetchUserData()
-        .then(() => {
-          // Attach event handler to the settings form AFTER user data is loaded
-          const newSettingsForm = document.querySelector('.content #settings-form');
-          if (newSettingsForm) {
-            attachSettingsFormHandler(newSettingsForm);
-          }
-        })
-        .catch(error => {
-          console.error('Error loading user data:', error);
-        });
-    } else {
-      // Fallback if settings section doesn't exist in HTML
-      document.querySelector('.content').innerHTML = `
-      <div class="settings-section" style="max-width: 600px; margin: auto; padding: 30px; background-color: #f8f9fa; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-        <div class="settings-container">
-        <form method="post" class="settings-form" id="settings-form" style="padding: 20px; background-color: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-          <div class="form-group" style="margin-bottom: 20px;">
-            <label for="user-id" style="font-weight: bold; margin-bottom: 5px; display: block;">User ID:</label>
-            <input type="text" id="user-id" value="" readonly style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: #f1f1f1;">
-          </div>
-          <div class="form-group" style="margin-bottom: 20px;">
-            <label for="email" style="font-weight: bold; margin-bottom: 5px; display: block;">Email Address:</label>
-            <input type="email" id="email" name="email" value="" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: #fff;">
-          </div>
-          <div class="form-group" style="margin-bottom: 20px;">
-            <label for="dob" style="font-weight: bold; margin-bottom: 5px; display: block;">Date of Birth:</label>
-            <input type="date" id="dob" name="dob" value="" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: #fff;">
-          </div>
-          <div class="form-group" style="margin-bottom: 20px;">
-            <label for="club-id" style="font-weight: bold; margin-bottom: 5px; display: block;">Club ID:</label>
-            <input type="text" id="club-id" value="LC-12345" readonly style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: #f1f1f1;">
-          </div>
-          <div class="form-actions" style="text-align: center; margin-top: 30px; display: flex; justify-content: space-between;">
-            <!-- Save Changes Button -->
-            <button type="submit" class="save-button" style="padding: 12px 30px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; width: 48%;">
-              <i class="fas fa-save"></i> Save Changes
-            </button>
-            <a href="#" id="logoutButton" class="logout-button" style="padding: 12px 30px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; text-decoration: none; display: inline-block; text-align: center; width: 48%;">
+      
+
+   // Fetch user data to populate the form
+fetchUserData()
+  .then(() => {
+    // Attach event handler to the settings form AFTER user data is loaded
+    const newSettingsForm = document.querySelector('.content #settings-form');
+    if (newSettingsForm) {
+      attachSettingsFormHandler(newSettingsForm);
+    }
+  })
+  .catch(error => {
+    console.error('Error loading user data:', error);
+  });
+} else {
+  // Fallback if settings section doesn't exist in HTML
+  document.querySelector('.content').innerHTML = `
+  <div class="settings-section" style="max-width: 600px; margin: auto; padding: 30px; background-color: #f8f9fa; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+    <div class="settings-container">
+    <form method="post" class="settings-form" id="settings-form" style="padding: 20px; background-color: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label for="user-id" style="font-weight: bold; margin-bottom: 5px; display: block;">User ID:</label>
+        <input type="text" id="user-id" value="" readonly style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: #f1f1f1;">
+      </div>
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label for="email" style="font-weight: bold; margin-bottom: 5px; display: block;">Email Address:</label>
+        <input type="email" id="email" name="email" value="" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: #fff;">
+      </div>
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label for="dob" style="font-weight: bold; margin-bottom: 5px; display: block;">Date of Birth:</label>
+        <input type="date" id="dob" name="dob" value="" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: #fff;">
+      </div>
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label for="club-id" style="font-weight: bold; margin-bottom: 5px; display: block;">Club ID:</label>
+        <input type="text" id="club-id" value="LC-12345" readonly style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: #f1f1f1;">
+      </div>
+      <div class="form-actions" style="text-align: center; margin-top: 30px; display: flex; justify-content: space-between;">
+        <!-- Save Changes Button -->
+        <button type="submit" class="save-button" style="padding: 12px 30px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; width: 48%;">
+          <i class="fas fa-save"></i> Save Changes
+        </button>
+        <a href="${homeUrl}" id="logoutButton" class="logout-button" style="padding: 12px 30px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; text-decoration: none; display: inline-block; text-align: center; width: 48%;">
               <i class="fas fa-sign-out-alt"></i> Logout
             </a>
-          </div>
-        </form>
-        <div id="settings-message" style="text-align: center; margin-top: 15px; font-size: 14px; color: #28a745;"></div>
       </div>
+    </form>
+    <div id="settings-message" style="text-align: center; margin-top: 15px; font-size: 14px; color: #28a745;"></div>
     </div>
-      `;
-
+  </div>
+  `;
       // Fetch user data to populate the form
       fetchUserData()
         .then(() => {
@@ -257,86 +258,210 @@ function getNewsHTML() {
       <h2>Latest Election News</h2>
       <div class="news-grid">
         <div class="news-card">
-          <div class="news-image"><img src="/api/placeholder/400/180" alt="News Image" height="180px" width="100%"></div>
+          <div class="news-image"><img src="https://i.pinimg.com/736x/5a/6d/4a/5a6d4a56c813530643a928e972bb4012.jpg" alt="" height="180px" width="100%"></div>
           <div class="news-content">
             <div class="news-date">March 15, 2025</div>
-            <h3 class="news-headline">District 306 A1 Election Results Announced</h3>
-            <p class="news-excerpt">The annual district governor election concluded with record participation from club delegates...</p>
+            <h3 class="news-headline">Historic Voter Turnout in Greenwood High's Student Council Elections</h3>
+            <p class="news-excerpt">Greenwood High celebrated a record-breaking student turnout during its annual student council elections held this Friday. More than 85% of the student body participated in the vote — a historic milestone in the school's democratic history.</p>
             <div class="news-author">
+              <div class="author-image">
+                <img src="https://i.pinimg.com/736x/8d/95/03/8d9503a77e4c21ebf0ced6c252819a0e.jpg" alt="" height="30px" width="30px" style="border-radius: 50%;" />
+              </div>
               <div class="author-name">By John Smith</div>
             </div>
-            <a href="#" class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
           </div>
         </div>
 
         <div class="news-card">
-          <div class="news-image"><img src="/api/placeholder/400/180" alt="News Image" height="180px" width="100%"></div>
+          <div class="news-image"><img src="https://i.pinimg.com/736x/37/a6/3b/37a63b7af7f7d7871d83b3ef2b809a31.jpg" alt="" height="180px" width="100%"></div>
           <div class="news-content">
             <div class="news-date">March 12, 2025</div>
             <h3 class="news-headline">Club Elections Schedule Released</h3>
-            <p class="news-excerpt">Multiple Lions Clubs announce their election dates for the upcoming term...</p>
+            <p class="news-excerpt">Tensions are rising at Oakwood Academy following an incident where several campaign posters were vandalized just days before the student government elections. Posters for candidate Rachel Adams were reportedly torn down or defaced in multiple school hallways.</p>
             <div class="news-author">
+              <div class="author-image">
+                <img src="https://i.pinimg.com/736x/94/3e/46/943e468e2193f42206c4640dfec13ea4.jpg" alt="" height="30px" width="30px" style="border-radius: 50%;" />
+              </div>
               <div class="author-name">By Sarah Johnson</div>
             </div>
-            <a href="#" class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
-          </div>
-        </div>
-
-       <div class="news-card">
-          <div class="news-image"><img src="/api/placeholder/400/180" alt="News Image" height="180px" width="100%"></div>
-          <div class="news-content">
-            <div class="news-date">April 15, 2025</div>
-            <h3 class="news-headline">State Representative Elections Underway</h3>
-            <p class="news-excerpt">Voters from all districts are casting their ballots to elect state representatives...</p>
-            <div class="news-author">
-              <div class="author-name">By Michael Smith</div>
-            </div>
-            <a href="#" class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
           </div>
         </div>
 
         <div class="news-card">
-          <div class="news-image"><img src="/api/placeholder/400/180" alt="News Image" height="180px" width="100%"></div>
+          <div class="news-image"><img src="https://i.pinimg.com/736x/39/dc/e3/39dce3424f254b2f0cbe75d37bdeadec.jpg" alt="" height="180px" width="100%"></div>
           <div class="news-content">
-            <div class="news-date">April 10, 2025</div>
-            <h3 class="news-headline">Highlights from the Mayoral Debate</h3>
-            <p class="news-excerpt">The mayoral debate showcased differing visions for the city's future...</p>
+            <div class="news-date">March 10, 2025</div>
+            <h3 class="news-headline">Nomination Process Begins for District Offices</h3>
+            <p class="news-excerpt">In a first for Westbridge High, students from the computer science club launched a custom-built voting app for the school's elections this year. The app, named "VoteMate," allowed students to cast their votes using school-issued tablets or their personal phones.</p>
             <div class="news-author">
-              <div class="author-name">By Emily Clark</div>
+              <div class="author-image">
+                <img src="https://i.pinimg.com/736x/cf/d4/13/cfd413c84851920d5dbc820610176e41.jpg" alt="" height="30px" width="30px" style="border-radius: 50%;" />
+              </div>
+              <div class="author-name">By Mike Wilson</div>
             </div>
-            <a href="#" class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
           </div>
         </div>
 
         <div class="news-card">
-          <div class="news-image"><img src="/api/placeholder/400/180" alt="News Image" height="180px" width="100%"></div>
+          <div class="news-image"><img src="https://i.pinimg.com/736x/d3/f9/bf/d3f9bf21323397d48868c4243f42735d.jpg" alt="" height="180px" width="100%"></div>
           <div class="news-content">
-            <div class="news-date">April 8, 2025</div>
-            <h3 class="news-headline">Community Polls Show Strong Support for Education Reforms</h3>
-            <p class="news-excerpt">Recent polls indicate strong support for educational changes among local communities...</p>
+            <div class="news-date">March 10, 2025</div>
+            <h3 class="news-headline">Twin Sisters Go Head-to-Head for Student President at Ridgeview Secondary</h3>
+            <p class="news-excerpt">For the first time in Ridgeview Secondary's history, twin sisters Emma and Emily Walters ran against each other for the position of student body president. The two seniors, known for their leadership in school clubs and sports, drew large crowds to their debates and campaign rallies.</p>
             <div class="news-author">
-              <div class="author-name">By Olivia Martinez</div>
+              <div class="author-image">
+                <img src="https://i.pinimg.com/736x/8d/95/03/8d9503a77e4c21ebf0ced6c252819a0e.jpg" alt="" height="30px" width="30px" style="border-radius: 50%;" />
+              </div>
+              <div class="author-name">By Mike Wilson</div>
             </div>
-            <a href="#" class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
           </div>
         </div>
-       
+
         <div class="news-card">
-          <div class="news-image"><img src="/api/placeholder/400/180" alt="News Image" height="180px" width="100%"></div>
+          <div class="news-image"><img src="https://i.pinimg.com/736x/09/d4/6a/09d46ab0dcd57db2ce16eeb147ea7dd6.jpg" alt="" height="180px" width="100%"></div>
           <div class="news-content">
-            <div class="news-date">April 5, 2025</div>
-            <h3 class="news-headline">Environmental Policies Take Center Stage in Local Elections</h3>
-            <p class="news-excerpt">Candidates focus on environmental issues, promising greener policies if elected...</p>
+            <div class="news-date">March 10, 2025</div>
+            <h3 class="news-headline">Student Journalist Uncovers Campaign Funding Discrepancies at Lincoln Prep</h3>
+            <p class="news-excerpt">A student reporter at Lincoln Preparatory School has sparked debate after publishing an article revealing discrepancies in campaign funding among student council candidates. Writing for The Lion's Roar, junior Jamie Chen detailed how some candidates received large donations from student clubs and parents.</p>
             <div class="news-author">
-              <div class="author-name">By Daniel Nguyen</div>
+              <div class="author-image">
+                <img src="https://i.pinimg.com/736x/47/91/f0/4791f027dcad85f85883359daf191c5d.jpg" alt="" height="30px" width="30px" style="border-radius: 50%;" />
+              </div>
+              <div class="author-name">By Mike Wilson</div>
             </div>
-            <a href="#" class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <div class="news-card">
+          <div class="news-image"><img src="https://i.pinimg.com/736x/86/a6/b6/86a6b6726cdc203203977feedf2374cd.jpg" alt="" height="180px" width="100%"></div>
+          <div class="news-content">
+            <div class="news-date">March 10, 2025</div>
+            <h3 class="news-headline">Sophomore Surprise: 10th Grader Wins Student Council President at Northdale High</h3>
+            <p class="news-excerpt">In an unexpected outcome at Northdale High, sophomore Ethan Monroe won the student body presidency, defeating two seniors and a junior in the running. Known for his role in the environmental club and morning announcements, Monroe built a grassroots campaign focused on sustainability and student wellness.</p>
+            <div class="news-author">
+              <div class="author-image">
+                <img src="https://i.pinimg.com/736x/8d/95/03/8d9503a77e4c21ebf0ced6c252819a0e.jpg" alt="" height="30px" width="30px" style="border-radius: 50%;" />
+              </div>
+              <div class="author-name">By Mike Wilson</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="news-card">
+          <div class="news-image"><img src="https://i.pinimg.com/736x/56/a5/ed/56a5eda64fdb2e4aa0f64ca47b33210e.jpg" alt="" height="180px" width="100%"></div>
+          <div class="news-content">
+            <div class="news-date">March 10, 2025</div>
+            <h3 class="news-headline">Debate Night Gets Heated at Brookside School Council Forum</h3>
+            <p class="news-excerpt">What was supposed to be a civil exchange of ideas turned intense at Brookside High's student council debate night. Four candidates for president took the stage in front of a packed auditorium, but tensions rose as policies were challenged and personal remarks were exchanged.</p>
+            <div class="news-author">
+              <div class="author-image">
+                <img src="https://i.pinimg.com/736x/20/ec/44/20ec449b3a7074fc5ea89cc8debcb68d.jpg" alt="" height="30px" width="30px" style="border-radius: 50%;" />
+              </div>
+              <div class="author-name">By Mike Wilson</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="news-card">
+          <div class="news-image"><img src="https://i.pinimg.com/736x/38/94/9a/38949a1bd89eeb1c5f1c2647fcea4b0b.jpg" alt="" height="180px" width="100%"></div>
+          <div class="news-content">
+            <div class="news-date">March 10, 2025</div>
+            <h3 class="news-headline">Newcomer Candidate Brings Inclusive Vision to Eastview High Election</h3>
+            <p class="news-excerpt">First-time candidate Malik Johnson is gaining traction in Eastview High's student council race, bringing forward a message of inclusion and accessibility. A junior transfer student, Malik has quickly made an impression by proposing initiatives that cater to underrepresented groups on campus.</p>
+            <div class="news-author">
+              <div class="author-image">
+                <img src="https://i.pinimg.com/736x/8d/95/03/8d9503a77e4c21ebf0ced6c252819a0e.jpg" alt="" height="30px" width="30px" style="border-radius: 50%;">
+              </div>
+              <div class="author-name">By Mike Wilson</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   `;
 }
+
+// Modal functionality
+document.addEventListener('DOMContentLoaded', function() {
+  // Get modal elements
+  const modal = document.getElementById('news-modal');
+  const closeModal = document.querySelector('.close-modal');
+  const readMoreLinks = document.querySelectorAll('.read-more');
+  
+  // Add click event to all "Read more" links
+  readMoreLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      // Get the parent news card
+      const newsCard = this.closest('.news-card');
+      
+      // Extract data from the news card
+      const imageUrl = newsCard.querySelector('.news-image img').src;
+      const headline = newsCard.querySelector('.news-headline').textContent;
+      const date = newsCard.querySelector('.news-date').textContent;
+      const excerpt = newsCard.querySelector('.news-excerpt').textContent;
+      const author = newsCard.querySelector('.author-name').textContent;
+      
+      // Populate modal with data
+      document.getElementById('modal-image').innerHTML = `<img src="${imageUrl}" alt="${headline}" width="100%">`;
+      document.getElementById('modal-headline').textContent = headline;
+      document.getElementById('modal-date').textContent = date;
+      document.getElementById('modal-content').textContent = excerpt;
+      document.getElementById('modal-author').textContent = author;
+      
+      // Show modal
+      modal.style.display = 'block';
+    });
+  });
+  
+  // Close modal when clicking the X
+  if (closeModal) {
+    closeModal.addEventListener('click', function() {
+      modal.style.display = 'none';
+    });
+  }
+  
+  // Close modal when clicking outside the content
+  window.addEventListener('click', function(e) {
+    if (e.target === modal) {
+      modal.style.display = 'none';
+    }
+  });
+  
+  // Theme toggle functionality
+  const themeToggle = document.querySelector('.theme-toggle');
+  if (themeToggle) {
+    themeToggle.addEventListener('click', function() {
+      const html = document.documentElement;
+      if (html.getAttribute('data-theme') === 'light') {
+        html.setAttribute('data-theme', 'dark');
+        this.innerHTML = '<i class="fas fa-sun"></i>';
+      } else {
+        html.setAttribute('data-theme', 'light');
+        this.innerHTML = '<i class="fas fa-moon"></i>';
+      }
+    });
+  }
+});
+
+// Apply active class to current page link
+function setActivePage() {
+  const navLinks = document.querySelectorAll('.nav-link');
+  const currentPage = window.location.pathname.split('/').pop();
+  
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+    const linkPage = link.getAttribute('data-page');
+    if (currentPage.includes(linkPage) || 
+        (currentPage === '' && linkPage === 'dashboard')) {
+      link.classList.add('active');
+    }
+  });
+}
+
+// Initialize active page
+setActivePage();
 
 function fetchVoteResults() {
   fetch('/vote_results/', {

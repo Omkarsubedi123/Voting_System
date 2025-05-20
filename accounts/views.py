@@ -232,19 +232,19 @@ def candidate_list_json(request):
             # Get candidates for each position
             candidates = People.objects.filter(post=position)
             
-            for candidate in candidates:
+            for candidate in candidates:  
                 result.append({
-                    'id': candidate.id,
+                    'id': candidate.id,  # Fixed the typo here
                     'name': candidate.name,
                     'position': candidate.post,
-                    'votes': candidate.vote_set.count(),
+                    # 'votes': candidate.vote_set.count(),
                     'description': candidate.description,
                     'membership': candidate.membership
                 })
         
         return JsonResponse(result, safe=False)
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        return JsonResponse({'error': str(e)}, status=500)  
 
 @login_required
 def candidate_create(request):
@@ -574,3 +574,25 @@ from django.contrib.auth.decorators import login_required
 @login_required(login_url='accounts:login')  # Specify the login URL
 def user_page(request):
     return render(request, 'accounts/user.html')
+
+@login_required
+def logout_view(request):
+    logout(request)
+    messages.success(request, 'You have been successfully logged out.')
+    return redirect('accounts:home')
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from .models import Vote, User
+
+@login_required
+def admin_page(request):
+    total_votes = Vote.objects.count()
+    total_users = User.objects.filter(user_type='user').count()
+
+    turnout_percentage = round((total_votes / total_users) * 100, 2) if total_users else 0
+
+    return render(request, 'accounts/admin.html', {
+        'total_votes': total_votes,
+        'turnout_percentage': turnout_percentage
+    })

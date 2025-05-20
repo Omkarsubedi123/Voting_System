@@ -6,7 +6,7 @@ app_name = 'accounts'  # Add this line to define the app namespace
 
 urlpatterns = [
     path('', views.home, name='home'),
-    path('login/', views.user_login, name='login'),  # Make sure this line exists
+    path('login/', views.user_login, name='login'),  
     path('logout/', auth_views.LogoutView.as_view(next_page='accounts:home'), name='logout'),
     path('register/', views.user_register, name='register'),
     
@@ -32,7 +32,7 @@ urlpatterns = [
     path('candidates/<int:pk>/delete/', views.candidate_delete, name='candidate_delete'),
     
     # Candidate list as JSON
-    path('candidates_json/', views.candidate_list_json, name='candidates_json'),
+    path('candidate_list_json/', views.candidate_list_json, name='candidate_list_json'),
     
     # Additional pages
     path('elections/', views.elections, name='elections'),
@@ -51,4 +51,6 @@ urlpatterns = [
     path('user_data/', views.user_data, name='user_data'),
     path('logout_view/', views.logout_view, name='logout_view'),
     path('get_voting_statistics/', views.get_voting_statistics, name='get_voting_statistics'),
+
+
 ]
