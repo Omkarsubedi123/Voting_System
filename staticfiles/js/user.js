@@ -169,14 +169,13 @@ function navigateToPage(page) {
               <i class="fas fa-save"></i> Save Changes
             </button>
 
-            <!-- Logout Button -->
-            <a href="/home/" class="logout-button" style="padding: 12px 30px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; text-decoration: none; width: 48%; text-align: center;">
-              <i class="fas fa-sign-out-alt"></i> Logout
-            </a>
-          </div>
-        </form>
-        <div id="settings-message" style="text-align: center; margin-top: 15px; font-size: 14px; color: #28a745;"></div>
-      </div>
+            <form method="POST" action="{% url 'accounts:logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="logout-button"
+            style="padding: 12px 30px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; text-align: center;">
+            <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+            </form>
     </div>
       `;
       

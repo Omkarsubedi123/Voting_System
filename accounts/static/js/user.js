@@ -45,6 +45,24 @@ function setupEventListeners() {
     themeToggle.addEventListener('click', toggleTheme);
   }
 
+  // Logout button functionality
+  const logoutButton = document.getElementById('logoutButton');
+  if (logoutButton) {
+    logoutButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      // Show success message
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'alert alert-success';
+      messageDiv.textContent = 'Logging out successfully...';
+      document.querySelector('.settings-container').insertBefore(messageDiv, document.querySelector('.settings-form'));
+      
+      // Redirect after a short delay
+      setTimeout(() => {
+        window.location.href = this.href;
+      }, 1000);
+    });
+  }
+
   // Navigation links
   const navLinks = document.querySelectorAll('.nav-link');
   for (const link of navLinks) {
@@ -145,56 +163,6 @@ function navigateToPage(page) {
       document.querySelector('.content').innerHTML = '';
       document.querySelector('.content').appendChild(settingsSection.cloneNode(true));
 
-      
-
-   // Fetch user data to populate the form
-fetchUserData()
-  .then(() => {
-    // Attach event handler to the settings form AFTER user data is loaded
-    const newSettingsForm = document.querySelector('.content #settings-form');
-    if (newSettingsForm) {
-      attachSettingsFormHandler(newSettingsForm);
-    }
-  })
-  .catch(error => {
-    console.error('Error loading user data:', error);
-  });
-} else {
-  // Fallback if settings section doesn't exist in HTML
-  document.querySelector('.content').innerHTML = `
-  <div class="settings-section" style="max-width: 600px; margin: auto; padding: 30px; background-color: #f8f9fa; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-    <div class="settings-container">
-    <form method="post" class="settings-form" id="settings-form" style="padding: 20px; background-color: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-      <div class="form-group" style="margin-bottom: 20px;">
-        <label for="user-id" style="font-weight: bold; margin-bottom: 5px; display: block;">User ID:</label>
-        <input type="text" id="user-id" value="" readonly style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: #f1f1f1;">
-      </div>
-      <div class="form-group" style="margin-bottom: 20px;">
-        <label for="email" style="font-weight: bold; margin-bottom: 5px; display: block;">Email Address:</label>
-        <input type="email" id="email" name="email" value="" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: #fff;">
-      </div>
-      <div class="form-group" style="margin-bottom: 20px;">
-        <label for="dob" style="font-weight: bold; margin-bottom: 5px; display: block;">Date of Birth:</label>
-        <input type="date" id="dob" name="dob" value="" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: #fff;">
-      </div>
-      <div class="form-group" style="margin-bottom: 20px;">
-        <label for="club-id" style="font-weight: bold; margin-bottom: 5px; display: block;">Club ID:</label>
-        <input type="text" id="club-id" value="LC-12345" readonly style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: #f1f1f1;">
-      </div>
-      <div class="form-actions" style="text-align: center; margin-top: 30px; display: flex; justify-content: space-between;">
-        <!-- Save Changes Button -->
-        <button type="submit" class="save-button" style="padding: 12px 30px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; width: 48%;">
-          <i class="fas fa-save"></i> Save Changes
-        </button>
-        <a href="${homeUrl}" id="logoutButton" class="logout-button" style="padding: 12px 30px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; text-decoration: none; display: inline-block; text-align: center; width: 48%;">
-              <i class="fas fa-sign-out-alt"></i> Logout
-            </a>
-      </div>
-    </form>
-    <div id="settings-message" style="text-align: center; margin-top: 15px; font-size: 14px; color: #28a745;"></div>
-    </div>
-  </div>
-  `;
       // Fetch user data to populate the form
       fetchUserData()
         .then(() => {
@@ -203,14 +171,53 @@ fetchUserData()
           if (newSettingsForm) {
             attachSettingsFormHandler(newSettingsForm);
           }
-
-          // Add logout button handler
-          const logoutButton = document.getElementById('logoutButton');
-          if (logoutButton) {
-            logoutButton.addEventListener('click', function (e) {
-              e.preventDefault();
-              window.location.href = '/logout/';
-            });
+        })
+        .catch(error => {
+          console.error('Error loading user data:', error);
+        });
+    } else {
+      // Fallback if settings section doesn't exist in HTML
+      document.querySelector('.content').innerHTML = `
+      <div class="settings-section" style="max-width: 600px; margin: auto; padding: 30px; background-color: #f8f9fa; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <div class="settings-container">
+        <form method="post" class="settings-form" id="settings-form" style="padding: 20px; background-color: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label for="user-id" style="font-weight: bold; margin-bottom: 5px; display: block;">User ID:</label>
+            <input type="text" id="user-id" value="" readonly style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: #f1f1f1;">
+          </div>
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label for="email" style="font-weight: bold; margin-bottom: 5px; display: block;">Email Address:</label>
+            <input type="email" id="email" name="email" value="" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: #fff;">
+          </div>
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label for="dob" style="font-weight: bold; margin-bottom: 5px; display: block;">Date of Birth:</label>
+            <input type="date" id="dob" name="dob" value="" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: #fff;">
+          </div>
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label for="club-id" style="font-weight: bold; margin-bottom: 5px; display: block;">Club ID:</label>
+            <input type="text" id="club-id" value="LC-12345" readonly style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; background-color: #f1f1f1;">
+          </div>
+          <div class="form-actions" style="text-align: center; margin-top: 30px; display: flex; justify-content: space-between;">
+            <!-- Save Changes Button -->
+            <button type="submit" class="save-button" style="padding: 12px 30px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; width: 48%;">
+              <i class="fas fa-save"></i> Save Changes
+            </button>
+            <a href="${homeUrl}" id="logoutButton" class="logout-button" style="padding: 12px 30px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; text-decoration: none; display: inline-block; text-align: center; width: 48%;">
+                  <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+          </div>
+        </form>
+        <div id="settings-message" style="text-align: center; margin-top: 15px; font-size: 14px; color: #28a745;"></div>
+        </div>
+      </div>
+      `;
+      // Fetch user data to populate the form
+      fetchUserData()
+        .then(() => {
+          // Attach event handler to the settings form AFTER user data is loaded
+          const newSettingsForm = document.querySelector('.content #settings-form');
+          if (newSettingsForm) {
+            attachSettingsFormHandler(newSettingsForm);
           }
         })
         .catch(error => {

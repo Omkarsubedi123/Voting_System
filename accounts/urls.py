@@ -7,7 +7,7 @@ app_name = 'accounts'  # Add this line to define the app namespace
 urlpatterns = [
     path('', views.home, name='home'),
     path('login/', views.user_login, name='login'),  
-    path('logout/', auth_views.LogoutView.as_view(next_page='accounts:home'), name='logout'),
+    path('logout/', views.custom_logout, name='logout'),
     path('register/', views.user_register, name='register'),
     
     path('admin-dashboard/', views.admin_page, name='admin_page'),
@@ -44,13 +44,9 @@ urlpatterns = [
     path('user/', views.user_page, name='user_page'),
     path('submit_vote/', views.submit_vote, name='submit_vote'),
     path('api/voting_statistics/', views.get_voting_statistics, name='get_voting_statistics'),
-
     path('vote_results/', views.vote_results, name='vote_results'),
     path('check_vote_status/', views.check_vote_status, name='check_vote_status'),
     path('settings_page/', views.settings_page, name='settings_page'),
     path('user_data/', views.user_data, name='user_data'),
-    path('logout_view/', views.logout_view, name='logout_view'),
     path('get_voting_statistics/', views.get_voting_statistics, name='get_voting_statistics'),
-
-
 ]

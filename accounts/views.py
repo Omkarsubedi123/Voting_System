@@ -128,6 +128,7 @@ def user_login(request):
 
     return render(request, 'accounts/login.html')
 
+@require_http_methods(["GET", "POST"])  # Accept both GET and POST
 @login_required
 def logout_view(request):
     logout(request)
@@ -575,24 +576,10 @@ from django.contrib.auth.decorators import login_required
 def user_page(request):
     return render(request, 'accounts/user.html')
 
-@login_required
-def logout_view(request):
+def custom_logout(request):
     logout(request)
     messages.success(request, 'You have been successfully logged out.')
     return redirect('accounts:home')
 
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-from .models import Vote, User
 
-@login_required
-def admin_page(request):
-    total_votes = Vote.objects.count()
-    total_users = User.objects.filter(user_type='user').count()
 
-    turnout_percentage = round((total_votes / total_users) * 100, 2) if total_users else 0
-
-    return render(request, 'accounts/admin.html', {
-        'total_votes': total_votes,
-        'turnout_percentage': turnout_percentage
-    })
