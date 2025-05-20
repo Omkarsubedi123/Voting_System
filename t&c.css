@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body, html {
+    height: 100%;
+    background-color: #e6ebf5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 900px;
+    background: white;
+    border-radius: 12px;
+    padding: 30px 40px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    max-height: 90vh;
+}
+
+.terms-box .header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.terms-box .header i {
+    font-size: 40px;
+    color: #5646eb;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.terms-box .header h2 {
+    font-size: 24px;
+    font-weight: 600;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.terms-box .header p {
+    font-size: 14px;
+    color: #666;
+    margin-top: 5px;
+}
+
+.terms-box .content {
+    font-size: 14px;
+    color: #333;
+    line-height: 1.7;
+}
+
+.terms-box .content p {
+    margin-bottom: 16px;
+}
+
+.agreement {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #333;
+}
+
+.agreement input {
+    margin-right: 10px;
+    width: 16px;
+    height: 16px;
+}
+
+.continue-button {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.continue-button button {
+    padding: 10px 20px;
+    background-color: #5646eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.continue-button button:hover {
+    background-color: #4033c7;
+}
