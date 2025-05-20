@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Online Voting System</title>
+    <link rel="stylesheet" href="register.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <div class="auth-container">
+        <!-- Logo side with centered logo and project name/slogan -->
+        <div class="logo-side">
+            <img src="logo.png" alt="PollMinds Logo" class="logo-img">
+            <h2 class="project-name">PollMinds</h2>
+            <p class="project-slogan">Your trusted voting system for Lion's Club</p>
+        </div>
+
+        <div class="form-side">
+            <div class="login-box">
+                <!-- Updated section for logo and text -->
+                <div class="header">
+                    <i class="fas fa-check-square"></i>
+                    <h2>Verify your Voter ID</h2>
+                </div>
+                <p>Create your voting account</p>
+
+                <form action="#" method="POST">
+                    <div class="input-group">
+                        <label for="username">Voter ID</label>
+                        <div class="input-box">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="username" name="username" placeholder="Enter your Voter ID" required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="dob">Date of Birth</label>
+                        <div class="input-box">
+                            <i class="fas fa-calendar-alt"></i>
+                            <input type="date" id="dob" name="dob" required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="email">Email</label>
+                        <div class="input-box">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <div class="input-box">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                            <i class="fas fa-eye toggle-password" onclick="togglePassword('password', this)"></i>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="confirm_password">Confirm Password</label>
+                        <div class="input-box">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm your password" required>
+                            <i class="fas fa-eye toggle-password" onclick="togglePassword('confirm_password', this)"></i>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="user_type">Register as</label>
+                        <div class="input-box">
+                            <i class="fas fa-user-tag"></i>
+                            <select id="user_type" name="user_type" required>
+                                <option value="voter">General Voter</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                    </div>      
+
+                    <button type="submit" class="register-btn">
+                        <i class="fas fa-user-plus"></i> Register
+                    </button>
+                </form>
+
+                <div class="register">
+                    <p>Already have an account?</p>
+                    <a href="login.html">Login <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword(id, element) {
+            const input = document.getElementById(id);
+            if (input.type === "password") {
+                input.type = "text";
+                element.classList.replace("fa-eye", "fa-eye-slash");
+            } else {
+                input.type = "password";
+                element.classList.replace("fa-eye-slash", "fa-eye");
+            }
+        }
+    </script>
+</body>
+</html>

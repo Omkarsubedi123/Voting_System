@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Online Voting System</title>
+    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="video-side">
+            <video autoplay muted loop playsinline>
+                <source src="animation.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <div class="form-side">
+            <div class="login-box">
+                <!-- Logo and Title aligned next to each other -->
+                <div class="logo header">
+                    <i class="fas fa-check-square"></i>
+                    <h2>Voting System</h2>
+                </div>
+                <p>Access your voting account</p>
+                
+                <form action="#" method="POST">
+                    <div class="input-group">
+                        <label for="username">Voter ID</label>
+                        <div class="input-box">
+                            <i class="fas fa-id-card"></i>
+                            <input type="text" id="username" name="username" placeholder=" Enter your Voter ID" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <div class="input-box">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="password" name="password" placeholder=" Enter your password" required>
+                            <i class="fas fa-eye toggle-password" onclick="togglePassword('password', this)"></i>
+                        </div>
+                    </div>  
+                    <div class="input-group">
+                        <label for="user_type">Login as</label>
+                        <div class="input-box">
+                            <i class="fas fa-user-tag"></i>
+                            <select id="user_type" name="user_type" required>
+                                <option value="voter">General Voter</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                    </div>                         
+                    <button type="submit" class="login-btn">
+                        <i class="fas fa-sign-in-alt"></i> Login 
+                    </button>
+                </form>
+
+                <div class="register">
+                    <p>New Voter?</p>
+                    <a href="register.html">Register <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword(id, element) {
+            const input = document.getElementById(id);
+            if (input.type === "password") {
+                input.type = "text";
+                element.classList.replace("fa-eye", "fa-eye-slash");
+            } else {
+                input.type = "password";
+                element.classList.replace("fa-eye-slash", "fa-eye");
+            }
+        }
+    </script>
+</body>
+</html>
