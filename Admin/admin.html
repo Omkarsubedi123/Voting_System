@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en" class="dark-theme">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VoteAdmin - Election Management Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90' x='0' y='80'>🗳️</text></svg>" />
+</head>
+<body>
+  <div id="app">
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <i class="fas fa-vote-yea"></i>
+        <span class="app-title">VoteAdmin</span>
+      </div>
+      <div class="menu-item active" data-page="dashboard">
+        <i class="fas fa-th-large"></i>
+        <span>Dashboard</span>
+      </div>
+      <div class="menu-item" data-page="voters">
+        <i class="fas fa-users"></i>
+        <span>Voters</span>
+      </div>
+      <div class="menu-item" data-page="candidates">
+        <i class="fas fa-user-tie"></i>
+        <span>Candidates</span>
+      </div>
+      <div class="menu-item" data-page="settings">
+        <i class="fas fa-cog"></i>
+        <span>Settings</span>
+      </div>
+    </div>
+    <div class="main-content">
+      <div class="header">
+        <div>
+          <h1 class="page-title">Dashboard Overview</h1>
+          <p class="welcome-text">Welcome back, Admin</p>
+        </div>
+        <div class="user-profile">
+          <button id="theme-toggle-btn" class="theme-toggle-btn" title="Toggle Light/Dark Mode">
+            <i class="fas fa-moon"></i>
+          </button>
+          <div class="profile-dropdown">
+            <button id="profile-btn" class="profile-btn">
+              <span class="profile-avatar">A</span>
+              <span>Profile</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="profile-menu">
+              <div class="profile-info">
+                <i class="fas fa-user-circle"></i>
+                <span><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="80e1e4ede9eec0e5f8e1edf0ece5aee3efed">[email&#160;protected]</a></span>
+              </div>
+              <div class="profile-menu-divider"></div>
+              <a href="#" class="profile-menu-item" id="quick-logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="dashboard-page" class="page-content active">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-title">
+              <span>Active Elections</span>
+              <i class="fas fa-vote-yea"></i>
+            </div>
+            <div class="stat-value">0</div>
+            <div class="stat-meta increase">
+              <i class="fas fa-arrow-up"></i>
+              <span>1 upcoming</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-title">
+              <span>Total Voters</span>
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-value">0</div>
+            <div class="stat-meta increase">
+              <i class="fas fa-arrow-up"></i>
+              <span>5% increase</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-title">
+              <span>Votes Cast</span>
+              <i class="fas fa-vote-yea"></i>
+            </div>
+            <div class="stat-value">0</div>
+            <div class="stat-meta percentage">
+              <span>75% turnout</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Active Elections</h2>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Election Name</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-election-id="1">
+                <td>Student Council 2025</td>
+                <td>Jan 15, 2025</td>
+                <td>Jan 20, 2025</td>
+                <td><span class="status-badge active">Active</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Recent Activity section removed as requested -->
+      </div>
+
+      <!-- Voters page content -->
+      <div id="voters-page" class="page-content">
+        <div class="card voter-dashboard-card">
+          <div class="voter-dashboard-header">
+            <h2 class="voter-dashboard-title">Voter Dashboard</h2>
+            <p class="voter-dashboard-subtitle">Overview of voter registration and activity</p>
+          </div>
+
+          <div class="voter-details-section">
+            <h3 class="section-title">Voter's Details</h3>
+            <div class="voter-table-container">
+              <table class="voter-table">
+                <thead>
+                  <tr>
+                    <th>Username</th>
+                    <th>Email Address</th>
+                    <th>Date of Birth</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="voter-avatar-name">
+                        <img src="" sizes="20px" avatar="voter-avatar-name">
+                        <span>Bibidh</span>
+                      </div>
+                    </td>
+                    <td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="64060d060d000c1617100c05240309050d084a070b09">[email&#160;protected]</a></td>
+                    <td>20 Dec 1990</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="pagination">
+              <span class="pagination-info">Showing 1 to 5 of 245 entries</span>
+              <div class="pagination-controls">
+                <button class="pagination-btn">Previous</button>
+                <button class="pagination-btn active">1</button>
+                <button class="pagination-btn">2</button>
+                <button class="pagination-btn">3</button>
+                <button class="pagination-btn">Next</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings page with updated options -->
+      <div id="settings-page" class="page-content">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Account Settings</h2>
+          </div>
+          <div class="settings-content">
+            <!-- Admin Profile Section -->
+            <div class="admin-profile-section">
+              <div class="admin-profile-header">
+                <h3>Admin Details</h3>
+                <p>Your account information</p>
+              </div>
+              <div class="admin-profile-content">
+                <div class="admin-avatar">
+                  <div class="admin-avatar-img">A</div>
+                </div>
+                <div class="admin-info">
+                  <div class="admin-info-item">
+                    <span class="admin-info-label">Name</span>
+                    <span class="admin-info-value">Admin User</span>
+                  </div>
+                  <div class="admin-info-item">
+                    <span class="admin-info-label">Email</span>
+                    <span class="admin-info-value">admin@example.com</span>
+                  </div>
+                  <div class="admin-info-item">
+                    <span class="admin-info-label">Role</span>
+                    <span class="admin-info-value">Super Admin</span>
+                  </div>
+                  <div class="admin-info-item">
+                    <span class="admin-info-label">Last Login</span>
+                    <span class="admin-info-value">Apr 1, 2025, 09:45 AM</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-divider"></div>
+
+            <div class="settings-option">
+              <div class="settings-info">
+                <i class="fas fa-sign-out-alt"></i>
+                <div>
+                  <h3>Logout</h3>
+                  <p>Sign out of your account</p>
+                </div>
+              </div>
+              <button class="btn logout-btn" id="logout-btn">Logout</button>
+            </div>
+
+            <div class="settings-option">
+              <div class="settings-info">
+                <i class="fas fa-user-slash"></i>
+                <div>
+                  <h3>Delete Account</h3>
+                  <p>Permanently delete your account</p>
+                </div>
+              </div>
+              <button class="btn logout-btn" id="delete-account-btn">Delete Account</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Other page content -->
+      <div id="candidates-page" class="page-content">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Candidate Management</h2>
+            <button class="btn" id="new-candidate-btn">
+              <i class="fas fa-plus"></i>
+              <span>New Candidate</span>
+            </button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Post</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody id="candidates-table-body">
+              <!-- Candidates will be dynamically added here -->
+              <tr>
+                <td colspan="4" class="empty-table-message">No candidates available. Click "New Candidate" to add one.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Candidate Modal -->
+      <div id="candidate-modal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 id="modal-title">Add New Candidate</h2>
+            <button class="close-modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <form id="candidate-form">
+              <div class="form-group">
+                <label for="candidate-name">Name</label>
+                <input type="text" id="candidate-name" required>
+              </div>
+              <div class="form-group">
+                <label for="candidate-age">Age</label>
+                <input type="number" id="candidate-age" min="18" required>
+              </div>
+              <div class="form-group">
+                <label for="candidate-post">Post</label>
+                <input type="text" id="candidate-post" required>
+              </div>
+              <div class="form-group">
+                <label for="candidate-description">Description</label>
+                <textarea id="candidate-description" rows="3" required></textarea>
+              </div>
+              <div class="form-actions">
+                <button type="button" class="btn secondary-btn" id="cancel-candidate">Cancel</button>
+                <button type="submit" class="btn primary-btn">Save Candidate</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delete Account Modal -->
+      <div id="delete-account-modal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Delete Account</h2>
+            <button class="close-modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <form id="delete-account-form">
+              <div class="form-group">
+                <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+              </div>
+              <div class="form-group">
+                <label for="delete-account-password">Enter your password to confirm</label>
+                <input type="password" id="delete-account-password" required>
+              </div>
+              <div class="form-actions">
+                <button type="button" class="btn secondary-btn close-delete-account-modal">Cancel</button>
+                <button type="submit" class="btn logout-btn">Delete Permanently</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="script.js"></script>
+</body>
+</html>
